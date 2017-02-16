@@ -82,7 +82,7 @@ a {
 .head-title {
   box-shadow: 0 3px 0 #008d74;
   -webkit-box-shadow: 0 3px 0 #008d74;
-  background-color: #009FCC;
+  background-color: #4300cc;
   border-radius: 0 0 5px 5px;
   -webkit-border-radius: 0 0 5px 5px;
   margin-bottom: 20px;
@@ -124,7 +124,7 @@ section {
   display: block;
 }
 .change-lang ul li:hover {
-  background-color: #009FCC !important;
+  background-color: #4300cc !important;
   cursor: pointer;
 }
 .change-lang ul li:hover a {
@@ -144,7 +144,7 @@ section {
 }
 .section-icon {
   border-radius: 100px;
-  background-color: #009FCC;
+  background-color: #4300cc;
   border: 5px solid #FBF6FA;
   box-shadow: 0px 3px 0px #C0C4C5;
   text-align: center;
@@ -179,14 +179,14 @@ section:first-child {
  border-radius: 150px;
 }
 .avatar {
-  border: 5px solid #009FCC;
+  border: 5px solid #4300cc;
 }
 .round-rows {
   margin: 0;
   list-style: none;
 }
 .round-row i {
-  color: #009FCC;
+  color: #4300cc;
   font-size: 20px;
 }
 .round-row:hover {
@@ -210,7 +210,7 @@ section:first-child {
   display: inline-block;
 }
 .available i {
-  color: #009FCC;
+  color: #4300cc;
 }
 .not-available i {
   color: #ED3723;
@@ -231,7 +231,7 @@ section:first-child {
 }
 .progress-bar {
   height: 11px;
-  background-color: #009FCC;
+  background-color: #4300cc;
   width: 0;
   border-radius: 6px;
 }
@@ -264,7 +264,7 @@ section:first-child {
 }
 .exp-holder:before {
   background-color: #fff;
-  border: 10px solid #009FCC;
+  border: 10px solid #4300cc;
   border-radius: 30px;
   content: " ";
   height: 20px;
@@ -281,7 +281,7 @@ section:first-child {
   height: 0px;
   border-style: solid;
   border-width: 10px 10px 10px 0;
-  border-color: transparent #009FCC transparent transparent;
+  border-color: transparent #4300cc transparent transparent;
   top: 10px;
 }
 .exp-holder .body,
@@ -289,7 +289,7 @@ section:first-child {
   padding: 13px 10px;
 }
 .exp-holder .head {
-  background-color: #009FCC;
+  background-color: #4300cc;
   border-radius: 5px 5px 0 0;
   -webkit-border-radius: 5px 5px 0 0;
   border: 1px solid #008d74;
@@ -326,7 +326,7 @@ section:first-child {
   border-right-width: 0;
   border-top-width: 0;
   border-bottom-width: 0;
-  border-color:#009FCC;
+  border-color:#4300cc;
   padding-left: 30px;
   padding-bottom: 50px;
   width: 91%;
@@ -367,7 +367,7 @@ section .desc p {
 .contact-form input:not(.submit):focus,
 .contact-form textarea:focus {
   box-shadow: none;
-  border: 1px solid #009FCC;
+  border: 1px solid #4300cc;
   background-color: #68be9f;
 }
 #loading {
