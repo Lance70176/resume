@@ -1,464 +1,634 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-Hant">
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rex Lu Resume ｜ 資深工程師與系統架構師</title>
+<meta name="description" content="Rex Lu — 技術管理職、資深工程師與系統架構師。10+ 年網站開發與架構經驗，專注金流安全與遊戲數據對接，AI 輔助開發實戰。">
+<link rel="icon" href="./img/R.png">
+<style>
+  :root{
+    --ink:#1f2933;
+    --muted:#5b6770;
+    --line:#d9dee3;
+    --accent:#0f7d6b;
+    --accent-2:#14a08a;
+    --accent-soft:#e6f4f1;
+    --bg:#f7f9fa;
+    --card:#ffffff;
+    --shadow:0 4px 20px rgba(31,41,51,.08);
+  }
+  html[data-theme="dark"]{
+    --ink:#e4e9ec;
+    --muted:#9aa7b0;
+    --line:#31404a;
+    --accent:#2ec4a9;
+    --accent-2:#25a892;
+    --accent-soft:#123830;
+    --bg:#0f1a20;
+    --card:#16242c;
+    --shadow:0 4px 20px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:"PingFang TC","Heiti TC","Microsoft JhengHei","Helvetica Neue",Arial,sans-serif;
+    color:var(--ink);background:var(--bg);
+    line-height:1.85;font-size:15px;
+    transition:background .4s,color .4s;
+    overflow-x:hidden;
+  }
+  a{color:var(--accent);text-decoration:none;}
+  .hl{color:var(--accent);font-weight:600;}
 
-<!--[if lt IE 9]>
-    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-    <title>Rex Lu Resume</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  /* ---------- scroll progress ---------- */
+  #progress{
+    position:fixed;top:0;left:0;height:3px;width:0;
+    background:linear-gradient(90deg,var(--accent),var(--accent-2));
+    z-index:1000;transition:width .1s linear;
+  }
 
-    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="bootstrap/css/bootstrap-responsive.min.css">
-<!--[if IE 7]>
-    <link rel="stylesheet" href="css/fontawesome/css/font-awesome-ie7.min.css"><![endif]-->
-    <link rel="stylesheet" href="css/index.css">
-    <link rel="stylesheet" href="css/responsive.css">
-    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
-    <link rel="icon" href="./img/R.png">
+  /* ---------- nav ---------- */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:900;
+    display:flex;align-items:center;gap:18px;
+    padding:10px 22px;
+    background:color-mix(in srgb,var(--card) 82%,transparent);
+    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+    transform:translateY(-100%);transition:transform .35s;
+  }
+  nav.show{transform:translateY(0);}
+  nav .brand{font-weight:700;color:var(--accent);font-size:16px;}
+  nav .links{display:flex;gap:14px;margin-left:auto;flex-wrap:wrap;}
+  nav .links a{color:var(--muted);font-size:13.5px;transition:color .2s;}
+  nav .links a:hover{color:var(--accent);}
+  #themeBtn{
+    border:1px solid var(--line);background:var(--card);color:var(--ink);
+    border-radius:20px;padding:3px 12px;cursor:pointer;font-size:13px;
+    transition:all .25s;
+  }
+  #themeBtn:hover{border-color:var(--accent);color:var(--accent);}
 
+  /* ---------- hero ---------- */
+  header{
+    position:relative;overflow:hidden;
+    padding:88px 20px 56px;text-align:center;
+  }
+  .blob{
+    position:absolute;border-radius:50%;filter:blur(70px);opacity:.35;
+    animation:float 14s ease-in-out infinite;pointer-events:none;
+  }
+  .blob.b1{width:420px;height:420px;background:var(--accent);top:-140px;left:-100px;}
+  .blob.b2{width:360px;height:360px;background:var(--accent-2);bottom:-160px;right:-80px;animation-delay:-7s;}
+  @keyframes float{
+    0%,100%{transform:translate(0,0) scale(1);}
+    50%{transform:translate(40px,30px) scale(1.12);}
+  }
+  .avatar-ring{
+    width:150px;height:150px;margin:0 auto 18px;position:relative;
+  }
+  .avatar-ring::before{
+    content:"";position:absolute;inset:-7px;border-radius:50%;
+    background:conic-gradient(var(--accent),var(--accent-2),transparent 65%,var(--accent));
+    animation:spin 5s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .avatar-ring img{
+    position:relative;width:150px;height:150px;border-radius:50%;
+    object-fit:cover;object-position:top;border:4px solid var(--card);
+    display:block;
+  }
+  h1.name{
+    font-size:44px;letter-spacing:.06em;
+    background:linear-gradient(120deg,var(--ink) 30%,var(--accent) 70%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .typing{
+    min-height:32px;font-size:18px;color:var(--accent);font-weight:600;
+    letter-spacing:.05em;margin-top:6px;
+  }
+  .typing .cursor{
+    display:inline-block;width:2px;height:1.1em;background:var(--accent);
+    vertical-align:-2px;margin-left:2px;animation:blink .8s step-end infinite;
+  }
+  @keyframes blink{50%{opacity:0;}}
+  .hero-tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px;}
+  .hero-tags span{
+    background:var(--accent-soft);color:var(--accent);
+    font-size:12.5px;font-weight:600;padding:4px 14px;border-radius:16px;
+    transition:transform .25s,box-shadow .25s;cursor:default;
+  }
+  .hero-tags span:hover{transform:translateY(-3px);box-shadow:var(--shadow);}
+  .stats{
+    display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:28px;
+  }
+  .stat{
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:12px 22px;min-width:118px;box-shadow:var(--shadow);
+    transition:transform .3s;
+  }
+  .stat:hover{transform:translateY(-4px);}
+  .stat .num{font-size:28px;font-weight:800;color:var(--accent);line-height:1.2;}
+  .stat .num small{font-size:16px;font-weight:700;}
+  .stat .lbl{font-size:12px;color:var(--muted);}
+  .hero-actions{margin-top:26px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+  .btn{
+    display:inline-flex;align-items:center;gap:7px;
+    padding:9px 22px;border-radius:24px;font-size:14px;font-weight:600;
+    border:1.5px solid var(--accent);transition:all .25s;cursor:pointer;
+  }
+  .btn.solid{background:var(--accent);color:#fff;}
+  .btn.solid:hover{background:var(--accent-2);border-color:var(--accent-2);transform:translateY(-2px);}
+  .btn.ghost{color:var(--accent);background:transparent;}
+  .btn.ghost:hover{background:var(--accent-soft);transform:translateY(-2px);}
+  .scroll-hint{
+    margin-top:34px;color:var(--muted);font-size:22px;
+    animation:bounce 1.6s infinite;
+  }
+  @keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(8px);}}
+
+  /* ---------- layout ---------- */
+  main{max-width:920px;margin:0 auto;padding:0 20px 60px;}
+  section{margin-bottom:46px;}
+  h2{
+    font-size:24px;color:var(--accent);letter-spacing:.08em;
+    display:flex;align-items:center;gap:12px;margin-bottom:20px;
+  }
+  h2::after{content:"";flex:1;height:1px;background:var(--line);}
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:24px 28px;box-shadow:var(--shadow);
+  }
+  .card + .card{margin-top:16px;}
+  p.summary{text-align:justify;color:var(--ink);}
+  p.summary + p.summary{margin-top:12px;}
+
+  /* ---------- reveal ---------- */
+  .reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease;}
+  .reveal.in{opacity:1;transform:none;}
+
+  /* ---------- AI box ---------- */
+  .ai-tools{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;}
+  .ai-tools span{
+    background:var(--card);color:var(--accent);border:1.5px solid var(--accent);
+    font-size:14px;font-weight:700;padding:6px 18px;border-radius:20px;
+    transition:all .3s;cursor:default;
+  }
+  .ai-tools span:hover{
+    background:var(--accent);color:#fff;transform:translateY(-3px) scale(1.05);
+    box-shadow:0 6px 18px rgba(15,125,107,.35);
+  }
+  .ai-list{list-style:none;}
+  .ai-list li{
+    position:relative;padding-left:22px;margin-bottom:9px;text-align:justify;
+  }
+  .ai-list li::before{
+    content:"▸";position:absolute;left:2px;color:var(--accent);font-weight:700;
+    transition:transform .25s;
+  }
+  .ai-list li:hover::before{transform:translateX(4px);}
+  .ai-card{border-left:4px solid var(--accent);}
+
+  /* ---------- skills ---------- */
+  .skills{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  @media(max-width:760px){.skills{grid-template-columns:1fr;}}
+  .skill-col h3{
+    font-size:15px;margin-bottom:12px;padding-bottom:8px;
+    border-bottom:2px solid var(--accent-soft);letter-spacing:.05em;
+  }
+  .chips{display:flex;flex-wrap:wrap;gap:8px;}
+  .chips span{
+    background:var(--bg);color:var(--muted);border:1px solid var(--line);
+    font-size:12.5px;padding:4px 12px;border-radius:6px;
+    transition:all .25s;cursor:default;
+    opacity:0;transform:scale(.7);
+  }
+  .in .chips span{opacity:1;transform:scale(1);}
+  .chips span:hover{
+    border-color:var(--accent);color:var(--accent);transform:translateY(-3px);
+  }
+  .chips span.key{
+    background:var(--accent-soft);color:var(--accent);
+    border-color:var(--accent);font-weight:700;
+  }
+
+  /* ---------- timeline ---------- */
+  .timeline{position:relative;padding-left:26px;}
+  .timeline::before{
+    content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;
+    background:linear-gradient(var(--accent),var(--line));
+  }
+  .job{
+    position:relative;margin-bottom:18px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:18px 22px;box-shadow:var(--shadow);
+    transition:transform .3s,border-color .3s;
+  }
+  .job:hover{transform:translateX(6px);border-color:var(--accent);}
+  .job::before{
+    content:"";position:absolute;left:-25px;top:24px;
+    width:12px;height:12px;border-radius:50%;
+    background:var(--accent);border:3px solid var(--bg);
+    box-shadow:0 0 0 2px var(--accent);
+    transition:transform .3s;
+  }
+  .job:hover::before{transform:scale(1.35);}
+  .job-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;}
+  .job-title{font-size:17px;font-weight:700;}
+  .job-date{
+    font-size:12px;color:#fff;background:var(--accent);
+    padding:2px 12px;border-radius:11px;font-weight:600;white-space:nowrap;
+  }
+  .job-org{font-size:13px;color:var(--muted);margin:3px 0 8px;font-weight:600;}
+  .job-org .pos{color:var(--accent);}
+  .job ul{list-style:none;margin-top:4px;}
+  .job ul li{position:relative;padding-left:16px;margin-bottom:4px;text-align:justify;}
+  .job ul li::before{content:"–";position:absolute;left:0;color:var(--accent);}
+  .job p.desc{text-align:justify;}
+
+  /* ---------- footer / misc ---------- */
+  footer{
+    text-align:center;padding:30px 20px 40px;color:var(--muted);
+    font-size:13px;border-top:1px solid var(--line);
+  }
+  #topBtn{
+    position:fixed;right:22px;bottom:26px;z-index:800;
+    width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;
+    background:var(--accent);color:#fff;font-size:20px;
+    box-shadow:0 4px 14px rgba(15,125,107,.4);
+    opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;
+  }
+  #topBtn.show{opacity:1;pointer-events:auto;}
+  #topBtn:hover{transform:translateY(-4px);}
+  @media(max-width:600px){
+    h1.name{font-size:34px;}
+    .card{padding:18px 18px;}
+    nav .links{display:none;}
+  }
+  @media print{
+    nav,#topBtn,#progress,.scroll-hint,.hero-actions{display:none!important;}
+    .reveal{opacity:1!important;transform:none!important;}
+    .chips span{opacity:1!important;transform:none!important;}
+    body{background:#fff;}
+  }
+</style>
 </head>
-<body >
-
-    <div class="wrapper container ">
-        <div class="resume-holder">
-
-            <div class="resume ">
-
-                <section id="home">
-                    <div class="span12">
-                        <div class="nav-menu">
-                            <ul class="nav nav-pills normal splited" style="position: fixed; top: -1px;">
-                                <li><a href="#home">HOME</a></li>
-                                <li><a href="#about">ABOUT</a></li>
-                                <li><a href="#skills">SKILLS</a></li>
-                                <li><a href="#experiences">EXPERIENCES</a></li>
-                                <li><a href="#portfolio">PORTFOLIO</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </section>
-
-                <section id="about">
-                    <div class="row-fluid">
-                        <div class="section-title">
-                            <div class="title">
-                                <h3>ABOUT</h3>
-                            </div>
-                        </div>
-
-                        <div class="span11">
-                            <div class="box-holder">
-                                <div class="row-fluid">
-                                    <div class="span3">
-                                        <div class="avatar">
-                                            <img alt src="img/avatr.jpg" />
-                                        </div>
-
-                                        <div class="change-lang" style="text-align: center;">
-                                            <ul>
-                                                <li class="chinese"><a onclick="changeToEnglish();">English version</a></li>
-                                                <li class="english" style="display:none;" ><a onclick="changeToChinese();">中文版</a></li>
-                                            </ul>
-                                        </div>
-
-                                    </div>
-
-                                    <div class="span9">
-                                        <div class="desc text-holder chinese">
-                                            <p>
-                                                我是 Rex，網站工程師。
-                                            </p>
-
-                                            <p>
-                                                熱愛程式開發與軟體工程改善，希望能擁有一份改變世界的工作，不斷地要求自己走在業界的前端，不侷限自己在軟體開發的技能，同時保持靈活並注重在團隊關係與流程改善。
-                                            </p>
-
-                                            <p>
-                                                技能專注在數據分析，主機架構設計，系統設計與重構,自動化測試與敏捷開發。在 Yahoo 有分析使用者行為，店家資料與商品廣告，和法商 Criteo 公司合作刊登廣告。在 PChome 接手行動支付重構與專案開發，與銀行有實際金流資料交換，系統內有資訊流與風險監控,高正確性的使用 TDD 進行專案開發。
-                                            </p>
-
-                                            <p>
-                                                工作技能方面，熟悉大型主機架構，使用者數據分析，電子商務流程與多樣化的開發技能，了解系統開發流程與金流相關知識。同時專精 PHP 與 ASP.NET MVC，熟悉 MVC 架構與大型系統規劃，同時擁有TDD觀念以提升程式碼品質。
-                                            </p>
-
-                                            <p>
-                                                目前專精於 PHP Laravel，工作實務上使用 Redis  做監控與可擴充性服務架構，有大型主機群架構經驗，也為資料庫快取架構編寫框架專用 plugin，面臨有時程性專案也可靈活變動工作模式，即使時限逼近，不只能開發完畢，同時也能完成單元測試，保持程式的可靠性。
-                                            </p>
-
-                                            <p>
-                                                工作橫跨多種類型，曾於 Yahoo! 電子商務部門，無名小站，小型新創公司與中型專案公司服務，透過各種不同類型的工作學習成長與自我淬煉。目前投身於行動支付業界龍頭，希望改變台灣的消費習慣，讓台灣本土的行動支付能佔有一席之地。
-                                            </p>
-
-                                            <p>
-                                                管理方面有 Scrum 敏捷開發的實務領導經驗，良好的溝通與協調能力，不僅擅長團隊合作也能獨立作業，並進行雙向管理。
-                                            </p>
-
-                                            <p>
-                                                如果對我有興趣的話，可以在 <a href="https://tw.linkedin.com/pub/rex-lu/55/235/862">Linkedin</a> 上看到我的相關資訊。
-                                            </p>
-
-                                            <p>
-                                                與我聯絡 <a>lance70176@gmail.com</a>
-                                            </p>
-
-                                        </div>
-
-                                        <div class="desc text-holder english" style="display:none;" >
-                                            <p>
-                                                I am Rex. Web engineer.
-                                            </p>
-
-                                            <p>
-                                                Well-versed with the web architecture of e-commerce and payment flow, I had worked for a start-up company in the traveling industry, a project management company and Yahoo Shopping Mall, before I joined PChome, my present employer.
-                                            </p>
-
-                                            <p>
-                                                About my expertise, I am specialized in PHP and ASP.NET MVC, familiar with MVC architecture and large system design. And I am good at Test-driven development for improving code quality.
-                                            </p>
-
-                                            <p>
-                                                About my management skill, I am good at Scrum and able to train a new team to operate with Scrum. I am good in communication skills. I can work well in a team, and also work effectively alone.
-                                            </p>
-
-                                            <p>
-                                                If you are interested in my porfolio, you can see more about me on <a href="https://tw.linkedin.com/pub/rex-lu/55/235/862">Linkedin</a>.
-                                            </p>
-
-                                            <p>
-                                                Contact me by <a>lance70176@gmail.com</a>
-                                            </p>
-
-                                        </div>
-
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </section>
-
-
-                <section id="skills">
-
-                    <div class="row-fluid">
-
-                        <div class="section-title">
-                            <div class="title">
-                                <h3>SKILLS</h3>
-                            </div>
-                        </div>
-                        <div class="span11">
-                            <div class="box-holder">
-
-                                <div class="row-fluid skills-holder left">
-
-                                    <!--right left start-->
-                                    <div class="span6 holder">
-
-                                        <div class="skill" data-level="95">
-                                            <label>MVC Architecture</label>
-                                        </div>
-
-                                        <div class="skill" data-level="78">
-                                            <label>ASP.NET MVC</label>
-                                        </div>
-
-                                        <div class="skill" data-level="75">
-                                            <label>ASP</label>
-                                        </div>
-
-                                        <div class="skill" data-level="30">
-                                            <label>CakePHP</label>
-                                        </div>
-
-                                        <div class="skill" data-level="90">
-                                            <label>MySQL</label>
-                                        </div>
-
-                                        <div class="skill" data-level="50">
-                                            <label>DB2</label>
-                                        </div>
-
-                                        <div class="skill" data-level="76">
-                                            <label>Redis</label>
-                                        </div>
-
-                                        <div class="skill" data-level="70">
-                                            <label>Apache</label>
-                                        </div>
-
-                                        <div class="skill" data-level="80">
-                                            <label>JSON</label>
-                                        </div>
-
-                                        <div class="skill" data-level="80">
-                                            <label>AJAX</label>
-                                        </div>
-
-                                    </div>
-                                    <!--right left end-->
-
-                                    <!--right side start-->
-                                    <div class="span6 holder">
-
-                                        <div class="skill" data-level="90">
-                                            <label>PHP</label>
-                                        </div>
-
-                                        <div class="skill" data-level="83">
-                                            <label>Laravel Framework</label>
-                                        </div>
-
-                                        <div class="skill" data-level="77">
-                                            <label>MS SQL</label>
-                                        </div>
-
-                                        <div class="skill" data-level="60">
-                                            <label>Oracle</label>
-                                        </div>
-
-                                        <div class="skill" data-level="95">
-                                            <label>Sherpa</label>
-                                        </div>
-
-                                        <div class="skill" data-level="90">
-                                            <label>LinQ</label>
-                                        </div>
-
-                                        <div class="skill" data-level="70">
-                                            <label>Linux</label>
-                                        </div>
-
-                                        <div class="skill" data-level="97">
-                                            <label>XML</label>
-                                        </div>
-
-                                        <div class="skill" data-level="90">
-                                            <label>HTML</label>
-                                        </div>
-
-                                        <div class="skill" data-level="70">
-                                            <label>JavaScript</label>
-                                        </div>
-                                    </div>
-                                    <!--right side end-->
-
-                                </div>
-
-
-                            </div>
-                        </div>
-                    </div>
-
-                </section>
-
-                <section id="experiences">
-                    <div class="row-fluid">
-
-                        <div class="section-title">
-                            <div class="title">
-                                <h3>EXPERIENCES</h3>
-                            </div>
-                        </div>
-
-                        <div class="span11">
-                            <div class="box-holder exp-box">
-
-                                <div class="row-fluid timeline-holder">
-                                    <div class="span12">
-                                        <div class="exp-item">
-                                            <div class="exp-holder">
-
-                                                <div class="head">
-                                                    <div class="date-range chinese">2014/11 ~ 2015(任職中)</div>
-                                                    <h3>
-                                                        <a href="https://www.piapp.com.tw/" target="_blank" class="exp_title">
-                                                            PChome
-                                                        </a>
-                                                    </h3>
-                                                    <h4>Web Developer</h4>
-
-                                                </div>
-
-                                                <div class="body chinese">
-                                                    在 Pi 行動錢包開發產品，用 APP 行動支付改變消費習慣。
-                                                    <br>
-                                                    負責的項目有開發與維護行動支付系統，線上問題即時處理與追蹤。
-                                                    <br>
-                                                    開發各式操作系統，包含金流風險控管系統，會計帳務系統與後台操作系統，並引進測試概念提升程式碼品質。
-                                                    <br>
-                                                    另外比較特殊的有開發 Laravel package for Oracle 開發，銀行 ACH 提領檔功能開發，電子發票系統開發。
-                                                    <br>
-                                                    導入 Scrum 敏捷開發管理 PHP 團隊，協調專案進度與分配工作內容。
-                                                    <br>
-                                                </div>
-
-                                                <div class="body english" style="display:none;" >
-                                                    I am mainly in charge of the development and operation of the mobile payment system, online troubleshooting and bug-tracing.
-                                                    <br>
-                                                    In system development, my work includes money flow risk management system, accounting system, CMS, and using PHPUnit to improve code quality.
-                                                    <br>
-                                                    My niche includes Laravel package for Oracle, bank ACH withdraws feature, and receipt-issuing system.
-                                                    I am responsible for introducing Scrum(agile software development) into our management team to coordinate project work schedule and assign work.
-                                                    <br>
-                                                </div>
-
-                                            </div>
-                                        </div>
-
-                                        <div class="exp-item">
-                                            <div class="exp-holder">
-                                                <div class="head">
-                                                    <div class="date-range">2014/01 ~ 2014/10</div>
-                                                    <h3>Tripmoment</h3>
-                                                    <h4>Web Developer</h4>
-                                                </div>
-
-                                                <div class="body chinese">
-                                                    小型創業團隊網站開發管理，規格分析與網站優化，並推行 RWD 設計以跟上現代趨勢。<br>
-                                                    使用ASP.Net MVC 4.0 搭配微軟雲端主機 Azure 開發 Web API for APP，圖文上傳管理系統，Google 分析，網站快速開發改版，活動網站開發設計。<br>
-                                                </div>
-
-                                                <div class="body english" style="display:none;" >
-                                                    Start-up company website development, SPEC analysis website optimization, and RWD usage on webpage.
-                                                    <br>
-                                                    Use of ASP.NET MVC 4.0, Azure develop web API for APP, articles manage system and Google analysis…etc.
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-                                        <div class="exp-item">
-                                            <div class="exp-holder">
-                                                <div class="head">
-                                                    <div class="date-range">2012/02 ~ 2013/11</div>
-                                                    <h3>Yahoo!</h3>
-                                                    <h4>Web Developer</h4>
-                                                </div>
-
-                                                <div class="body chinese">
-                                                    Yahoo! 超級商城維護與開發，做過使用者追蹤分析，資料應用在Yahoo! 分析工具，店家分析，Criteo 法國廣告商合作。
-                                                    <br>
-                                                    無名小站維護與開發，重構無名小站部分功能，系統架構瞭解並提升測試覆蓋率。
-                                                </div>
-
-                                                <div class="body english" style="display:none;">
-                                                    Yahoo! Super Mall maintenance and development.
-                                                    Develop user trace analysis, and user data in Yahoo! Analysis Tool, Super Mall store analysis and Criteo AD.
-                                                    <br>
-                                                    Yahoo! Wretch Maintenance and development.
-                                                    Code refactoring, system architecture learning and test code coverage improving  from 70% to 80%.
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="exp-item" >
-                                            <div class="exp-holder">
-                                                <div class="head">
-                                                    <div class="date-range">2010/10 ~ 2012/02</div>
-                                                    <h3>Inter-fly </h3>
-                                                    <h4>Web Developer</h4>
-                                                </div>
-
-                                                <div class="body chinese">
-                                                    工作內容為專案開發，參與過各種不同類型專案的開發與設計，開發的專案除了有大型政府網站，證卷金融服務網站，中型購物網站，還得過政府頒發的服務類網站金手指獎。
-                                                </div>
-
-                                                <div class="body english" style="display:none;" >
-                                                   Project management, SA/SD work.
-                                                   My involvement includes government website, fund service and online shopping mall.
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="exp-item" style="border-color: #ffffff;">
-                                            <div class="exp-holder">
-                                                <div class="head">
-                                                    <h3>Start Coding</h3>
-                                                </div>
-
-                                            </div>
-                                        </div>
-
-
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-
-                <section id="portfolio">
-                    <div class="row-fluid">
-
-                        <div class="section-title">
-                            <div class="title">
-                                <h3>PORTFOLIO</h3>
-                            </div>
-                        </div>
-
-                        <div class="span11">
-                            <div class="box-holder exp-box">
-                                <div class="row-fluid">
-                                    <div class="span12" style="margin-bottom:20px;">
-                                        <a href="https://www.piapp.com.tw/" target="_blank" class="portflio_item">
-                                            <i class="icon-tags"></i> Pi 行動錢包
-                                        </a>
-                                        <br/>
-                                        <a href="https://tw.mall.yahoo.com/" target="_blank" class="portflio_item">
-                                            <i class="icon-tags"></i> Yahoo 奇摩超級商城
-                                        </a>
-                                        <br/>
-
-                                        <a href="http://zh.wikipedia.org/wiki/%E7%84%A1%E5%90%8D%E5%B0%8F%E7%AB%99" target="_blank" class="portflio_item" >
-                                            <i class="icon-tags"></i> 無名小站
-                                        </a>
-                                        <br/>
-
-                                        <a href="http://tripmoment.com/" target="_blank" class="portflio_item">
-                                            <i class="icon-tags"></i> TripMoment
-                                        </a>
-                                        <br/>
-
-                                        <a href="http://www.mofa.gov.tw/" target="_blank" class="portflio_item">
-                                            <i class="icon-tags"></i> 政府外交部網站
-                                        </a>
-                                        <br/>
-
-                                        <a href="http://event.sinyi.com.tw/metro/" target="_blank" class="portflio_item">
-                                            <i class="icon-tags"></i> 信義房屋 - 捷運生活+
-                                        </a>
-                                        <br/>
-
-                                        <a href="http://event.sinyi.com.tw/school/" target="_blank" class="portflio_item">
-                                            <i class="icon-tags"></i> 信義房屋 - 明星學校特搜
-                                        </a>
-                                        <br/>
-
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-        </div>
+<body>
+
+<div id="progress"></div>
+
+<nav id="nav">
+  <span class="brand">Rex Lu</span>
+  <div class="links">
+    <a href="#about">簡介</a>
+    <a href="#ai">AI 能力</a>
+    <a href="#skills">技能</a>
+    <a href="#expertise">專長</a>
+    <a href="#exp">經歷</a>
+  </div>
+  <button id="themeBtn" title="切換深淺色">🌙 深色</button>
+</nav>
+
+<header>
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="avatar-ring"><img src="img/avatr.jpg" alt="Rex Lu"></div>
+  <h1 class="name">Rex Lu</h1>
+  <div class="typing"><span id="typeText"></span><span class="cursor"></span></div>
+  <div class="hero-tags">
+    <span>金流安全</span>
+    <span>遊戲數據對接</span>
+    <span>系統架構設計</span>
+    <span>AI 數字人組長</span>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="num"><span class="count" data-n="10">0</span><small>+</small></div><div class="lbl">年開發與架構</div></div>
+    <div class="stat"><div class="num"><span class="count" data-n="21">0</span></div><div class="lbl">最多帶領成員</div></div>
+    <div class="stat"><div class="num"><span class="count" data-n="100">0</span><small>+</small></div><div class="lbl">金流廠商接入</div></div>
+    <div class="stat"><div class="num"><span class="count" data-n="2">0</span><small> 年</small></div><div class="lbl">AI 輔助開發</div></div>
+  </div>
+  <div class="hero-actions">
+    <a class="btn solid" href="mailto:lance70176@gmail.com">✉ 聯絡我</a>
+    <a class="btn ghost" href="download/rex_resume.pdf" download>⬇ 下載 PDF</a>
+  </div>
+  <div class="scroll-hint">⌄</div>
+</header>
+
+<main>
+
+  <section id="about" class="reveal">
+    <h2>個人簡介</h2>
+    <div class="card">
+      <p class="summary">
+        超過十年的網站開發與架構設計經驗，前期任職於 <span class="hl">PChome、Yahoo 電商、無名小站</span> 及旅遊新創。
+        最近七年專注於<span class="hl">海外金融與遊戲產業</span>，協助多個團隊提升網站功能與系統架構。現專精於
+        <span class="hl">Laravel 架構設計與底層框架開發</span>，自製 PHP 框架接手調整、各式功能打底與規劃、團隊成員訓練，
+        並同時處理線上緊急狀況。
+      </p>
+      <p class="summary">
+        最多曾帶領 21 位成員開發專案，後轉為精兵制度，保留 5–9 位核心成員進行開發；進入 AI 時代後，目前實際帶領 2–3 位組員，
+        以 <span class="hl">「AI 數字人組長」</span>的模式運作——熟練運用 AI 作為團隊的延伸戰力，讓小編制發揮過往大團隊的產能，
+        並特別注重 <span class="hl">AI 與實際工作中各部門的權責分配與落地實作</span>：明確界定哪些環節交給 AI、哪些由人把關，
+        使 AI 產出能真正銜接跨部門流程。無論是制度化的大型架構，或需精簡快速的時程安排皆為我的強項；
+        善於溝通、理解業務邏輯，並依公司情況在<span class="hl">敏捷開發與瀑布式開發</span>間切換。
+      </p>
+      <p class="summary">
+        在技術之外，我重視在不同領域的業務邏輯間碰撞、解決跨領域問題並身兼多角。技術設計上特別注重
+        <span class="hl">資安與金流對接細節</span>：跨系統的金流確認邏輯、出錯的確認與回復機制、活動計算方式與危機補救機制，
+        皆於設計初期一併納入考量——處理錯誤情境的難度往往是正常流程的三倍以上。同時熟悉台灣金流相關法規，
+        並評估不同金流管道的費率與優缺點，以提升專案的最終完整度。
+      </p>
     </div>
+  </section>
 
-    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-    <script type="text/javascript" src="bootstrap/js/css_browser_selector.js"></script>
-    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="js/jquery.easing-1.3.js"></script>
-    <script type="text/javascript" src="js/script.js"></script>
+  <section id="ai" class="reveal">
+    <h2>AI 輔助開發能力</h2>
+    <div class="card ai-card">
+      <div class="ai-tools">
+        <span>Claude Code</span>
+        <span>Codex</span>
+        <span>Gemini</span>
+        <span>Kiro</span>
+        <span>Cursor</span>
+      </div>
+      <ul class="ai-list">
+        <li>具備 <span class="hl">兩年 AI 工具實戰經驗</span>，熟練使用 Claude Code、Codex、Gemini、Kiro、Cursor 等主流 AI 開發工具，
+          並能依任務特性挑選合適工具與工作流。</li>
+        <li>熟練以 AI 輔助進行<span class="hl">黑箱測試、白箱測試與單元測試</span>，加速測試案例生成、邊界條件覆蓋與回歸驗證，
+          提升程式碼品質與測試覆蓋率。</li>
+        <li>以資深架構視角運用 AI：在 AI 加速開發的同時，仍堅持<span class="hl">架構設計與安全設計</span>的把關，
+          確保 AI 產出的程式碼符合分層架構、PSR 規範與 Clean Code 原則。</li>
+        <li>專注將 AI 應用於<span class="hl">金流安全與遊戲數據對接</span>場景：金流確認與對帳邏輯審查、異常與回復機制設計、
+          以及遊戲數據介接的正確性與一致性驗證。</li>
+        <li>能帶領團隊導入 AI 開發流程，將 AI 融入既有的 Code Review、測試與部署環節，建立可重複、可審查的開發節奏。</li>
+      </ul>
+    </div>
+  </section>
 
+  <section id="skills" class="reveal">
+    <h2>核心技能</h2>
+    <div class="card">
+      <div class="skills">
+        <div class="skill-col">
+          <h3>程式開發</h3>
+          <div class="chips">
+            <span class="key">PHP</span>
+            <span class="key">Laravel</span>
+            <span class="key">Go</span>
+            <span>Yii</span>
+            <span>MySQL</span>
+            <span>Redis</span>
+            <span>Memcache</span>
+            <span>Supervisor</span>
+            <span>Queue</span>
+            <span>Crontab</span>
+            <span>NoSQL</span>
+            <span>PSR / Clean Code</span>
+          </div>
+        </div>
+        <div class="skill-col">
+          <h3>架構與主機</h3>
+          <div class="chips">
+            <span class="key">系統架構設計</span>
+            <span>主機集群拆分</span>
+            <span>Load Balance 調校</span>
+            <span>高併發</span>
+            <span>DB 緩存 / SQL 調校</span>
+            <span>前後端分離 API</span>
+            <span>Ali</span>
+            <span>AWS</span>
+            <span>GCP</span>
+            <span>Linode</span>
+          </div>
+        </div>
+        <div class="skill-col">
+          <h3>管理與業務</h3>
+          <div class="chips">
+            <span class="key">團隊領導</span>
+            <span class="key">金流安全</span>
+            <span>遊戲數據對接</span>
+            <span>Scrum 敏捷</span>
+            <span>Waterfall</span>
+            <span>專案排程</span>
+            <span>市場調查</span>
+            <span>風險控管</span>
+            <span>跨國溝通</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
+  <section id="expertise" class="reveal">
+    <h2>專業專長</h2>
+    <div class="card">
+      <p class="summary">
+        目前技術擅長於 <span class="hl">PHP Laravel</span>，可設計整套完整架構與底層框架，擅長主機集群功能拆分、Load Balance 調校、
+        套件與框架底層開發除錯，善於運用 Supervisor、Queue、Redis、Memcache，以及定期與秒級 Crontab 的優化。
+        程式設計上落實 PSR 規範與 Clean Code、多級別分層概念的實際應用；資料庫方面熟悉 DB 緩存與 SQL 調校、
+        正規化與反正規化的取捨，並要求 API 化的前後端分離，可協助 Web 與 App 同時進行功能邏輯接入與開發。
+      </p>
+      <p class="summary">
+        金流方面，為台灣金流 <span class="hl">PChome Pi 行動錢包</span>初版開發主力，亦有豐富的海外市場金流經驗，
+        接入<span class="hl">百家以上大陸金流廠商</span>；具台灣銀行與信用卡對接經驗，對接多家銀行不同格式與流程，
+        台灣三大三方金流（藍／綠／紅）皆有對接經驗。
+      </p>
+    </div>
+  </section>
+
+  <section id="exp" class="reveal">
+    <h2>工作經歷</h2>
+    <div class="timeline">
+
+      <div class="job reveal">
+        <div class="job-head">
+          <span class="job-title">海外棋牌遊戲公司</span>
+          <span class="job-date">2020.04 – 至今</span>
+        </div>
+        <div class="job-org">台灣 台北 ｜ <span class="pos">技術部 Team Leader</span></div>
+        <ul>
+          <li>延伸開發 PHP Laravel 5.7 與 ThinkPHP 5.3 舊系統。</li>
+          <li>主導跨國溝通，主要對象為菲律賓、杜拜團隊與老闆。</li>
+          <li>帶領五位 RD 建立代收商戶架構與聊天後台開發。</li>
+          <li>建立並串接三方金流系統，渠道含支付寶、銀行卡、手機話費與 USDT，每人每週至少串接兩家、多至十家。</li>
+          <li>配合 C++ 團隊開發棋牌遊戲相關 API，前後台皆採前後端分離 API 形式。</li>
+          <li><span class="hl">主導將本包網專案的 DC（Discord）常駐通訊服務重構為 Go</span>：由既有實作全面改寫為 Go 常駐服務，
+            提升執行效率與穩定性，具備包網專案 Go 重構的實戰經驗。</li>
+          <li>後期帶領團隊遠距（WFH）協作。</li>
+        </ul>
+      </div>
+
+      <div class="job reveal">
+        <div class="job-head">
+          <span class="job-title">台灣金融遊戲公司</span>
+          <span class="job-date">2019.05 – 2020.01</span>
+        </div>
+        <div class="job-org">台灣 台北 ｜ <span class="pos">技術部 Team Leader</span></div>
+        <p class="desc">使用 PHP Yii 框架與 Go 語言開發網站，與市場團隊及需求方保持良好溝通。帶領團隊開發第三方遊戲平台接入，
+          依過往經驗提供架構，並把關遊戲邏輯與財務報表的正確性。</p>
+        <ul>
+          <li><span class="hl">以 Go 開發「飛單」系統</span>：收到大額訂單後，即時自動下單至其他合作網站進行分流與對沖，
+            涵蓋訂單風險判斷、下單時效與跨站狀態確認等關鍵邏輯。</li>
+        </ul>
+      </div>
+
+      <div class="job reveal">
+        <div class="job-head">
+          <span class="job-title">菲律賓德勝集團</span>
+          <span class="job-date">2017.07 – 2019.01</span>
+        </div>
+        <div class="job-org">台灣 台北 ｜ <span class="pos">技術部副總監</span></div>
+        <p class="desc">由菲律賓總公司派駐回台灣分公司建立團隊，打造完整團隊並開發全新架構。使用 PHP Laravel 開發，
+          擅長高併發、系統可靠度與主機集群設計，於程式碼規範與架構設計有高度要求；擅長溝通業務邏輯、報表與會計統計、
+          數學概率計算檢查。帶領團隊參加 2018 年澳門 G2E 展覽，最多帶領 21 位成員完成集團所需功能體系。</p>
+        <ul>
+          <li>開發項目：多平台用戶資料分析中心、第三方遊戲中心（娛樂城）、第三方充值、線上遊戲平台、風險控管、
+            遊戲概率設計、流程設計、用戶分紅與工資制度設計。</li>
+        </ul>
+      </div>
+
+      <div class="job reveal">
+        <div class="job-head">
+          <span class="job-title">菲律賓 GamePark 集團（金亞洲公司）</span>
+          <span class="job-date">2016.04 – 2017.06</span>
+        </div>
+        <div class="job-org">菲律賓 馬尼拉 ｜ <span class="pos">Team Leader</span></div>
+        <p class="desc">負責每週營業額平均破億台幣的線上遊戲網站開發，主導一個新平台開發、四個平台運營、三個平台協助設計。
+          帶領技術團隊開發與整體架構設計、線上問題控管與緊急處理；引進最新 Laravel 技術並調整結構符合框架設計思想。
+          多平台核心複用，大型活動搭配 NoSQL 開發與壓測，編寫套件支援自定義 MySQL 語法，
+          大量於 Linux 環境設計 queue、crontab，並開發手機版遊戲 API。</p>
+      </div>
+
+      <div class="job reveal">
+        <div class="job-head">
+          <span class="job-title">PChome Online Inc.</span>
+          <span class="job-date">2014.11 – 2016.04</span>
+        </div>
+        <div class="job-org">台灣 台北 ｜ <span class="pos">Team Leader</span></div>
+        <p class="desc">於 Pi 行動錢包開發產品，以 App 行動支付改變消費習慣。開發可擴充的多主機架構與資料庫快取專用套件，
+          維護行動支付系統、銀行金流功能、風險控管與會計帳務系統，並引進測試概念與 Scrum 敏捷開發提升程式碼品質。</p>
+      </div>
+
+      <div class="job reveal">
+        <div class="job-head">
+          <span class="job-title">Tripmoment（旅遊新創）</span>
+          <span class="job-date">2014.01 – 2014.11</span>
+        </div>
+        <div class="job-org">台灣 台北 ｜ <span class="pos">Web Development Engineer</span></div>
+        <p class="desc">小型創業團隊的網站開發與管理、規格分析與網站優化，推行 RWD 設計。使用 ASP.NET MVC 4.0 搭配
+          Azure 雲端主機開發 Web API for App、圖文上傳管理系統與 Google 分析，並進行活動網站設計。</p>
+      </div>
+
+      <div class="job reveal">
+        <div class="job-head">
+          <span class="job-title">Yahoo</span>
+          <span class="job-date">2012.02 – 2013.11</span>
+        </div>
+        <div class="job-org">台灣 台北 ｜ <span class="pos">Web Development Engineer</span></div>
+        <p class="desc">參與 Yahoo! 超級商城開發，負責使用者追蹤與購買資料分析、訂單比對、店家與商品分析，
+          並與法國廣告商 Criteo 合作刊登廣告。同時維護與重構無名小站部分功能，將測試覆蓋率由 70% 提升至 80%。</p>
+      </div>
+
+      <div class="job reveal">
+        <div class="job-head">
+          <span class="job-title">Interfly</span>
+          <span class="job-date">2010.10 – 2012.01</span>
+        </div>
+        <div class="job-org">台灣 台北 ｜ <span class="pos">Web Development Engineer</span></div>
+        <p class="desc">負責多元類型的專案開發與設計，包含大型政府網站、證券金融服務網站與中型購物網站；
+          開發項目曾獲政府頒發的服務類網站金手指獎。</p>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Rex Lu ｜ 資深工程師與系統架構師 ｜ <a href="mailto:lance70176@gmail.com">lance70176@gmail.com</a><br>
+  履歷更新於 2026.07
+</footer>
+
+<button id="topBtn" title="回到頂部">↑</button>
+
+<script>
+(function(){
+  /* ---- typing effect ---- */
+  var roles=["技術管理職","資深工程師","系統架構師","AI 數字人組長","技術顧問"];
+  var el=document.getElementById("typeText"),ri=0,ci=0,del=false;
+  function type(){
+    var word=roles[ri];
+    el.textContent=word.slice(0,ci);
+    if(!del){
+      if(ci<word.length){ci++;setTimeout(type,110);}
+      else{del=true;setTimeout(type,1600);}
+    }else{
+      if(ci>0){ci--;setTimeout(type,55);}
+      else{del=false;ri=(ri+1)%roles.length;setTimeout(type,350);}
+    }
+  }
+  type();
+
+  /* ---- scroll progress + nav + top button ---- */
+  var nav=document.getElementById("nav"),topBtn=document.getElementById("topBtn"),
+      bar=document.getElementById("progress");
+  function onScroll(){
+    var st=document.documentElement.scrollTop||document.body.scrollTop,
+        h=document.documentElement.scrollHeight-window.innerHeight;
+    bar.style.width=(h>0?st/h*100:0)+"%";
+    nav.classList.toggle("show",st>240);
+    topBtn.classList.toggle("show",st>500);
+  }
+  window.addEventListener("scroll",onScroll,{passive:true});
+  onScroll();
+  topBtn.addEventListener("click",function(){window.scrollTo({top:0,behavior:"smooth"});});
+
+  /* ---- reveal on scroll ---- */
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        e.target.classList.add("in");
+        e.target.querySelectorAll(".chips span").forEach(function(c,i){
+          c.style.transitionDelay=(i*40)+"ms";
+        });
+        io.unobserve(e.target);
+      }
+    });
+  },{threshold:.12});
+  document.querySelectorAll(".reveal").forEach(function(n){io.observe(n);});
+
+  /* ---- counters ---- */
+  var cio=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(!e.isIntersecting)return;
+      var span=e.target,target=+span.dataset.n,start=null;
+      function step(ts){
+        if(!start)start=ts;
+        var p=Math.min((ts-start)/1400,1);
+        span.textContent=Math.round(target*(1-Math.pow(1-p,3)));
+        if(p<1)requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+      cio.unobserve(span);
+    });
+  },{threshold:.6});
+  document.querySelectorAll(".count").forEach(function(n){cio.observe(n);});
+
+  /* ---- theme toggle ---- */
+  var btn=document.getElementById("themeBtn"),root=document.documentElement;
+  function apply(t){
+    root.setAttribute("data-theme",t);
+    btn.textContent=t==="dark"?"☀️ 淺色":"🌙 深色";
+    try{localStorage.setItem("theme",t);}catch(e){}
+  }
+  var saved=null;
+  try{saved=localStorage.getItem("theme");}catch(e){}
+  apply(saved||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"));
+  btn.addEventListener("click",function(){
+    apply(root.getAttribute("data-theme")==="dark"?"light":"dark");
+  });
+})();
+</script>
 </body>
-
-
 </html>
