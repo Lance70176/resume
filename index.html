@@ -55,7 +55,6 @@ a{color:var(--accent)}
 @media (max-width:600px){.wrap{padding-inline:16px}}
 .bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
 .bar .wrap{display:flex;align-items:center;gap:18px;padding-block:10px}
-.bar .me{font-family:var(--f-mono);font-weight:600;font-size:14px;color:var(--ink);text-decoration:none}
 .bar nav{display:flex;gap:16px;margin-left:auto;flex-wrap:wrap}
 .bar nav a{font-size:13.5px;color:var(--muted);text-decoration:none}
 .bar nav a:hover,.bar nav a:focus-visible{color:var(--accent)}
@@ -117,7 +116,7 @@ h3{font-size:18px;margin:0 0 4px;text-wrap:balance}
 .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 @media (max-width:760px){.cards{grid-template-columns:minmax(0,1fr)}}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 20px;display:flex;flex-direction:column;gap:8px;min-width:0}
-.card .top{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+.card .top{display:flex;flex-direction:column;gap:2px}
 .card .when{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
 .card p{margin:0;font-size:14.5px}
 .card .hit{font-family:var(--f-mono);font-size:13px;color:var(--spark);font-weight:600}
@@ -129,6 +128,8 @@ h3{font-size:18px;margin:0 0 4px;text-wrap:balance}
 .tool{border:1px dashed var(--line);border-radius:10px;padding:14px 16px;background:var(--surface);display:flex;flex-direction:column;gap:6px;min-width:0}
 .tool .nm{font-family:var(--f-mono);font-weight:600;font-size:14px}
 .tool p{margin:0;font-size:13.5px;color:var(--muted)}
+.tool .dl{margin-top:auto;padding-top:4px;font-family:var(--f-mono);font-size:12px;font-weight:600;text-decoration:none;color:var(--accent);width:max-content}
+.tool .dl:hover,.tool .dl:focus-visible{text-decoration:underline}
 .prov{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.04em;padding:1px 7px;border-radius:999px;width:max-content;max-width:100%}
 .prov.orig{background:color-mix(in srgb,var(--spark) 14%,transparent);color:var(--spark)}
 .prov.ref{background:var(--accent-soft);color:var(--accent)}
@@ -156,7 +157,6 @@ footer{padding-block:28px 48px;color:var(--muted);font-size:13px;border-top:1px 
 
 <header class="bar">
   <div class="wrap">
-    <a class="me" href="#top">rex.lu</a>
     <nav aria-label="主選單">
       <a href="#about">關於</a>
       <a href="#agentic">Agentic Engineering</a>
@@ -317,20 +317,20 @@ MyGhost  MyXnip  TypeTop  AirGrip  <span class="p">+8</span>
     <p class="eyebrow">Toolsmith · Home-cooked software</p>
     <h2>自己的工具，自己做</h2>
     <div class="prose">
-      <p class="muted">《人月神話》描述的理想團隊裡有一個角色叫「工具匠」，專門為團隊打造順手的工具。AI agent 讓這件事變得便宜：與其忍受商業軟體的限制，不如照自己的工作流做一個。2026 年我做了 12 個 macOS 原生 App，每一個都每天在用。</p>
+      <p class="muted">《人月神話》描述的理想團隊裡有一個角色叫「工具匠」，專門為團隊打造順手的工具。AI agent 讓這件事變得便宜：與其忍受商業軟體的限制，不如照自己的工作流做一個。2026 年我做了 12 個 macOS 原生 App，每一個都每天在用。有公開的都附上 GitHub 下載連結。</p>
     </div>
     <div class="bench">
-      <div class="tool big"><span class="prov fork">Fork Ghostty 後客製</span><span class="nm">MyGhost</span><p>為長時間跑 AI agent 設計的終端機：側欄分頁、tmux 讓 session 當機也能接回、遠端 SSH 分頁自動重連、貼圖自動上傳給遠端 agent、Claude／Codex 額度儀表板，還有手機可用的 Web 版。已發佈到 v1.3.9。</p></div>
+      <div class="tool big"><span class="prov fork">Fork Ghostty 後客製</span><span class="nm">MyGhost</span><p>為長時間跑 AI agent 設計的終端機：側欄分頁、tmux 讓 session 當機也能接回、遠端 SSH 分頁自動重連、貼圖自動上傳給遠端 agent、Claude／Codex 額度儀表板，還有手機可用的 Web 版。</p><a class="dl" href="https://github.com/Lance70176/my_ghost/releases/latest" rel="noopener">GitHub 下載最新版 →</a></div>
       <div class="tool"><span class="prov ref">參考 Xnip UI 自製</span><span class="nm">MyXnip</span><p>舊截圖 API 會凍住整台機器，改用 ScreenCaptureKit 重設計成「先擷取、後顯示」。滾動長截圖、標註、OCR。</p></div>
-      <div class="tool"><span class="prov ref">參考他人版本改寫優化</span><span class="nm">TypeTop</span><p>按住右 ⌘ 說話，Whisper 轉文字後由 LLM 修正並打進任何輸入框；支援裝置端 Apple Intelligence 與 7 家 LLM 自動切換。</p></div>
+      <div class="tool"><span class="prov ref">參考他人版本改寫優化</span><span class="nm">TypeTop</span><p>按住右 ⌘ 說話，Whisper 轉文字後由 LLM 修正並打進任何輸入框；支援裝置端 Apple Intelligence 與 7 家 LLM 自動切換。</p><a class="dl" href="https://github.com/Lance70176/TypeTop/releases/latest" rel="noopener">GitHub 下載最新版 →</a></div>
       <div class="tool"><span class="prov ref">以自然輸入法為原型自製</span><span class="nm">超自然輸入法</span><p>InputMethodKit 自寫引擎：DP 詞格組句、選字學習與衰減、縮寫快選。</p></div>
       <div class="tool"><span class="prov orig">原創</span><span class="nm">AirGrip</span><p>用鏡頭辨識手勢操作系統，Vision 手部姿勢辨識，全部本機運算。</p></div>
-      <div class="tool"><span class="prov fork">Fork DuoBar 後客製</span><span class="nm">MyDuoBar</span><p>選單列狀態中心：Wi-Fi、VPN、AirPods 左右耳電量、原生充電上限，Swift 6 嚴格併發。</p></div>
+      <div class="tool"><span class="prov fork">Fork DuoBar 後客製</span><span class="nm">MyDuoBar</span><p>選單列狀態中心：Wi-Fi、VPN、AirPods 左右耳電量、原生充電上限，Swift 6 嚴格併發。</p><a class="dl" href="https://github.com/Lance70176/my_duo_bar/releases/latest" rel="noopener">GitHub 下載最新版 →</a></div>
       <div class="tool"><span class="prov ref">參考 Downie UI 自製</span><span class="nm">My Downie</span><p>影片下載器，補上原版抓不到的平台；瀏覽器擴充一鍵喚起、App 自我更新。</p></div>
       <div class="tool"><span class="prov ref">參考 Niya UI 自製</span><span class="nm">My Niya</span><p>螢幕頂部靈動島儀表板：系統監控、待辦、網速、剪貼簿與隔空投送。</p></div>
       <div class="tool"><span class="prov ref">參考 Hidden Bar 自製</span><span class="nm">MyHiddenBar</span><p>摸清 macOS 27 狀態列的新排版規則後重寫收納邏輯，一天完成。</p></div>
-      <div class="tool"><span class="prov ref">參考 Obsidian UI 自製</span><span class="nm">MyObsidian</span><p>Markdown 知識庫：雙向連結、mermaid、跨平台建置與 e2e 測試。</p></div>
-      <div class="tool"><span class="prov ref">參考 Slidepad UI 自製</span><span class="nm">MySlidePad</span><p>碰螢幕邊緣滑出的瀏覽器面板，附 AI 對話整理腳本。</p></div>
+      <div class="tool"><span class="prov ref">參考 Obsidian UI 自製</span><span class="nm">MyObsidian</span><p>Markdown 知識庫：雙向連結、mermaid、跨平台建置與 e2e 測試。</p><a class="dl" href="https://github.com/Lance70176/my_obsidian/releases/latest" rel="noopener">GitHub 下載最新版 →</a></div>
+      <div class="tool"><span class="prov ref">參考 Slidepad UI 自製</span><span class="nm">MySlidePad</span><p>碰螢幕邊緣滑出的瀏覽器面板，附 AI 對話整理腳本。</p><a class="dl" href="https://github.com/Lance70176/MySlidePad/releases/latest" rel="noopener">GitHub 下載最新版 →</a></div>
       <div class="tool"><span class="prov orig">原創</span><span class="nm">MyPlayer</span><p>鍵盤操控倍速與循環的輕量播放器。</p></div>
     </div>
   </div>
