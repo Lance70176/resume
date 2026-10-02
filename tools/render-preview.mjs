@@ -1,9 +1,11 @@
 // 用 Node 跑同一份繪圖程式（explainer/explainer.js）出預覽圖，不用開瀏覽器。
 //
-//   node tools/render-preview.mjs <輸出資料夾> [--frames 15]
+//   node tools/render-preview.mjs <輸出資料夾> [--frames 15] [--cues]
 //
 // 預設：每幕抽 3 個時間點（25%、60%、100%）輸出 PNG；加 --frames N 另外以 N fps 輸出整段連續幀
 // 到 <輸出資料夾>/frames/，可再用 ffmpeg 合成 mp4（見 tools/make-preview-video.sh）。
+// 加 --cues 另外在每幕每個 cue（script.js 裡念到關鍵詞的秒數）+0.3 秒各出一張 PNG 到
+// <輸出資料夾>/cues/，用來逐張檢查「念到這個詞時畫面正好出現對應元素」。
 // 需要 @napi-rs/canvas：預設從 ~/projects/claude/temp/resume-2026/explainer-preview 的 node_modules 載入，
 // 可用 CANVAS_DIR 改路徑。手寫字型用 explainer/iansui-explainer.woff2（沒有就退回原始 TTF：IANSUI_TTF）。
 
@@ -23,6 +25,7 @@ const args = process.argv.slice(2)
 const outDir = args.find(a => !a.startsWith('--')) || join(canvasDir, 'out')
 const fpsIdx = args.indexOf('--frames')
 const fps = fpsIdx >= 0 ? Number(args[fpsIdx + 1]) : 0
+const wantCues = args.includes('--cues')
 mkdirSync(outDir, { recursive: true })
 
 const woff2 = join(root, 'explainer/iansui-explainer.woff2')
@@ -52,6 +55,21 @@ for (let i = 0; i < SCENES.length; i++) {
     writeFileSync(file, render(i, t, t))
   }
   console.log(`${SCENES[i].id}: ${d.toFixed(2)}s`)
+}
+
+// 關鍵詞時間點：每個 cue 念到後 0.3 秒（元素已開始畫、尚未畫完）各一張
+if (wantCues) {
+  const cdir = join(outDir, 'cues')
+  mkdirSync(cdir, { recursive: true })
+  let n = 0
+  SCENES.forEach((s, i) => {
+    for (const [key, sec] of Object.entries(s.cues || {})) {
+      const t = sec + 0.3
+      writeFileSync(join(cdir, `${String(i + 1).padStart(2, '0')}-${s.id}-${key}-${t.toFixed(2)}s.png`), render(i, t, t))
+      n++
+    }
+  })
+  console.log(`cue 圖：${n} 張 → ${cdir}`)
 }
 
 // 連續幀（給 ffmpeg 合成影片）

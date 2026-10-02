@@ -276,7 +276,18 @@
 
   // ---------- ② 各幕 ----------
   // 每幕都是 (ctx, t 本幕已播秒數, d 本幕總長, n 旁白秒數) 的純函式；版面以 960×540 為座標。
-  // 與旁白同步的元素用 n 的比例當時間點（旁白講到哪，畫到哪）。
+  // 與旁白同步的元素用 script.js 各幕的 cues（念到關鍵詞的秒數）當起點：c('詞') 回傳
+  // 「念到該詞的秒數 − 提前量（預設 0.15 秒）」，筆畫從那一刻開始畫，念到時正好在畫。
+  function cueFn(id) {
+    var cs = {}
+    SCENES.forEach(function (s) { if (s.id === id) cs = s.cues || {} })
+    return function (key, lead) {
+      if (!(key in cs)) throw new Error('script.js 缺 cue：' + id + '.' + key)
+      return cs[key] - (lead == null ? 0.15 : lead)
+    }
+  }
+  var CUE = {}
+  SCENES.forEach(function (s) { CUE[s.id] = cueFn(s.id) })
 
   /** 上方手寫標題＋底線 */
   function title(ctx, str, t, color) {
@@ -355,12 +366,12 @@
   }
 
   // --- intro：時間軸 2010 → 2026，最後長出產線 ---
+  // 節點只畫旁白有念到的四站（電商／行動支付／海外平台／現在），各自在念到時出現
   var ERAS = [
-    { x: 120, year: '2010', label: '電商' },
-    { x: 300, year: '2014', label: '行動支付' },
-    { x: 480, year: '2016', label: '海外平台' },
-    { x: 660, year: '2020', label: '遊戲 API 平台' },
-    { x: 860, year: '2026', label: 'AI agent 產線' },
+    { x: 120, year: '2010', label: '電商', cue: 'ecom' },
+    { x: 330, year: '2014', label: '行動支付', cue: 'pay' },
+    { x: 540, year: '2016', label: '海外平台', cue: 'overseas' },
+    { x: 860, year: '2026', label: '現在', cue: 'now' },
   ]
   function pipelineIcon(ctx, x, y, p, time) {
     // 輸送帶＋三個方塊（agent 的交付物）＋小旗
@@ -375,65 +386,68 @@
     stroke(ctx, [[x + 40, y - 46], [x + 62, y - 38], [x + 40, y - 30]], { seed: 'flag', color: ORANGE, width: 2.5, progress: prog(p, 0.9, 0.1) })
   }
   function intro(ctx, t, d, n) {
-    title(ctx, '嗨，我是 Rex', t)
+    var c = CUE.intro
+    title(ctx, '嗨，我是 Rex', t - c('me'))
     var Y = 300
-    // 「十六年」在旁白約 20%，時間軸要在那之前畫到底
-    var lineEnd = n * 0.22
-    stroke(ctx, [[90, Y], [900, Y]], { seed: 'axis', color: CHALK, width: 3, progress: easeInOut(prog(t, 0.5, lineEnd - 0.5)) })
-    // 經歷節點依旁白出現：電商 / 行動支付 → 海外平台 → 現在
-    var at = [n * 0.1, n * 0.36, n * 0.47, n * 0.56, n * 0.66]
-    ERAS.forEach(function (e, i) {
-      var p = prog(t, at[i], 0.6)
-      var last = i === ERAS.length - 1
-      var c = last ? ORANGE : BLUE
-      stroke(ctx, [[e.x, Y - 10], [e.x, Y + 10]], { seed: 'tick' + i, color: c, width: 3, progress: prog(p, 0, 0.4) })
-      stroke(ctx, ellipse(e.x, Y, 7, 7), { seed: 'dot' + i, color: c, width: 2.5, progress: prog(p, 0.2, 0.5) })
-      text(ctx, e.year, e.x, Y - 32, { size: 22, color: MUTED, progress: prog(p, 0.3, 0.5) })
-      text(ctx, e.label, e.x, Y + 36, { size: last ? 26 : 24, color: last ? ORANGE : CHALK, progress: prog(t, at[i] + 0.35, 0.7) })
-    })
-    // 16 年：底下的大括線
-    var yp = prog(t, n * 0.17, 0.9)
+    // 「寫了十六年的系統」：時間軸先畫到底，念到「十六年」時大括線＋「16 年」正好出現
+    stroke(ctx, [[90, Y], [900, Y]], { seed: 'axis', color: CHALK, width: 3, progress: easeInOut(prog(t, 0.4, c('years') - 0.4)) })
+    var yp = prog(t, c('years'), 0.7)
     stroke(ctx, [[120, 392], [120, 404], [860, 404], [860, 392]], { seed: 'span', color: ORANGE, width: 2.5, progress: easeOut(yp) })
-    text(ctx, '16 年', 490, 432, { size: 30, color: ORANGE, progress: prog(t, n * 0.21, 0.6) })
-    // 現在：產線圖示從 2026 節點上方長出來
-    pipelineIcon(ctx, 860, 215, prog(t, n * 0.72, n * 0.24), t)
-    sparkle(ctx, 795, 160, 9, ORANGE, prog(t, n * 0.95, 0.5), 'is1')
-    sparkle(ctx, 925, 250, 7, BLUE, prog(t, n * 0.98, 0.5), 'is2')
+    text(ctx, '16 年', 490, 432, { size: 30, color: ORANGE, progress: prog(t, c('years') + 0.15, 0.5) })
+    // 經歷節點：念到「電商／行動支付／海外平台／現在」時各自出現
+    ERAS.forEach(function (e, i) {
+      var at = c(e.cue)
+      var p = prog(t, at, 0.5)
+      var last = i === ERAS.length - 1
+      var col = last ? ORANGE : BLUE
+      stroke(ctx, [[e.x, Y - 10], [e.x, Y + 10]], { seed: 'tick' + i, color: col, width: 3, progress: prog(p, 0, 0.4) })
+      stroke(ctx, ellipse(e.x, Y, 7, 7), { seed: 'dot' + i, color: col, width: 2.5, progress: prog(p, 0.2, 0.5) })
+      text(ctx, e.year, e.x, Y - 32, { size: 22, color: MUTED, progress: prog(p, 0.3, 0.5) })
+      text(ctx, e.label, e.x, Y + 36, { size: last ? 26 : 24, color: last ? ORANGE : CHALK, progress: prog(t, at + 0.15, 0.6) })
+    })
+    // 「我用 AI agent 產線交付」：產線圖示從 2026 節點上方長出來，字先寫、「產線」念到時輸送帶畫完
+    var pt = c('pipeline')
+    text(ctx, 'AI agent 產線', 830, 148, { size: 24, color: ORANGE, progress: prog(t, pt, 0.9) })
+    pipelineIcon(ctx, 860, 215, prog(t, pt + 0.1, c('line') + 0.5 - pt), t)
+    sparkle(ctx, 775, 215, 9, ORANGE, prog(t, c('line') + 0.5, 0.5), 'is1')
+    sparkle(ctx, 925, 265, 7, BLUE, prog(t, c('line') + 0.8, 0.5), 'is2')
   }
 
   // --- money：兩本帳之間的金流、逾時沙漏、重複入帳被擋、反查打勾 ---
   function money(ctx, t, d, n) {
-    title(ctx, '錢不能錯', t, ORANGE)
+    var c = CUE.money
     var AX = 200, BX = 760, Y = 300
-    ledger(ctx, AX, Y, prog(t, 0.3, 1.2), 'LA')
-    ledger(ctx, BX, Y, prog(t, 0.5, 1.2), 'LB')
-    text(ctx, '帳本 A', AX, Y + 100, { size: 24, color: BLUE, progress: prog(t, 1.2, 0.5) })
-    text(ctx, '帳本 B', BX, Y + 100, { size: 24, color: BLUE, progress: prog(t, 1.4, 0.5) })
-    arrow(ctx, [AX + 75, Y], [480, Y - 6], [BX - 75, Y], { seed: 'flow', color: CHALK, width: 3, progress: prog(t, 1.3, 1) })
-    // 第一枚錢幣安全抵達
-    var c1 = prog(t, 2.1, 1.4)
+    // 「我最在意的是」：先把兩本帳擺好當舞台；「錢不能錯」：標題＋金流箭頭＋第一枚錢幣安全抵達
+    ledger(ctx, AX, Y, prog(t, c('care') + 0.35, 1.0), 'LA')
+    ledger(ctx, BX, Y, prog(t, c('care') + 0.55, 1.0), 'LB')
+    text(ctx, '帳本 A', AX, Y + 100, { size: 24, color: BLUE, progress: prog(t, c('care') + 1.0, 0.5) })
+    text(ctx, '帳本 B', BX, Y + 100, { size: 24, color: BLUE, progress: prog(t, c('care') + 1.15, 0.5) })
+    var mt = c('money')
+    title(ctx, '錢不能錯', t - mt, ORANGE)
+    arrow(ctx, [AX + 75, Y], [480, Y - 6], [BX - 75, Y], { seed: 'flow', color: CHALK, width: 3, progress: prog(t, mt + 0.1, 0.8) })
+    var c1 = prog(t, mt + 0.6, 1.2)
     if (c1 > 0) coin(ctx, AX + 85 + (BX - AX - 200) * easeInOut(c1), Y - 2 - Math.sin(c1 * Math.PI) * 10, ORANGE, 1, 'c1')
-    // 逾時
-    var ht = n * 0.3
-    hourglass(ctx, 470, 205, prog(t, ht, 0.9), 'hg')
-    text(ctx, '逾時', 520, 205, { size: 26, color: BLUE, align: 'left', progress: prog(t, ht + 0.4, 0.5) })
-    // 重複入帳：第二枚錢幣走到一半被打叉擋下
-    var dt = n * 0.41
-    var c2 = prog(t, dt, 1.2)
+    // 「逾時」：沙漏
+    var ht = c('timeout')
+    hourglass(ctx, 470, 205, prog(t, ht, 0.7), 'hg')
+    text(ctx, '逾時', 520, 205, { size: 26, color: BLUE, align: 'left', progress: prog(t, ht + 0.2, 0.45) })
+    // 「重複入帳」：第二枚錢幣走到一半被打叉擋下
+    var dt = c('dup')
+    var c2 = prog(t, dt, 0.7)
     if (c2 > 0) {
       var cx = AX + 85 + 160 * easeOut(c2)
       coin(ctx, cx, Y - 2, MUTED, 1, 'c2')
-      cross(ctx, cx, Y - 2, 13, ORANGE, prog(t, dt + 1.1, 0.5), 'dup')
+      cross(ctx, cx, Y - 2, 13, ORANGE, prog(t, dt + 0.55, 0.4), 'dup')
     }
-    text(ctx, '重複入帳', 455, 345, { size: 24, color: BLUE, progress: prog(t, dt + 0.5, 0.7) })
-    // 對帳補救：回頭反查的箭頭＋打勾
-    var rt = n * 0.54
-    arrow(ctx, [BX - 70, Y + 60], [480, Y + 150], [AX + 70, Y + 60], { seed: 'recon', color: BLUE, width: 2.5, progress: prog(t, rt, 1.1) })
-    text(ctx, '對帳・反查', 455, 455, { size: 24, color: BLUE, progress: prog(t, rt + 0.6, 0.7) })
-    check(ctx, 560, 452, 11, ORANGE, prog(t, rt + 1.2, 0.4), 'rk')
-    // 設計第一天就放進去：右上角一個戳章
-    var st = n * 0.68
-    var sp = prog(t, st, 0.8)
+    text(ctx, '重複入帳', 455, 345, { size: 24, color: BLUE, progress: prog(t, dt + 0.2, 0.6) })
+    // 「對帳補救」：回頭反查的箭頭＋打勾
+    var rt = c('recon')
+    arrow(ctx, [BX - 70, Y + 60], [480, Y + 150], [AX + 70, Y + 60], { seed: 'recon', color: BLUE, width: 2.5, progress: prog(t, rt, 0.9) })
+    text(ctx, '對帳・反查', 455, 455, { size: 24, color: BLUE, progress: prog(t, rt + 0.3, 0.6) })
+    check(ctx, 560, 452, 11, ORANGE, prog(t, rt + 0.85, 0.35), 'rk')
+    // 「我在設計的第一天」：右上角蓋下 Day 1 戳章；「就放進去」：戳章旁閃一下
+    var st = c('day1')
+    var sp = prog(t, st, 0.7)
     if (sp > 0) {
       ctx.save()
       ctx.translate(835, 150)
@@ -445,55 +459,64 @@
       text(ctx, '設計第一天就放進去', 0, 18, { size: 14, color: ORANGE, alpha: sp })
       ctx.restore()
     }
+    sparkle(ctx, 748, 112, 9, ORANGE, prog(t, c('putin'), 0.5), 'ms1')
+    sparkle(ctx, 915, 195, 7, BLUE, prog(t, c('putin') + 0.2, 0.5), 'ms2')
   }
 
   // --- pipeline：架構師 → 四條平行軌道 → 審查閘門 → 把關 → 火箭上線 ---
   function pipeline(ctx, t, d, n) {
+    var c = CUE.pipeline
     title(ctx, 'AI agent 產線', t)
     var TRACKS = [185, 255, 325, 395]
     var X0 = 175, X1 = 640, GX = 690
-    // 我：架構與拆解
-    person(ctx, 95, 410, prog(t, 0.4, 1), { arm: 0 })
-    text(ctx, '架構・拆解', 95, 448, { size: 22, color: ORANGE, progress: prog(t, n * 0.05, 0.8) })
-    // 拆成四條：從手指出去的分叉
-    var split = prog(t, n * 0.2, 0.7)
+    // 「我負責架構與拆解」：我站在左邊，手指向右
+    var at = c('architect')
+    person(ctx, 95, 410, prog(t, at + 0.2, 0.9), { arm: 0 })
+    text(ctx, '架構・拆解', 95, 448, { size: 22, color: ORANGE, progress: prog(t, at + 0.9, 0.7) })
+    // 「多個 AI agent 在各自的工作區」：從手指分叉出四條軌道，agent 各自沿軌道走；「平行開發」念到時標上字
+    var ag = c('agents')
+    var split = prog(t, ag, 0.6)
     TRACKS.forEach(function (y, i) {
       stroke(ctx, curve([120, 362], [150, y], [X0, y]), { seed: 'split' + i, color: BLUE, width: 2, progress: prog(split, i * 0.1, 0.6), alpha: 0.8 })
     })
-    text(ctx, '4 個工作區平行開發', 405, 140, { size: 22, color: MUTED, progress: prog(t, n * 0.28, 1) })
-    // 四條軌道各自延伸，agent 跟著走到底
+    var trackEnd = c('review')
     TRACKS.forEach(function (y, i) {
-      var start = n * 0.24 + i * 0.25
-      var p = easeInOut(prog(t, start, n * 0.25))
+      var start = ag + 0.35 + i * 0.2
+      var p = easeInOut(prog(t, start, trackEnd - start))
       stroke(ctx, [[X0, y], [X1, y]], { seed: 'track' + i, color: BLUE, width: 2.5, progress: p })
       if (p > 0) agent(ctx, X0 + 10 + (X1 - X0 - 40) * p, y - 2 + Math.sin(t * 6 + i) * 1.5, prog(t, start - 0.2, 0.5), 'ag' + i)
     })
-    // 審查閘門
-    var gt = n * 0.5
-    stroke(ctx, roundRect(GX - 20, 155, 40, 265, 10), { seed: 'gate', color: CHALK, width: 3, progress: prog(t, gt, 0.9) })
-    text(ctx, '跨模型審查・對拍', GX, 135, { size: 22, color: CHALK, progress: prog(t, gt + 0.3, 1) })
+    text(ctx, '4 個工作區平行開發', 405, 140, { size: 22, color: MUTED, progress: prog(t, c('parallel'), 0.8) })
+    // 「經過跨模型審查」：審查閘門；「與對拍」：四條都打勾
+    var gt = c('review')
+    stroke(ctx, roundRect(GX - 20, 155, 40, 265, 10), { seed: 'gate', color: CHALK, width: 3, progress: prog(t, gt, 0.7) })
+    text(ctx, '跨模型審查・對拍', GX, 135, { size: 22, color: CHALK, progress: prog(t, gt + 0.15, 0.9) })
+    var ck = c('diff')
     TRACKS.forEach(function (y, i) {
       stroke(ctx, [[X1, y], [GX - 20, y]], { seed: 'in' + i, color: BLUE, width: 2.5, progress: prog(t, gt + 0.4 + i * 0.1, 0.3), alpha: 0.8 })
-      check(ctx, GX, y - 2, 9, ORANGE, prog(t, gt + 0.9 + i * 0.25, 0.4), 'gk' + i)
+      check(ctx, GX, y - 2, 9, ORANGE, prog(t, ck + i * 0.15, 0.35), 'gk' + i)
     })
-    // 把關 → 上線
-    var ft = n * 0.72
-    stroke(ctx, [[GX + 20, 290], [740, 290], [740, 362], [772, 362]], { seed: 'out', color: BLUE, width: 2.5, progress: prog(t, ft - 0.3, 0.6) })
-    person(ctx, 795, 410, prog(t, ft, 0.9), { arm: prog(t, ft + 1.2, 0.5) })
-    text(ctx, '把關', 795, 448, { size: 22, color: ORANGE, progress: prog(t, ft + 0.5, 0.5) })
-    var rp = prog(t, n * 0.84, 1)
-    var lift = easeInOut(prog(t, d - 2.2, 2.2))
-    var flame = prog(t, d - 2.4, 0.5)
+    // 「最後由我把關」：右邊的我；「上線」：火箭升空
+    var ft = c('gate')
+    stroke(ctx, [[GX + 20, 290], [740, 290], [740, 362], [772, 362]], { seed: 'out', color: BLUE, width: 2.5, progress: prog(t, ft - 0.35, 0.5) })
+    person(ctx, 795, 410, prog(t, ft, 0.7), { arm: prog(t, c('launch'), 0.4) })
+    text(ctx, '把關', 795, 448, { size: 22, color: ORANGE, progress: prog(t, ft + 0.3, 0.45) })
+    var lt = c('launch')
+    var rp = prog(t, lt, 0.6)
+    var flame = prog(t, lt + 0.55, 0.35)
+    var lift = easeInOut(prog(t, lt + 0.7, d - lt - 0.7))
     if (rp > 0) rocket(ctx, 890 + Math.sin(t * 30) * flame * 1.2, 330 - lift * 240, rp, flame, t)
-    text(ctx, '上線', 890, 395, { size: 24, color: ORANGE, progress: prog(t, n * 0.9, 0.5), alpha: 1 - lift * 0.5 })
+    text(ctx, '上線', 890, 395, { size: 24, color: ORANGE, progress: prog(t, lt + 0.1, 0.45), alpha: 1 - lift * 0.5 })
   }
 
   // --- proof：60% 圓餅長出來、失敗率折線從天花板掉到地板 ---
   function proof(ctx, t, d, n) {
-    title(ctx, '數字會說話', t)
+    var c = CUE.proof
+    title(ctx, '數字會說話', t - c('result'))
     var PX = 245, PY = 295, R = 110
-    stroke(ctx, ellipse(PX, PY, R, R), { seed: 'pie', color: CHALK, width: 3, progress: easeOut(prog(t, 0.4, 1)) })
-    var wp = easeInOut(prog(t, n * 0.18, n * 0.28))
+    // 「一個月交付全隊」：先畫整個餅（全隊）；「百分之六十」：橘色扇形長到 60%
+    stroke(ctx, ellipse(PX, PY, R, R), { seed: 'pie', color: CHALK, width: 3, progress: easeOut(prog(t, c('month'), 0.9)) })
+    var wp = easeInOut(prog(t, c('sixty'), 1.2))
     var sweep = Math.PI * 2 * 0.6 * wp
     if (wp > 0) {
       ctx.save()
@@ -509,21 +532,25 @@
       stroke(ctx, [[PX, PY], [PX + Math.cos(-Math.PI / 2 + sweep) * R, PY + Math.sin(-Math.PI / 2 + sweep) * R]], { seed: 'r1', color: ORANGE, width: 3, progress: 1 })
     }
     text(ctx, Math.round(60 * wp) + '%', PX + 52, PY + 26, { size: 44, color: ORANGE, alpha: prog(wp, 0.05, 0.2) })
-    text(ctx, '一個月・全隊工作量', PX, PY + R + 38, { size: 22, color: CHALK, progress: prog(t, n * 0.4, 0.9) })
-    // 折線圖
+    text(ctx, '一個月・全隊工作量', PX, PY + R + 38, { size: 22, color: CHALK, progress: prog(t, c('month') + 0.3, 0.9) })
+    // 「壓測失敗率」：座標軸＋折線先在高處晃；「從 62.8%」：起點與標籤；「降到 0.03%」：折線一路跌到地板
     var OX = 560, OY = 435, TOP = 165, RIGHT = 905
-    var ct = n * 0.48
-    stroke(ctx, [[OX, TOP], [OX, OY], [RIGHT, OY]], { seed: 'axes', color: CHALK, width: 2.5, progress: prog(t, ct, 0.9) })
-    text(ctx, '壓測失敗率', (OX + RIGHT) / 2, OY + 36, { size: 22, color: CHALK, progress: prog(t, ct + 0.5, 0.7) })
+    var ct = c('stress')
+    stroke(ctx, [[OX, TOP], [OX, OY], [RIGHT, OY]], { seed: 'axes', color: CHALK, width: 2.5, progress: prog(t, ct, 0.7) })
+    text(ctx, '壓測失敗率', (OX + RIGHT) / 2, OY + 36, { size: 22, color: CHALK, progress: prog(t, ct + 0.25, 0.6) })
     var pts = [[590, 198], [630, 210], [665, 190], [700, 215], [735, 240], [770, 330], [805, 400], [840, 416], [880, 418]]
-    var lp = easeInOut(prog(t, n * 0.56, n * 0.36))
-    stroke(ctx, ellipse(590, 198, 6, 6), { seed: 'p0', color: BLUE, width: 2.5, progress: prog(t, n * 0.52, 0.4) })
-    text(ctx, '62.8%', 650, 170, { size: 28, color: BLUE, progress: prog(t, n * 0.56, 0.8) })
+    // 折線分兩段：前五點是高原（念「壓測失敗率…從 62.8%」時慢慢畫），後四點是下跌（念「降到」時一口氣畫完）
+    var FLAT = 0.4 // 前五點佔整條折線長度的比例（168 / 421 px）
+    var ft = c('from')
+    var lp = FLAT * easeInOut(prog(t, ct + 0.6, c('down') - ct - 0.6)) + (1 - FLAT) * easeInOut(prog(t, c('down'), 0.9))
+    stroke(ctx, ellipse(590, 198, 6, 6), { seed: 'p0', color: BLUE, width: 2.5, progress: prog(t, ft, 0.4) })
+    text(ctx, '62.8%', 650, 170, { size: 28, color: BLUE, progress: prog(t, ft + 0.1, 0.7) })
     stroke(ctx, pts, { seed: 'line', color: BLUE, width: 3.5, progress: lp })
-    var ep = prog(t, n * 0.9, 0.5)
+    var dt = c('down')
+    var ep = prog(t, dt + 0.8, 0.4)
     stroke(ctx, ellipse(880, 418, 7, 7), { seed: 'p1', color: ORANGE, width: 3, progress: ep })
-    text(ctx, '0.03%', 835, 385, { size: 30, color: ORANGE, progress: prog(t, n * 0.9, 0.7) })
-    sparkle(ctx, 905, 380, 9, ORANGE, prog(t, n * 0.97, 0.5), 'ps')
+    text(ctx, '0.03%', 835, 385, { size: 30, color: ORANGE, progress: prog(t, dt + 0.6, 0.6) })
+    sparkle(ctx, 905, 380, 9, ORANGE, prog(t, dt + 1.2, 0.5), 'ps')
   }
 
   // --- toolsmith：Dock 上 12 個圖示一個個跳出來 ---
@@ -562,12 +589,14 @@
     }
   }
   function toolsmith(ctx, t, d, n) {
-    title(ctx, '工具匠', t)
-    // Dock
+    var c = CUE.toolsmith
+    title(ctx, '工具匠', t - c('smith'))
+    // 「今年做了」：Dock 先畫；「十二個」：12 個圖示一個個跳出來，念到「終端機」前跳完
     var DY = 420
-    stroke(ctx, roundRect(90, DY - 46, 780, 92, 18), { seed: 'dock', color: BLUE, width: 3, progress: easeOut(prog(t, 0.4, 0.9)) })
-    var popStart = n * 0.27, popStep = n * 0.024
-    var callouts = { 0: n * 0.6, 1: n * 0.68, 3: n * 0.76 }
+    stroke(ctx, roundRect(90, DY - 46, 780, 92, 18), { seed: 'dock', color: BLUE, width: 3, progress: easeOut(prog(t, c('year'), 0.6)) })
+    var popStart = c('twelve'), popStep = (c('term') - 0.5 - popStart) / (APPS.length - 1)
+    // 「終端機、截圖、輸入法」：念到時該圖示放大變橘＋拉線標名
+    var callouts = { 0: c('term'), 1: c('cam'), 3: c('ime') }
     var count = 0
     APPS.forEach(function (a, i) {
       var x = 139 + i * 62
@@ -586,15 +615,16 @@
       ctx.restore()
     })
     // 計數：12 個 macOS App
-    var cnt = prog(t, popStart - 0.2, 0.5)
+    var cnt = prog(t, c('year') + 0.2, 0.5)
     text(ctx, count + ' 個 macOS App', 480, 150, { size: 40, color: ORANGE, alpha: cnt })
-    text(ctx, '2026 · 每一個都每天在用', 480, 200, { size: 22, color: MUTED, progress: prog(t, n * 0.82, 1) })
+    // 「每天都在用」
+    text(ctx, '2026 · 每天都在用', 480, 200, { size: 22, color: MUTED, progress: prog(t, c('daily'), 0.8) })
     // 點名：終端機、截圖、輸入法
     var callY = { 0: 300, 1: 262, 3: 300 }
     Object.keys(callouts).forEach(function (key) {
       var i = +key
       var x = 139 + i * 62
-      var cp = prog(t, callouts[i], 0.6)
+      var cp = prog(t, callouts[i], 0.5)
       stroke(ctx, [[x, DY - 34], [x, callY[i] + 20]], { seed: 'lead' + i, color: ORANGE, width: 2, progress: prog(cp, 0, 0.5), alpha: 0.8 })
       text(ctx, APPS[i].nm, x, callY[i], { size: 26, color: ORANGE, progress: prog(cp, 0.4, 0.6) })
     })
@@ -602,25 +632,27 @@
 
   // --- cta：兩個提問泡泡 → 信封 → email ---
   function cta(ctx, t, d, n) {
-    title(ctx, '來聊聊吧', t)
-    var b1 = prog(t, n * 0.06, 1)
+    var c = CUE.cta
+    // 「如果你有系統要做穩」：左泡泡；「或想導入 AI 工作流」：右泡泡
+    var b1 = prog(t, c('stable') + 0.2, 0.8)
     stroke(ctx, roundRect(100, 150, 300, 86, 16), { seed: 'bub1', color: BLUE, width: 3, progress: easeOut(b1) })
     stroke(ctx, [[220, 236], [236, 262], [250, 236]], { seed: 'tail1', color: BLUE, width: 3, progress: prog(b1, 0.8, 0.2) })
-    text(ctx, '系統要做穩', 250, 193, { size: 30, progress: prog(t, n * 0.1, 0.9) })
-    var b2 = prog(t, n * 0.33, 1)
+    text(ctx, '系統要做穩', 250, 193, { size: 30, progress: prog(t, c('stable') + 0.45, 0.8) })
+    var b2 = prog(t, c('ai'), 0.8)
     stroke(ctx, roundRect(560, 150, 300, 86, 16), { seed: 'bub2', color: BLUE, width: 3, progress: easeOut(b2) })
     stroke(ctx, [[710, 236], [724, 262], [740, 236]], { seed: 'tail2', color: BLUE, width: 3, progress: prog(b2, 0.8, 0.2) })
-    text(ctx, '導入 AI 工作流', 710, 193, { size: 30, progress: prog(t, n * 0.37, 0.9) })
-    // 信封
-    var et = n * 0.56
-    var ep = prog(t, et, 1.1)
+    text(ctx, '導入 AI 工作流', 710, 193, { size: 30, progress: prog(t, c('ai') + 0.25, 0.8) })
+    // 「歡迎來信」：信封＋ email；「我們聊聊」：標題「來聊聊吧」最後才寫上去
+    var et = c('mail')
+    var ep = prog(t, et, 0.9)
     var EX = 480, EY = 350
     stroke(ctx, roundRect(EX - 110, EY - 68, 220, 136, 8), { seed: 'env', color: CHALK, width: 3, progress: easeOut(prog(ep, 0, 0.6)) })
     stroke(ctx, [[EX - 110, EY - 68], [EX, EY + 8], [EX + 110, EY - 68]], { seed: 'flap', color: CHALK, width: 3, progress: prog(ep, 0.5, 0.5) })
     stroke(ctx, [[EX - 110, EY + 68], [EX - 30, EY - 10]], { seed: 'fl', color: CHALK, width: 2, progress: prog(ep, 0.8, 0.2), alpha: 0.6 })
     stroke(ctx, [[EX + 110, EY + 68], [EX + 30, EY - 10]], { seed: 'fr', color: CHALK, width: 2, progress: prog(ep, 0.8, 0.2), alpha: 0.6 })
-    stroke(ctx, ellipse(EX, EY + 22, 10, 10), { seed: 'seal', color: ORANGE, width: 2.5, progress: prog(t, et + 1.1, 0.4) })
-    text(ctx, 'lance70176@gmail.com', EX, 470, { size: 32, color: ORANGE, progress: prog(t, n * 0.74, n * 0.22) })
+    stroke(ctx, ellipse(EX, EY + 22, 10, 10), { seed: 'seal', color: ORANGE, width: 2.5, progress: prog(t, et + 0.9, 0.4) })
+    text(ctx, 'lance70176@gmail.com', EX, 470, { size: 32, color: ORANGE, progress: prog(t, et + 0.3, 1.0) })
+    title(ctx, '來聊聊吧', t - c('chat'))
     // 結尾停留：紙飛機從信封飛出去
     var fp = prog(t, n + 0.4, 2.2)
     if (fp > 0) {

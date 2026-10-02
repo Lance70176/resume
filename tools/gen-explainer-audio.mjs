@@ -5,6 +5,7 @@
 //   GEMINI_API_KEY=xxx node tools/gen-explainer-audio.mjs money cta  # 只重產某幾幕
 //   node tools/gen-explainer-audio.mjs --missing                     # 只補還沒產生的幕
 //   node tools/gen-explainer-audio.mjs --from ~/錄音資料夾             # 改用真人錄音（檔名＝幕 id）
+//   node tools/gen-explainer-audio.mjs --measure                     # 不產音，只重量既有 mp3 的秒數與子句起點
 //
 // 金鑰：環境變數 GEMINI_API_KEY，沒設就讀 GEMINI_KEY_FILE 指到的 .env（預設是 astrofish
 // dice-writer 的 .env，取 GEMINI_API_KEYS 第一把）。金鑰不印出、不寫進 repo。
@@ -12,8 +13,14 @@
 // 聲線：TTS_VOICE（預設 Charon，男聲）。免費額度每分鐘 3 次、每日約 10 次。
 //
 // 輸出：explainer/audio/<scene>.mp3、explainer/durations.json
+//   durations.json 的 <id>＝配音秒數；<id>_pauses＝子句起點秒數陣列（第一個固定是 0），
+//   由 ffmpeg silencedetect（noise=-35dB:d=0.12）的每段靜音「結束點」算出，也就是旁白每個
+//   停頓之後開口的時刻。畫面與旁白同步靠 explainer/script.js 各幕的 cues（念到關鍵詞的秒數）：
+//   重產配音後子句起點會變，請把 <id>_pauses 依序對到該幕 line 的逗號／頓號／分號子句，
+//   更新 cues 裡對應的秒數；子句中間的詞（例如 intro 的「十六年」約在子句起點後 0.5 秒）
+//   這裡量不到，要自己聽著估。這個檔只負責量，不會自動改 cues。
 
-import { execFileSync } from 'node:child_process'
+import { execFileSync, spawnSync } from 'node:child_process'
 import { mkdirSync, readFileSync, writeFileSync, existsSync, unlinkSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { homedir } from 'node:os'
@@ -29,6 +36,7 @@ const VOICE = process.env.TTS_VOICE || 'Charon'
 const args = process.argv.slice(2)
 const fromDir = args.includes('--from') ? args[args.indexOf('--from') + 1] : null
 const skipExisting = args.includes('--missing')
+const measureOnly = args.includes('--measure')
 const only = args.filter(a => !a.startsWith('--') && a !== fromDir)
 
 const readKey = () => {
@@ -38,8 +46,8 @@ const readKey = () => {
   const m = readFileSync(file, 'utf8').match(/^GEMINI_API_KEYS?=([^\n\r]+)/m)
   return m ? m[1].trim().replace(/^["']|["']$/g, '').split(',')[0].trim() : ''
 }
-const key = fromDir ? '' : readKey()
-if (!key && !fromDir) throw new Error('缺 GEMINI_API_KEY（或 GEMINI_KEY_FILE 指到的 .env 沒有 GEMINI_API_KEYS）')
+const key = fromDir || measureOnly ? '' : readKey()
+if (!key && !fromDir && !measureOnly) throw new Error('缺 GEMINI_API_KEY（或 GEMINI_KEY_FILE 指到的 .env 沒有 GEMINI_API_KEYS）')
 
 mkdirSync(outDir, { recursive: true })
 const durations = existsSync(durFile) ? JSON.parse(readFileSync(durFile, 'utf8')) : {}
@@ -65,6 +73,14 @@ const call = async (model, body) => {
   }
 }
 const norm = t => t.replace(/[^\p{Script=Han}\d]/gu, '')
+
+// 子句起點：靜音（-35dB 以下持續 0.12 秒以上）結束的時刻＝停頓後再開口。第一個子句固定從 0 起。
+const clauseStarts = mp3 => {
+  // silencedetect 的結果印在 stderr
+  const log = spawnSync('ffmpeg', ['-v', 'info', '-i', mp3, '-af', 'silencedetect=noise=-35dB:d=0.12', '-f', 'null', '-'], { encoding: 'utf8' }).stderr
+  const ends = [...log.matchAll(/silence_end: ([\d.]+)/g)].map(m => Math.round(parseFloat(m[1]) * 100) / 100)
+  return [0, ...ends]
+}
 
 // TTS 偶爾會自己加語助詞或漏字：產生後用聽寫比對，不一致就重來
 const transcribe = async mp3 => {
@@ -108,6 +124,8 @@ for (const s of SCENES) {
     const src = ['wav', 'mp3', 'm4a', 'aiff'].map(ext => join(fromDir, `${s.id}.${ext}`)).find(existsSync)
     if (!src) { console.log(`${s.id}: 沒有錄音，沿用原本配音`); continue }
     execFileSync('ffmpeg', ['-v', 'error', '-y', '-i', src, '-ac', '1', '-af', CLEAN, '-codec:a', 'libmp3lame', '-b:a', '64k', mp3])
+  } else if (measureOnly) {
+    if (!existsSync(mp3)) { console.log(`${s.id}: 沒有 mp3，略過`); continue }
   } else if (!(skipExisting && existsSync(mp3))) {
     for (let attempt = 1; ; attempt++) {
       await synth(s.line, mp3)
@@ -123,7 +141,10 @@ for (const s of SCENES) {
     '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', mp3,
   ]).toString())
   durations[s.id] = Math.round(sec * 100) / 100
-  console.log(`${s.id}: ${durations[s.id]}s`)
+  durations[`${s.id}_pauses`] = clauseStarts(mp3)
+  console.log(`${s.id}: ${durations[s.id]}s，子句起點 ${durations[`${s.id}_pauses`].join(' / ')}`)
+  const cues = s.cues ? Object.values(s.cues) : []
+  if (cues.length && Math.max(...cues) > sec) console.log(`  注意：${s.id} 的 cues 超過配音長度，請依子句起點更新 script.js 的 cues`)
   // 每幕完成就寫一次，中途失敗重跑 --missing 時不會遺失已完成的秒數
   writeFileSync(durFile, JSON.stringify(durations, null, 2) + '\n')
 }
