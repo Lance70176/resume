@@ -150,6 +150,45 @@ h3{font-size:18px;margin:0 0 4px;text-wrap:balance}
 .mail{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
 .mail code{font-family:var(--f-mono);font-size:17px;background:var(--surface);border:1px solid var(--line);padding:8px 14px;border-radius:8px;user-select:all;max-width:100%;overflow-wrap:anywhere}
 footer{padding-block:28px 48px;color:var(--muted);font-size:13px;border-top:1px solid var(--line)}
+@media print{
+  :root,:root[data-theme="dark"]{--bg:#ffffff;--surface:#ffffff;--ink:#15171c;--muted:#4b515c;--line:#d6d9df;--accent:#2c49c9;--accent-soft:#e6eafb;--spark:#c2410c;color-scheme:light}
+  @page{size:A4;margin:12mm 12mm 14mm}
+  html{font-size:12.5px}
+  body{font-size:12.5px;line-height:1.6;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .bar,#themeBtn,.cta,#copyMail,.no-print{display:none!important}
+  .hero{padding-block:4px 14px}
+  .hero .grid{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:20px}
+  h1{font-size:28px}
+  .thesis{font-size:13px}
+  section{padding-block:16px}
+  h2{font-size:19px;margin-bottom:10px}
+  .metric{padding:10px 12px}
+  .metric b{font-size:19px}
+  .card,.tool,.job,.step,.metric,.proof,.console,.skills>div{break-inside:avoid}
+  h2,.eyebrow,.group-title{break-after:avoid}
+  .cards{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px}
+  .pipe{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:8px}
+  .bench{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px}
+  .tool.big{grid-column:span 3!important}
+  .skills{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+  .metrics{grid-template-columns:repeat(6,minmax(0,1fr))!important}
+  .metric small{display:none}
+  .metric span{font-size:11px}
+  .metric b{font-size:16px!important}
+  .job{grid-template-columns:120px minmax(0,1fr)!important;gap:14px;padding-block:10px}
+  .card{padding:12px 14px;gap:5px}
+  .card p,.job p,.proof ul{font-size:12px}
+  .card h3{font-size:14.5px}
+  .tool{padding:10px 12px}
+  .tool p{font-size:11.5px}
+  .step{padding:10px}
+  .step p{font-size:11.5px}
+  .group-title{margin:12px 0 6px}
+  .prose p{margin-bottom:8px}
+  .console{font-size:11px}
+  .mail code{font-size:13px}
+  a{text-decoration:none}
+}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
 </head>
@@ -187,6 +226,7 @@ footer{padding-block:28px 48px;color:var(--muted);font-size:13px;border-top:1px 
       <div class="cta">
         <a class="btn solid" href="#contact">聯絡我</a>
         <a class="btn ghost" href="#agentic">看我怎麼工作</a>
+        <a class="btn ghost" href="download/rex-lu-resume.pdf" download>下載 PDF</a>
       </div>
     </div>
     <div class="console" role="img" aria-label="近一年開發數據的終端機畫面">
@@ -376,10 +416,11 @@ MyGhost  MyXnip  TypeTop  AirGrip  <span class="p">+8</span>
   <div class="wrap">
     <p class="eyebrow">Contact</p>
     <h2>有系統要做穩，或想導入 AI 工作流？</h2>
-    <p class="prose muted">全職機會、顧問與接案合作都歡迎來信。</p>
+    <p class="prose muted">全職機會、顧問與接案合作都歡迎來信。線上版：resume.master0987.com</p>
     <div class="mail">
       <code id="mailText">lance70176@gmail.com</code>
       <button class="btn ghost" type="button" id="copyMail">複製 Email</button>
+      <a class="btn ghost no-print" href="download/rex-lu-resume.pdf" download>下載 PDF 履歷</a>
       <a class="btn ghost" href="https://github.com/Lance70176" rel="noopener">GitHub</a>
     </div>
   </div>
