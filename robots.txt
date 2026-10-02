@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://master0987.com/sitemap.xml
+Sitemap: https://resume.master0987.com/sitemap.xml
