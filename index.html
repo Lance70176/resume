@@ -155,7 +155,7 @@ footer{padding-block:28px 48px;color:var(--muted);font-size:13px;border-top:1px 
   @page{size:A4;margin:12mm 12mm 14mm}
   html{font-size:12.5px}
   body{font-size:12.5px;line-height:1.6;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  .bar,#themeBtn,.cta,#copyMail,.no-print{display:none!important}
+  .bar,#themeBtn,.cta,#explainBtn,#copyMail,.no-print,.rx-ov{display:none!important}
   .hero{padding-block:4px 14px}
   .hero .grid{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:20px}
   h1{font-size:28px}
@@ -226,6 +226,7 @@ footer{padding-block:28px 48px;color:var(--muted);font-size:13px;border-top:1px 
       <div class="cta">
         <a class="btn solid" href="#contact">聯絡我</a>
         <a class="btn ghost" href="#agentic">看我怎麼工作</a>
+        <button class="btn ghost" type="button" id="explainBtn" aria-haspopup="dialog">▶ 1 分鐘認識我</button>
         <a class="btn ghost" href="download/rex-lu-resume.pdf" download>下載 PDF</a>
       </div>
     </div>
@@ -446,6 +447,22 @@ MyGhost  MyXnip  TypeTop  AirGrip  <span class="p">+8</span>
     var el=document.getElementById('mailText'),txt=el.textContent;
     function sel(){var r=document.createRange();r.selectNodeContents(el);var s=getSelection();s.removeAllRanges();s.addRange(r);cb.textContent='已選取，請按複製';}
     if(navigator.clipboard){navigator.clipboard.writeText(txt).then(function(){cb.textContent='已複製';},sel);}else{sel();}
+  });
+  // 「1 分鐘認識我」：播放器、字型、配音都等點了才載入。iOS 只允許在點擊當下啟動播放，
+  // 所以先在這裡同步建立 Audio 並靜音 play 一次解鎖，再載入 explainer/ 的腳本開啟彈窗。
+  var eb=document.getElementById('explainBtn'),label=eb.textContent,loading=false;
+  function loadScript(src){return new Promise(function(res,rej){var s=document.createElement('script');s.src=src;s.onload=res;s.onerror=rej;document.head.appendChild(s);});}
+  eb.addEventListener('click',function(){
+    if(loading)return;
+    var a=window.__rxAudio||(window.__rxAudio=new Audio());
+    a.preload='auto';a.src='explainer/audio/intro.mp3';a.muted=true;
+    var unlocked=a.play().then(function(){a.pause();}).catch(function(){}).then(function(){a.muted=false;});
+    var ready=window.RexExplainer?Promise.resolve():(loading=true,eb.textContent='載入中…',
+      loadScript('explainer/script.js?v=1').then(function(){return loadScript('explainer/explainer.js?v=1');}));
+    ready.then(function(){
+      loading=false;eb.textContent=label;
+      window.RexExplainer.open({audio:a,unlocked:unlocked,returnFocus:eb});
+    },function(){loading=false;eb.textContent='載入失敗，請重試';});
   });
 })();
 </script>
