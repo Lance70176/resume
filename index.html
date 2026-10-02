@@ -1,632 +1,410 @@
-<!DOCTYPE html>
-<html lang="zh-Hant">
+<!doctype html>
+<html lang="zh-Hant-TW">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rex Lu Resume ｜ 資深工程師與系統架構師</title>
-<meta name="description" content="Rex Lu — 技術管理職、資深工程師與系統架構師。10+ 年網站開發與架構經驗，專注金流安全與遊戲數據對接，AI 輔助開發實戰。">
-<link rel="icon" href="./img/R.png">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rex Lu｜系統架構師 × Agentic Engineer</title>
+<meta name="description" content="Rex Lu：16 年經驗的系統架構師與 Agentic Engineer。以 AI agent 產線交付金流、遊戲平台與 SaaS 系統，單月交付為團隊第 2 名的 2.9 倍；自製 12 個 macOS 工具 App。台北。">
+<meta name="author" content="Rex Lu">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://master0987.com/">
+<meta property="og:type" content="profile">
+<meta property="og:title" content="Rex Lu｜系統架構師 × Agentic Engineer">
+<meta property="og:description" content="我設計架構，指揮 AI agent 產線交付。金流安全、高併發平台、AI 產品與自製工具。">
+<meta property="og:url" content="https://master0987.com/">
+<meta property="og:image" content="https://master0987.com/img/avatr.jpg">
+<meta property="og:locale" content="zh_TW">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Rex Lu",
+  "url": "https://master0987.com/",
+  "image": "https://master0987.com/img/avatr.jpg",
+  "email": "mailto:lance70176@gmail.com",
+  "jobTitle": ["系統架構師", "Agentic Engineer"],
+  "address": {"@type": "PostalAddress", "addressLocality": "台北", "addressCountry": "TW"},
+  "sameAs": ["https://github.com/Lance70176"],
+  "knowsAbout": ["Agentic Engineering", "Claude Code", "系統架構設計", "金流安全", "高併發", "PHP Laravel", "Go", "Next.js", "AWS EKS", "Terraform", "Swift macOS 開發", "GEO 生成式引擎最佳化"]
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700;900&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
-  :root{
-    --ink:#1f2933;
-    --muted:#5b6770;
-    --line:#d9dee3;
-    --accent:#0f7d6b;
-    --accent-2:#14a08a;
-    --accent-soft:#e6f4f1;
-    --bg:#f7f9fa;
-    --card:#ffffff;
-    --shadow:0 4px 20px rgba(31,41,51,.08);
-  }
-  html[data-theme="dark"]{
-    --ink:#e4e9ec;
-    --muted:#9aa7b0;
-    --line:#31404a;
-    --accent:#2ec4a9;
-    --accent-2:#25a892;
-    --accent-soft:#123830;
-    --bg:#0f1a20;
-    --card:#16242c;
-    --shadow:0 4px 20px rgba(0,0,0,.35);
-  }
-  *{box-sizing:border-box;margin:0;padding:0;}
-  html{scroll-behavior:smooth;}
-  body{
-    font-family:"PingFang TC","Heiti TC","Microsoft JhengHei","Helvetica Neue",Arial,sans-serif;
-    color:var(--ink);background:var(--bg);
-    line-height:1.85;font-size:15px;
-    transition:background .4s,color .4s;
-    overflow-x:hidden;
-  }
-  a{color:var(--accent);text-decoration:none;}
-  .hl{color:var(--accent);font-weight:600;}
-
-  /* ---------- scroll progress ---------- */
-  #progress{
-    position:fixed;top:0;left:0;height:3px;width:0;
-    background:linear-gradient(90deg,var(--accent),var(--accent-2));
-    z-index:1000;transition:width .1s linear;
-  }
-
-  /* ---------- nav ---------- */
-  nav{
-    position:fixed;top:0;left:0;right:0;z-index:900;
-    display:flex;align-items:center;gap:18px;
-    padding:10px 22px;
-    background:color-mix(in srgb,var(--card) 82%,transparent);
-    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
-    border-bottom:1px solid var(--line);
-    transform:translateY(-100%);transition:transform .35s;
-  }
-  nav.show{transform:translateY(0);}
-  nav .brand{font-weight:700;color:var(--accent);font-size:16px;}
-  nav .links{display:flex;gap:14px;margin-left:auto;flex-wrap:wrap;}
-  nav .links a{color:var(--muted);font-size:13.5px;transition:color .2s;}
-  nav .links a:hover{color:var(--accent);}
-  #themeBtn{
-    border:1px solid var(--line);background:var(--card);color:var(--ink);
-    border-radius:20px;padding:3px 12px;cursor:pointer;font-size:13px;
-    transition:all .25s;
-  }
-  #themeBtn:hover{border-color:var(--accent);color:var(--accent);}
-
-  /* ---------- hero ---------- */
-  header{
-    position:relative;overflow:hidden;
-    padding:88px 20px 56px;text-align:center;
-  }
-  .blob{
-    position:absolute;border-radius:50%;filter:blur(70px);opacity:.35;
-    animation:float 14s ease-in-out infinite;pointer-events:none;
-  }
-  .blob.b1{width:420px;height:420px;background:var(--accent);top:-140px;left:-100px;}
-  .blob.b2{width:360px;height:360px;background:var(--accent-2);bottom:-160px;right:-80px;animation-delay:-7s;}
-  @keyframes float{
-    0%,100%{transform:translate(0,0) scale(1);}
-    50%{transform:translate(40px,30px) scale(1.12);}
-  }
-  .avatar-ring{
-    width:150px;height:150px;margin:0 auto 18px;position:relative;
-  }
-  .avatar-ring::before{
-    content:"";position:absolute;inset:-7px;border-radius:50%;
-    background:conic-gradient(var(--accent),var(--accent-2),transparent 65%,var(--accent));
-    animation:spin 5s linear infinite;
-  }
-  @keyframes spin{to{transform:rotate(360deg);}}
-  .avatar-ring img{
-    position:relative;width:150px;height:150px;border-radius:50%;
-    object-fit:cover;object-position:top;border:4px solid var(--card);
-    display:block;
-  }
-  h1.name{
-    font-size:44px;letter-spacing:.06em;
-    background:linear-gradient(120deg,var(--ink) 30%,var(--accent) 70%);
-    -webkit-background-clip:text;background-clip:text;color:transparent;
-  }
-  .typing{
-    min-height:32px;font-size:18px;color:var(--accent);font-weight:600;
-    letter-spacing:.05em;margin-top:6px;
-  }
-  .typing .cursor{
-    display:inline-block;width:2px;height:1.1em;background:var(--accent);
-    vertical-align:-2px;margin-left:2px;animation:blink .8s step-end infinite;
-  }
-  @keyframes blink{50%{opacity:0;}}
-  .hero-tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px;}
-  .hero-tags span{
-    background:var(--accent-soft);color:var(--accent);
-    font-size:12.5px;font-weight:600;padding:4px 14px;border-radius:16px;
-    transition:transform .25s,box-shadow .25s;cursor:default;
-  }
-  .hero-tags span:hover{transform:translateY(-3px);box-shadow:var(--shadow);}
-  .stats{
-    display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:28px;
-  }
-  .stat{
-    background:var(--card);border:1px solid var(--line);border-radius:12px;
-    padding:12px 22px;min-width:118px;box-shadow:var(--shadow);
-    transition:transform .3s;
-  }
-  .stat:hover{transform:translateY(-4px);}
-  .stat .num{font-size:28px;font-weight:800;color:var(--accent);line-height:1.2;}
-  .stat .num small{font-size:16px;font-weight:700;}
-  .stat .lbl{font-size:12px;color:var(--muted);}
-  .hero-actions{margin-top:26px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
-  .btn{
-    display:inline-flex;align-items:center;gap:7px;
-    padding:9px 22px;border-radius:24px;font-size:14px;font-weight:600;
-    border:1.5px solid var(--accent);transition:all .25s;cursor:pointer;
-  }
-  .btn.solid{background:var(--accent);color:#fff;}
-  .btn.solid:hover{background:var(--accent-2);border-color:var(--accent-2);transform:translateY(-2px);}
-  .btn.ghost{color:var(--accent);background:transparent;}
-  .btn.ghost:hover{background:var(--accent-soft);transform:translateY(-2px);}
-  .scroll-hint{
-    margin-top:34px;color:var(--muted);font-size:22px;
-    animation:bounce 1.6s infinite;
-  }
-  @keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(8px);}}
-
-  /* ---------- layout ---------- */
-  main{max-width:920px;margin:0 auto;padding:0 20px 60px;}
-  section{margin-bottom:46px;}
-  h2{
-    font-size:24px;color:var(--accent);letter-spacing:.08em;
-    display:flex;align-items:center;gap:12px;margin-bottom:20px;
-  }
-  h2::after{content:"";flex:1;height:1px;background:var(--line);}
-  .card{
-    background:var(--card);border:1px solid var(--line);border-radius:14px;
-    padding:24px 28px;box-shadow:var(--shadow);
-  }
-  .card + .card{margin-top:16px;}
-  p.summary{text-align:justify;color:var(--ink);}
-  p.summary + p.summary{margin-top:12px;}
-
-  /* ---------- reveal ---------- */
-  .reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease;}
-  .reveal.in{opacity:1;transform:none;}
-
-  /* ---------- AI box ---------- */
-  .ai-tools{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;}
-  .ai-tools span{
-    background:var(--card);color:var(--accent);border:1.5px solid var(--accent);
-    font-size:14px;font-weight:700;padding:6px 18px;border-radius:20px;
-    transition:all .3s;cursor:default;
-  }
-  .ai-tools span:hover{
-    background:var(--accent);color:#fff;transform:translateY(-3px) scale(1.05);
-    box-shadow:0 6px 18px rgba(15,125,107,.35);
-  }
-  .ai-list{list-style:none;}
-  .ai-list li{
-    position:relative;padding-left:22px;margin-bottom:9px;text-align:justify;
-  }
-  .ai-list li::before{
-    content:"▸";position:absolute;left:2px;color:var(--accent);font-weight:700;
-    transition:transform .25s;
-  }
-  .ai-list li:hover::before{transform:translateX(4px);}
-  .ai-card{border-left:4px solid var(--accent);}
-
-  /* ---------- skills ---------- */
-  .skills{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
-  @media(max-width:760px){.skills{grid-template-columns:1fr;}}
-  .skill-col h3{
-    font-size:15px;margin-bottom:12px;padding-bottom:8px;
-    border-bottom:2px solid var(--accent-soft);letter-spacing:.05em;
-  }
-  .chips{display:flex;flex-wrap:wrap;gap:8px;}
-  .chips span{
-    background:var(--bg);color:var(--muted);border:1px solid var(--line);
-    font-size:12.5px;padding:4px 12px;border-radius:6px;
-    transition:all .25s;cursor:default;
-    opacity:0;transform:scale(.7);
-  }
-  .in .chips span{opacity:1;transform:scale(1);}
-  .chips span:hover{
-    border-color:var(--accent);color:var(--accent);transform:translateY(-3px);
-  }
-  .chips span.key{
-    background:var(--accent-soft);color:var(--accent);
-    border-color:var(--accent);font-weight:700;
-  }
-
-  /* ---------- timeline ---------- */
-  .timeline{position:relative;padding-left:26px;}
-  .timeline::before{
-    content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;
-    background:linear-gradient(var(--accent),var(--line));
-  }
-  .job{
-    position:relative;margin-bottom:18px;
-    background:var(--card);border:1px solid var(--line);border-radius:12px;
-    padding:18px 22px;box-shadow:var(--shadow);
-    transition:transform .3s,border-color .3s;
-  }
-  .job:hover{transform:translateX(6px);border-color:var(--accent);}
-  .job::before{
-    content:"";position:absolute;left:-25px;top:24px;
-    width:12px;height:12px;border-radius:50%;
-    background:var(--accent);border:3px solid var(--bg);
-    box-shadow:0 0 0 2px var(--accent);
-    transition:transform .3s;
-  }
-  .job:hover::before{transform:scale(1.35);}
-  .job-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;}
-  .job-title{font-size:17px;font-weight:700;}
-  .job-date{
-    font-size:12px;color:#fff;background:var(--accent);
-    padding:2px 12px;border-radius:11px;font-weight:600;white-space:nowrap;
-  }
-  .job-org{font-size:13px;color:var(--muted);margin:3px 0 8px;font-weight:600;}
-  .job-org .pos{color:var(--accent);}
-  .job ul{list-style:none;margin-top:4px;}
-  .job ul li{position:relative;padding-left:16px;margin-bottom:4px;text-align:justify;}
-  .job ul li::before{content:"–";position:absolute;left:0;color:var(--accent);}
-  .job p.desc{text-align:justify;}
-
-  /* ---------- footer / misc ---------- */
-  footer{
-    text-align:center;padding:30px 20px 40px;color:var(--muted);
-    font-size:13px;border-top:1px solid var(--line);
-  }
-  #topBtn{
-    position:fixed;right:22px;bottom:26px;z-index:800;
-    width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;
-    background:var(--accent);color:#fff;font-size:20px;
-    box-shadow:0 4px 14px rgba(15,125,107,.4);
-    opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;
-  }
-  #topBtn.show{opacity:1;pointer-events:auto;}
-  #topBtn:hover{transform:translateY(-4px);}
-  @media(max-width:600px){
-    h1.name{font-size:34px;}
-    .card{padding:18px 18px;}
-    nav .links{display:none;}
-  }
-  @media print{
-    nav,#topBtn,#progress,.scroll-hint,.hero-actions{display:none!important;}
-    .reveal{opacity:1!important;transform:none!important;}
-    .chips span{opacity:1!important;transform:none!important;}
-    body{background:#fff;}
-  }
+/* Layout: workbench resume — a console-flavoured hero, then a single reading column with full-bleed evidence bands */
+:root{
+  --bg:#f3f4f6; --surface:#ffffff; --ink:#15171c; --muted:#5b616e; --line:#dcdfe5;
+  --accent:#2c49c9; --accent-soft:#e6eafb; --spark:#c2410c; --console:#171a21; --console-ink:#d7dbe4;
+  --f-display:"Noto Serif TC","Songti TC",serif;
+  --f-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f1115; --surface:#171a20; --ink:#e6e8ee; --muted:#9aa1ae; --line:#2a2f39;
+  --accent:#8fa3ff; --accent-soft:#1d2546; --spark:#fb923c; --console:#0a0c10; --console-ink:#d7dbe4; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1115; --surface:#171a20; --ink:#e6e8ee; --muted:#9aa1ae; --line:#2a2f39;
+  --accent:#8fa3ff; --accent-soft:#1d2546; --spark:#fb923c; --console:#0a0c10; --console-ink:#d7dbe4; color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.8}
+a{color:var(--accent)}
+.wrap{max-width:1040px;margin:0 auto;padding-inline:20px}
+@media (max-width:600px){.wrap{padding-inline:16px}}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.bar .wrap{display:flex;align-items:center;gap:18px;padding-block:10px}
+.bar .me{font-family:var(--f-mono);font-weight:600;font-size:14px;color:var(--ink);text-decoration:none}
+.bar nav{display:flex;gap:16px;margin-left:auto;flex-wrap:wrap}
+.bar nav a{font-size:13.5px;color:var(--muted);text-decoration:none}
+.bar nav a:hover,.bar nav a:focus-visible{color:var(--accent)}
+#themeBtn{font:12px var(--f-mono);border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:4px 10px;cursor:pointer}
+@media (max-width:720px){.bar nav{display:none}.bar #themeBtn{margin-left:auto}}
+.hero{padding-block:56px 40px}
+.hero .grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:40px;align-items:center}
+@media (max-width:860px){.hero .grid{grid-template-columns:minmax(0,1fr)}}
+.who{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.who img{width:64px;height:64px;border-radius:50%;object-fit:cover;object-position:50% 20%;border:2px solid var(--surface);box-shadow:0 0 0 1px var(--line)}
+.who span{font-family:var(--f-mono);font-size:12.5px;color:var(--muted);letter-spacing:.06em}
+h1{font-family:var(--f-display);font-weight:900;font-size:clamp(34px,5.6vw,54px);line-height:1.15;margin:0 0 16px;letter-spacing:.01em;text-wrap:balance}
+h1 em{font-style:normal;color:var(--accent)}
+.thesis{font-size:18px;color:var(--muted);max-width:34em;margin:0 0 22px}
+.labels{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:26px}
+.labels span{font-size:13px;font-weight:700;padding:4px 12px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.labels span.spark{background:color-mix(in srgb,var(--spark) 14%,transparent);color:var(--spark)}
+.cta{display:flex;flex-wrap:wrap;gap:10px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:8px;font-weight:700;font-size:14.5px;text-decoration:none;border:1.5px solid var(--accent);cursor:pointer;font-family:inherit}
+.btn.solid{background:var(--accent);color:#fff}
+.btn.ghost{background:transparent;color:var(--accent)}
+.btn:focus-visible{outline:2px solid var(--spark);outline-offset:2px}
+.console{background:var(--console);color:var(--console-ink);border-radius:12px;font-family:var(--f-mono);font-size:13px;line-height:1.75;box-shadow:0 20px 40px -24px rgba(0,0,0,.45);overflow:hidden;min-width:0}
+.console .chrome{display:flex;gap:6px;padding:10px 14px;border-bottom:1px solid #262b35}
+.console .chrome i{width:10px;height:10px;border-radius:50%;background:#3a404c;display:block}
+.console .chrome b{margin-left:auto;font-weight:400;font-size:11px;color:#7f8796}
+.console pre{margin:0;padding:14px 16px 18px;white-space:pre-wrap;word-break:break-word;font-family:inherit}
+.console .p{color:#7f8796}
+.console .c{color:#8fa3ff}
+.console .k{color:#fbbf77}
+.console .g{color:#86d4a4}
+section{padding-block:56px}
+section + section{border-top:1px solid var(--line)}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--spark);margin:0 0 6px}
+h2{font-family:var(--f-display);font-weight:900;font-size:clamp(24px,3.4vw,32px);line-height:1.3;margin:0 0 18px;text-wrap:balance}
+h3{font-size:18px;margin:0 0 4px;text-wrap:balance}
+.prose{max-width:42em}
+.prose p{margin:0 0 14px}
+.muted{color:var(--muted)}
+.band{background:var(--surface);border-block:1px solid var(--line)}
+.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:760px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.metric{padding:22px 20px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.metric b{display:block;font-family:var(--f-mono);font-weight:600;font-size:clamp(22px,3.2vw,32px);color:var(--accent);font-variant-numeric:tabular-nums;line-height:1.2}
+.metric span{display:block;font-size:13.5px;color:var(--ink);margin-top:4px}
+.metric small{display:block;font-size:12px;color:var(--muted)}
+.pipe{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:22px;counter-reset:step}
+@media (max-width:860px){.pipe{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:480px){.pipe{grid-template-columns:minmax(0,1fr)}}
+.step{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;counter-increment:step}
+.step::before{content:"0" counter(step);font-family:var(--f-mono);font-size:12px;color:var(--spark);display:block;margin-bottom:4px}
+.step h3{font-size:16px}
+.step p{margin:0;font-size:14px;color:var(--muted)}
+.who-does{font-family:var(--f-mono);font-size:11px;color:var(--accent);display:block;margin-top:8px}
+.proof{margin-top:22px;padding:18px 20px;border-left:3px solid var(--spark);background:var(--surface);border-radius:0 10px 10px 0}
+.proof p{margin:0 0 8px}
+.proof ul{margin:0;padding-left:1.2em;display:grid;gap:4px;font-size:14.5px}
+.group-title{font-family:var(--f-mono);font-size:12px;letter-spacing:.12em;color:var(--muted);margin:28px 0 10px}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (max-width:760px){.cards{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 20px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.card .top{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+.card .when{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.card p{margin:0;font-size:14.5px}
+.card .hit{font-family:var(--f-mono);font-size:13px;color:var(--spark);font-weight:600}
+.tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:auto;padding-top:6px}
+.tags span{font-family:var(--f-mono);font-size:11px;color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:0 6px}
+.bench{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:22px}
+@media (max-width:860px){.bench{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:480px){.bench{grid-template-columns:minmax(0,1fr)}}
+.tool{border:1px dashed var(--line);border-radius:10px;padding:14px 16px;background:var(--surface);display:flex;flex-direction:column;gap:6px;min-width:0}
+.tool .nm{font-family:var(--f-mono);font-weight:600;font-size:14px}
+.tool p{margin:0;font-size:13.5px;color:var(--muted)}
+.prov{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.04em;padding:1px 7px;border-radius:999px;width:max-content;max-width:100%}
+.prov.orig{background:color-mix(in srgb,var(--spark) 14%,transparent);color:var(--spark)}
+.prov.ref{background:var(--accent-soft);color:var(--accent)}
+.prov.fork{background:color-mix(in srgb,var(--muted) 16%,transparent);color:var(--muted)}
+.tool.big{grid-column:span 2}
+@media (max-width:480px){.tool.big{grid-column:auto}}
+.skills{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+@media (max-width:860px){.skills{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.skills h3{font-size:14px;color:var(--accent);margin-bottom:8px}
+.skills ul{list-style:none;margin:0;padding:0;font-size:14px;display:grid;gap:2px}
+.tl{display:grid;margin-top:10px}
+.job{display:grid;grid-template-columns:150px minmax(0,1fr);gap:20px;padding-block:18px;border-top:1px solid var(--line)}
+@media (max-width:600px){.job{grid-template-columns:minmax(0,1fr);gap:4px}}
+.job .yr{font-family:var(--f-mono);font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.job h3{font-size:16.5px}
+.job .role{font-size:13.5px;color:var(--muted);margin-bottom:6px}
+.job p{margin:0;font-size:14.5px}
+.mail{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
+.mail code{font-family:var(--f-mono);font-size:17px;background:var(--surface);border:1px solid var(--line);padding:8px 14px;border-radius:8px;user-select:all;max-width:100%;overflow-wrap:anywhere}
+footer{padding-block:28px 48px;color:var(--muted);font-size:13px;border-top:1px solid var(--line)}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
 </head>
 <body>
 
-<div id="progress"></div>
-
-<nav id="nav">
-  <span class="brand">Rex Lu</span>
-  <div class="links">
-    <a href="#about">簡介</a>
-    <a href="#ai">AI 能力</a>
-    <a href="#skills">技能</a>
-    <a href="#expertise">專長</a>
-    <a href="#exp">經歷</a>
+<header class="bar">
+  <div class="wrap">
+    <a class="me" href="#top">rex.lu</a>
+    <nav aria-label="主選單">
+      <a href="#about">關於</a>
+      <a href="#agentic">Agentic Engineering</a>
+      <a href="#work">近期專案</a>
+      <a href="#toolsmith">工具匠</a>
+      <a href="#experience">經歷</a>
+      <a href="#contact">聯絡</a>
+    </nav>
+    <button id="themeBtn" type="button" aria-label="切換深淺色">◐</button>
   </div>
-  <button id="themeBtn" title="切換深淺色">🌙 深色</button>
-</nav>
-
-<header>
-  <div class="blob b1"></div>
-  <div class="blob b2"></div>
-  <div class="avatar-ring"><img src="img/avatr.jpg" alt="Rex Lu"></div>
-  <h1 class="name">Rex Lu</h1>
-  <div class="typing"><span id="typeText"></span><span class="cursor"></span></div>
-  <div class="hero-tags">
-    <span>金流安全</span>
-    <span>遊戲數據對接</span>
-    <span>系統架構設計</span>
-    <span>AI 數字人組長</span>
-  </div>
-  <div class="stats">
-    <div class="stat"><div class="num"><span class="count" data-n="10">0</span><small>+</small></div><div class="lbl">年開發與架構</div></div>
-    <div class="stat"><div class="num"><span class="count" data-n="21">0</span></div><div class="lbl">最多帶領成員</div></div>
-    <div class="stat"><div class="num"><span class="count" data-n="100">0</span><small>+</small></div><div class="lbl">金流廠商接入</div></div>
-    <div class="stat"><div class="num"><span class="count" data-n="2">0</span><small> 年</small></div><div class="lbl">AI 輔助開發</div></div>
-  </div>
-  <div class="hero-actions">
-    <a class="btn solid" href="mailto:lance70176@gmail.com">✉ 聯絡我</a>
-    <a class="btn ghost" href="download/rex_resume.pdf" download>⬇ 下載 PDF</a>
-  </div>
-  <div class="scroll-hint">⌄</div>
 </header>
 
-<main>
-
-  <section id="about" class="reveal">
-    <h2>個人簡介</h2>
-    <div class="card">
-      <p class="summary">
-        超過十年的網站開發與架構設計經驗，前期任職於 <span class="hl">PChome、Yahoo 電商、無名小站</span> 及旅遊新創。
-        最近七年專注於<span class="hl">海外金融與遊戲產業</span>，協助多個團隊提升網站功能與系統架構。現專精於
-        <span class="hl">Laravel 架構設計與底層框架開發</span>，自製 PHP 框架接手調整、各式功能打底與規劃、團隊成員訓練，
-        並同時處理線上緊急狀況。
-      </p>
-      <p class="summary">
-        最多曾帶領 21 位成員開發專案，後轉為精兵制度，保留 5–9 位核心成員進行開發；進入 AI 時代後，目前實際帶領 2–3 位組員，
-        以 <span class="hl">「AI 數字人組長」</span>的模式運作——熟練運用 AI 作為團隊的延伸戰力，讓小編制發揮過往大團隊的產能，
-        並特別注重 <span class="hl">AI 與實際工作中各部門的權責分配與落地實作</span>：明確界定哪些環節交給 AI、哪些由人把關，
-        使 AI 產出能真正銜接跨部門流程。無論是制度化的大型架構，或需精簡快速的時程安排皆為我的強項；
-        善於溝通、理解業務邏輯，並依公司情況在<span class="hl">敏捷開發與瀑布式開發</span>間切換。
-      </p>
-      <p class="summary">
-        在技術之外，我重視在不同領域的業務邏輯間碰撞、解決跨領域問題並身兼多角。技術設計上特別注重
-        <span class="hl">資安與金流對接細節</span>：跨系統的金流確認邏輯、出錯的確認與回復機制、活動計算方式與危機補救機制，
-        皆於設計初期一併納入考量——處理錯誤情境的難度往往是正常流程的三倍以上。同時熟悉台灣金流相關法規，
-        並評估不同金流管道的費率與優缺點，以提升專案的最終完整度。
-      </p>
-    </div>
-  </section>
-
-  <section id="ai" class="reveal">
-    <h2>AI 輔助開發能力</h2>
-    <div class="card ai-card">
-      <div class="ai-tools">
-        <span>Claude Code</span>
-        <span>Codex</span>
-        <span>Gemini</span>
-        <span>Kiro</span>
-        <span>Cursor</span>
+<main id="top">
+<div class="hero">
+  <div class="wrap grid">
+    <div>
+      <div class="who">
+        <img src="img/avatr.jpg" alt="Rex Lu 大頭照" width="64" height="64">
+        <span>REX LU · 台北</span>
       </div>
-      <ul class="ai-list">
-        <li>具備 <span class="hl">兩年 AI 工具實戰經驗</span>，熟練使用 Claude Code、Codex、Gemini、Kiro、Cursor 等主流 AI 開發工具，
-          並能依任務特性挑選合適工具與工作流。</li>
-        <li>熟練以 AI 輔助進行<span class="hl">黑箱測試、白箱測試與單元測試</span>，加速測試案例生成、邊界條件覆蓋與回歸驗證，
-          提升程式碼品質與測試覆蓋率。</li>
-        <li>以資深架構視角運用 AI：在 AI 加速開發的同時，仍堅持<span class="hl">架構設計與安全設計</span>的把關，
-          確保 AI 產出的程式碼符合分層架構、PSR 規範與 Clean Code 原則。</li>
-        <li>專注將 AI 應用於<span class="hl">金流安全與遊戲數據對接</span>場景：金流確認與對帳邏輯審查、異常與回復機制設計、
-          以及遊戲數據介接的正確性與一致性驗證。</li>
-        <li>能帶領團隊導入 AI 開發流程，將 AI 融入既有的 Code Review、測試與部署環節，建立可重複、可審查的開發節奏。</li>
+      <h1>我設計架構，<br>指揮 <em>AI agent 產線</em>交付。</h1>
+      <p class="thesis">16 年系統開發與架構經驗，專精金流安全、高併發平台與多租戶系統。現在以 Agentic Engineering 工作：架構、拆解與品質把關由我負責，實作交給平行的 AI agent，一個人交付過去一個團隊的產能。</p>
+      <div class="labels">
+        <span>系統架構師</span>
+        <span>Agentic Engineer</span>
+        <span class="spark">Toolsmith 工具匠</span>
+      </div>
+      <div class="cta">
+        <a class="btn solid" href="#contact">聯絡我</a>
+        <a class="btn ghost" href="#agentic">看我怎麼工作</a>
+      </div>
+    </div>
+    <div class="console" role="img" aria-label="近一年開發數據的終端機畫面">
+      <div class="chrome"><i></i><i></i><i></i><b>~/projects · zsh</b></div>
+<pre><span class="p">$</span> <span class="c">git log</span> --author=rex --since=2025-10 --no-merges | wc -l
+<span class="k">3,300+</span>
+<span class="p">$</span> <span class="c">claude</span> --worktrees --parallel
+<span class="g">✓</span> 44 worktrees · 跨模型審查開啟
+<span class="p">$</span> <span class="c">report</span> --month=2026-08
+交付點數 <span class="k">743</span>  全隊 <span class="k">60%</span>  第 2 名的 <span class="k">2.9×</span>
+<span class="p">$</span> <span class="c">ls</span> ~/Applications/home-cooked
+MyGhost  MyXnip  TypeTop  AirGrip  <span class="p">+8</span>
+<span class="p">$</span> <span class="g">_</span></pre>
+    </div>
+  </div>
+</div>
+
+<section id="about">
+  <div class="wrap">
+    <p class="eyebrow">About</p>
+    <h2>先看懂業務邏輯，再把系統做穩</h2>
+    <div class="prose">
+      <p>我從 2010 年開始寫網站，前期在 Yahoo! 超級商城、無名小站與 PChome 行動支付（Pi 錢包初版開發主力）累積電商與金流底子，之後在菲律賓與台灣帶領海外遊戲平台團隊，最多同時帶過 21 位工程師，經手每週營業額破億台幣的線上平台。</p>
+      <p>我最在意的是「錢不能錯」。跨系統的金流確認、逾時與重複入帳、對帳與補救機制，我都在設計初期就納入；處理錯誤情境的難度，往往是正常流程的三倍以上。近一年的兩階段轉帳安全流程、提款派單守門與壓測調校，都從這個原則出發。</p>
+      <p>2025 年起，我把工作方式完整轉成 Agentic Engineering：用 Claude Code、Codex、Gemini 組成可審查、可重跑的開發產線，自己專注在架構、拆解、審查與上線把關。小編制，也能交付大團隊的成果。</p>
+    </div>
+  </div>
+</section>
+
+<div class="band" aria-label="代表數據">
+  <div class="wrap metrics">
+    <div class="metric"><b>2.9×</b><span>單月交付為團隊第 2 名的倍數</span><small>交付點數全隊 60%、合併 MR 56%</small></div>
+    <div class="metric"><b>62.8→0.03%</b><span>正式規格壓測失敗率</span><small>找出 3 個根因，登入成功率 44.8%→100%</small></div>
+    <div class="metric"><b>90s→2s</b><span>1,347 萬列大表查詢</span><small>覆蓋索引＋移除多餘跨庫 join</small></div>
+    <div class="metric"><b>−96%</b><span>跨 30 平台報表的 SQL 數</span><small>先 audit 74 平台欄位型別再 UNION</small></div>
+    <div class="metric"><b>75 家／2 天</b><span>第三方平台設定自動萃取</span><small>寫工具從舊程式碼產出設定</small></div>
+    <div class="metric"><b>7 天</b><span>AI 產品從啟動到公測</span><small>68 commits、12 個版本批次</small></div>
+  </div>
+</div>
+
+<section id="agentic">
+  <div class="wrap">
+    <p class="eyebrow">Agentic Engineering</p>
+    <h2>不只會用 AI，是把 agent 組成一條產線</h2>
+    <p class="prose muted">2026 年業界把這種工作方式稱為 Agentic Engineering：人掌握架構與品質，AI agent 負責撰寫、測試與交付。以下是我每天實際在跑的流程。</p>
+    <div class="pipe">
+      <div class="step"><h3>架構與拆解</h3><p>先釐清業務規則與錯誤情境，把需求拆成可獨立驗證的工作單元，寫下驗收基準。</p><span class="who-does">由我負責</span></div>
+      <div class="step"><h3>平行實作</h3><p>每張工單一個 git worktree，多個 agent 同時開發互不干擾，單一專案最多 44 個平行工作區。</p><span class="who-does">AI agent 執行</span></div>
+      <div class="step"><h3>交叉審查與對拍</h3><p>Claude 寫、Codex 審；重構以舊系統實際輸出為真相，自寫黑盒比對工具逐欄驗證。</p><span class="who-does">跨模型＋工具</span></div>
+      <div class="step"><h3>把關與上線</h3><p>人工 review、測試與灰度開關後才進正式環境，過程沉澱成可重跑的 skill 與文件。</p><span class="who-does">由我負責</span></div>
+    </div>
+    <div class="proof">
+      <p><strong>實證：團隊縮編時的一個月</strong>　2026 年 8 月，團隊實質開發人力只剩 4 人，三位同事相繼離開。</p>
+      <ul>
+        <li>一人交付全隊 60% 的點數、56% 的合併 MR，橫跨後端、後台、前台、商城、雲端五條線</li>
+        <li>一週內接入 6 家遊戲供應商，每家都完成三段式落地與實測</li>
+        <li>上線前一週修正 12 處正式環境運維錯誤，獨立跑完三環境發版</li>
+        <li>同月產出 31 份評估、規格與交接文件，約 22 萬字</li>
       </ul>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section id="skills" class="reveal">
-    <h2>核心技能</h2>
-    <div class="card">
-      <div class="skills">
-        <div class="skill-col">
-          <h3>程式開發</h3>
-          <div class="chips">
-            <span class="key">PHP</span>
-            <span class="key">Laravel</span>
-            <span class="key">Go</span>
-            <span>Yii</span>
-            <span>MySQL</span>
-            <span>Redis</span>
-            <span>Memcache</span>
-            <span>Supervisor</span>
-            <span>Queue</span>
-            <span>Crontab</span>
-            <span>NoSQL</span>
-            <span>PSR / Clean Code</span>
-          </div>
-        </div>
-        <div class="skill-col">
-          <h3>架構與主機</h3>
-          <div class="chips">
-            <span class="key">系統架構設計</span>
-            <span>主機集群拆分</span>
-            <span>Load Balance 調校</span>
-            <span>高併發</span>
-            <span>DB 緩存 / SQL 調校</span>
-            <span>前後端分離 API</span>
-            <span>Ali</span>
-            <span>AWS</span>
-            <span>GCP</span>
-            <span>Linode</span>
-          </div>
-        </div>
-        <div class="skill-col">
-          <h3>管理與業務</h3>
-          <div class="chips">
-            <span class="key">團隊領導</span>
-            <span class="key">金流安全</span>
-            <span>遊戲數據對接</span>
-            <span>Scrum 敏捷</span>
-            <span>Waterfall</span>
-            <span>專案排程</span>
-            <span>市場調查</span>
-            <span>風險控管</span>
-            <span>跨國溝通</span>
-          </div>
-        </div>
-      </div>
+<section id="work">
+  <div class="wrap">
+    <p class="eyebrow">Recent work · 2025–2026</p>
+    <h2>近一年的代表專案</h2>
+    <p class="prose muted">企業專案依保密需求，以產品型態描述。</p>
+
+    <p class="group-title">正職</p>
+    <div class="cards">
+      <article class="card">
+        <div class="top"><h3>遊戲 API 聚合平台：營運風控與新市場錢包</h3><span class="when">2020.04 – 至今</span></div>
+        <p>風控與商戶後台主力開發者。從零打造簡訊邀請行銷系統（Cloudflare Workers＋Analytics Engine），完成 8 時區 × 4 套系統的時區架構，以及南亞三語錢包的國際化。</p>
+        <p class="hit">大表查詢 90 秒 → 2～3 秒 · 一個月上線新系統</p>
+        <div class="tags"><span>PHP</span><span>ThinkPHP</span><span>Cloudflare Workers</span><span>Redis</span><span>Nuxt</span></div>
+      </article>
     </div>
-  </section>
 
-  <section id="expertise" class="reveal">
-    <h2>專業專長</h2>
-    <div class="card">
-      <p class="summary">
-        目前技術擅長於 <span class="hl">PHP Laravel</span>，可設計整套完整架構與底層框架，擅長主機集群功能拆分、Load Balance 調校、
-        套件與框架底層開發除錯，善於運用 Supervisor、Queue、Redis、Memcache，以及定期與秒級 Crontab 的優化。
-        程式設計上落實 PSR 規範與 Clean Code、多級別分層概念的實際應用；資料庫方面熟悉 DB 緩存與 SQL 調校、
-        正規化與反正規化的取捨，並要求 API 化的前後端分離，可協助 Web 與 App 同時進行功能邏輯接入與開發。
-      </p>
-      <p class="summary">
-        金流方面，為台灣金流 <span class="hl">PChome Pi 行動錢包</span>初版開發主力，亦有豐富的海外市場金流經驗，
-        接入<span class="hl">百家以上大陸金流廠商</span>；具台灣銀行與信用卡對接經驗，對接多家銀行不同格式與流程，
-        台灣三大三方金流（藍／綠／紅）皆有對接經驗。
-      </p>
+    <p class="group-title">接案</p>
+    <div class="cards">
+      <article class="card">
+        <div class="top"><h3>白牌娛樂平台：錢包、金流與雲端</h3><span class="when">2026.07 – 至今</span></div>
+        <p>兩階段轉帳＋逾時反查、提款派單守門；WAF 白名單由應用直推並回寫 Terraform；正式規格壓測找出三個根因。三個月 788 commits，佔全隊 29%。</p>
+        <p class="hit">失敗率 62.8% → 0.03% · p95 60s → 10.9s</p>
+        <div class="tags"><span>Go</span><span>AWS EKS</span><span>WAF</span><span>Terraform</span><span>Helm</span><span>Vue 3</span></div>
+      </article>
+      <article class="card">
+        <div class="top"><h3>多租戶平台：代理分潤後台 API 重構</h3><span class="when">2025.10 – 2026.09</span></div>
+        <p>主導 Legacy PHP 到 Lumen 10 三層架構重構，86 支路由寫了 73 支；跨 70+ schema 報表聚合；config-driven 一次支援 75 家平台；宣告式 diff 同步引擎通過客戶驗收。</p>
+        <p class="hit">SQL 數 −96% · 41/42 家新舊逐欄對齊</p>
+        <div class="tags"><span>PHP 8.3</span><span>Lumen</span><span>PHPUnit</span><span>MySQL</span><span>Redis</span></div>
+      </article>
+      <article class="card">
+        <div class="top"><h3>勞務報酬單與會計總帳系統</h3><span class="when">2026.03 – 至今</span></div>
+        <p>為集團旗下三家公司把勞報單搬上線：稅務規則引擎（含 183 天居住者規則）、四級簽核、單批 2 萬筆上傳、中英 PDF；延伸的會計系統已完成需求訪談與四期規劃。</p>
+        <p class="hit">3 API ＋ 3 前端 · 已交付並持續擴充</p>
+        <div class="tags"><span>PHP 8</span><span>Next.js 16</span><span>TypeScript</span><span>MariaDB</span></div>
+      </article>
+      <article class="card">
+        <div class="top"><h3>占星品牌全端平台</h3><span class="when">2026.04 – 至今</span></div>
+        <p>內容站、會員與互動占卜工具一人完成。AI 先產初稿、專家審核後送出，生成 worker 沙箱化；SEO／AEO 改造後核心關鍵字 Bing 排名第 1，Google 曝光 +58%。</p>
+        <p class="hit">121 支 API · 零停機網域遷移</p>
+        <div class="tags"><span>Next.js</span><span>PHP</span><span>Three.js</span><span>Gemini ⇄ Claude</span><span>LINE Login</span></div>
+      </article>
     </div>
-  </section>
 
-  <section id="exp" class="reveal">
-    <h2>工作經歷</h2>
-    <div class="timeline">
-
-      <div class="job reveal">
-        <div class="job-head">
-          <span class="job-title">海外棋牌遊戲公司</span>
-          <span class="job-date">2020.04 – 至今</span>
-        </div>
-        <div class="job-org">台灣 台北 ｜ <span class="pos">技術部 Team Leader</span></div>
-        <ul>
-          <li>延伸開發 PHP Laravel 5.7 與 ThinkPHP 5.3 舊系統。</li>
-          <li>主導跨國溝通，主要對象為菲律賓、杜拜團隊與老闆。</li>
-          <li>帶領五位 RD 建立代收商戶架構與聊天後台開發。</li>
-          <li>建立並串接三方金流系統，渠道含支付寶、銀行卡、手機話費與 USDT，每人每週至少串接兩家、多至十家。</li>
-          <li>配合 C++ 團隊開發棋牌遊戲相關 API，前後台皆採前後端分離 API 形式。</li>
-          <li><span class="hl">主導將本包網專案的 DC（Discord）常駐通訊服務重構為 Go</span>：由既有實作全面改寫為 Go 常駐服務，
-            提升執行效率與穩定性，具備包網專案 Go 重構的實戰經驗。</li>
-          <li>後期帶領團隊遠距（WFH）協作。</li>
-        </ul>
-      </div>
-
-      <div class="job reveal">
-        <div class="job-head">
-          <span class="job-title">台灣金融遊戲公司</span>
-          <span class="job-date">2019.05 – 2020.01</span>
-        </div>
-        <div class="job-org">台灣 台北 ｜ <span class="pos">技術部 Team Leader</span></div>
-        <p class="desc">使用 PHP Yii 框架與 Go 語言開發網站，與市場團隊及需求方保持良好溝通。帶領團隊開發第三方遊戲平台接入，
-          依過往經驗提供架構，並把關遊戲邏輯與財務報表的正確性。</p>
-        <ul>
-          <li><span class="hl">以 Go 開發「飛單」系統</span>：收到大額訂單後，即時自動下單至其他合作網站進行分流與對沖，
-            涵蓋訂單風險判斷、下單時效與跨站狀態確認等關鍵邏輯。</li>
-        </ul>
-      </div>
-
-      <div class="job reveal">
-        <div class="job-head">
-          <span class="job-title">菲律賓德勝集團</span>
-          <span class="job-date">2017.07 – 2019.01</span>
-        </div>
-        <div class="job-org">台灣 台北 ｜ <span class="pos">技術部副總監</span></div>
-        <p class="desc">由菲律賓總公司派駐回台灣分公司建立團隊，打造完整團隊並開發全新架構。使用 PHP Laravel 開發，
-          擅長高併發、系統可靠度與主機集群設計，於程式碼規範與架構設計有高度要求；擅長溝通業務邏輯、報表與會計統計、
-          數學概率計算檢查。帶領團隊參加 2018 年澳門 G2E 展覽，最多帶領 21 位成員完成集團所需功能體系。</p>
-        <ul>
-          <li>開發項目：多平台用戶資料分析中心、第三方遊戲中心（娛樂城）、第三方充值、線上遊戲平台、風險控管、
-            遊戲概率設計、流程設計、用戶分紅與工資制度設計。</li>
-        </ul>
-      </div>
-
-      <div class="job reveal">
-        <div class="job-head">
-          <span class="job-title">菲律賓 GamePark 集團（金亞洲公司）</span>
-          <span class="job-date">2016.04 – 2017.06</span>
-        </div>
-        <div class="job-org">菲律賓 馬尼拉 ｜ <span class="pos">Team Leader</span></div>
-        <p class="desc">負責每週營業額平均破億台幣的線上遊戲網站開發，主導一個新平台開發、四個平台運營、三個平台協助設計。
-          帶領技術團隊開發與整體架構設計、線上問題控管與緊急處理；引進最新 Laravel 技術並調整結構符合框架設計思想。
-          多平台核心複用，大型活動搭配 NoSQL 開發與壓測，編寫套件支援自定義 MySQL 語法，
-          大量於 Linux 環境設計 queue、crontab，並開發手機版遊戲 API。</p>
-      </div>
-
-      <div class="job reveal">
-        <div class="job-head">
-          <span class="job-title">PChome Online Inc.</span>
-          <span class="job-date">2014.11 – 2016.04</span>
-        </div>
-        <div class="job-org">台灣 台北 ｜ <span class="pos">Team Leader</span></div>
-        <p class="desc">於 Pi 行動錢包開發產品，以 App 行動支付改變消費習慣。開發可擴充的多主機架構與資料庫快取專用套件，
-          維護行動支付系統、銀行金流功能、風險控管與會計帳務系統，並引進測試概念與 Scrum 敏捷開發提升程式碼品質。</p>
-      </div>
-
-      <div class="job reveal">
-        <div class="job-head">
-          <span class="job-title">Tripmoment（旅遊新創）</span>
-          <span class="job-date">2014.01 – 2014.11</span>
-        </div>
-        <div class="job-org">台灣 台北 ｜ <span class="pos">Web Development Engineer</span></div>
-        <p class="desc">小型創業團隊的網站開發與管理、規格分析與網站優化，推行 RWD 設計。使用 ASP.NET MVC 4.0 搭配
-          Azure 雲端主機開發 Web API for App、圖文上傳管理系統與 Google 分析，並進行活動網站設計。</p>
-      </div>
-
-      <div class="job reveal">
-        <div class="job-head">
-          <span class="job-title">Yahoo</span>
-          <span class="job-date">2012.02 – 2013.11</span>
-        </div>
-        <div class="job-org">台灣 台北 ｜ <span class="pos">Web Development Engineer</span></div>
-        <p class="desc">參與 Yahoo! 超級商城開發，負責使用者追蹤與購買資料分析、訂單比對、店家與商品分析，
-          並與法國廣告商 Criteo 合作刊登廣告。同時維護與重構無名小站部分功能，將測試覆蓋率由 70% 提升至 80%。</p>
-      </div>
-
-      <div class="job reveal">
-        <div class="job-head">
-          <span class="job-title">Interfly</span>
-          <span class="job-date">2010.10 – 2012.01</span>
-        </div>
-        <div class="job-org">台灣 台北 ｜ <span class="pos">Web Development Engineer</span></div>
-        <p class="desc">負責多元類型的專案開發與設計，包含大型政府網站、證券金融服務網站與中型購物網站；
-          開發項目曾獲政府頒發的服務類網站金手指獎。</p>
-      </div>
-
+    <p class="group-title">自有產品</p>
+    <div class="cards">
+      <article class="card">
+        <div class="top"><h3>念念：AI 角色陪伴平台</h3><span class="when">2026.09</span></div>
+        <p>分層記憶、依真實在線心跳的主動訊息、6 階段關係養成、多角色群聊；對話走 Gemini 串流，其餘生成改走本機 Claude，壓低成本。</p>
+        <p class="hit">7 天從啟動到公測</p>
+        <div class="tags"><span>Node.js</span><span>SQLite</span><span>SSE</span><span>Gemini</span><span>Claude CLI</span></div>
+      </article>
+      <article class="card">
+        <div class="top"><h3>Rankly：產業網站排行與 AI 能見度</h3><span class="when">2026.08 – 至今</span></div>
+        <p>每天體檢客戶與同業網站，並用真實問句問 ChatGPT、Claude、Gemini、Perplexity，排出誰被 AI 看見；附 GEO 五大體質診斷與每日內容熱點。</p>
+        <p class="hit">45 天 857 則 AI 回答 · 找出「覆蓋率而非排名」的瓶頸</p>
+        <div class="tags"><span>Node.js</span><span>多 LLM</span><span>headless Claude</span><span>GEO</span></div>
+      </article>
     </div>
-  </section>
+  </div>
+</section>
 
+<section id="toolsmith">
+  <div class="wrap">
+    <p class="eyebrow">Toolsmith · Home-cooked software</p>
+    <h2>自己的工具，自己做</h2>
+    <div class="prose">
+      <p class="muted">《人月神話》描述的理想團隊裡有一個角色叫「工具匠」，專門為團隊打造順手的工具。AI agent 讓這件事變得便宜：與其忍受商業軟體的限制，不如照自己的工作流做一個。2026 年我做了 12 個 macOS 原生 App，每一個都每天在用。</p>
+    </div>
+    <div class="bench">
+      <div class="tool big"><span class="prov fork">Fork Ghostty 後客製</span><span class="nm">MyGhost</span><p>為長時間跑 AI agent 設計的終端機：側欄分頁、tmux 讓 session 當機也能接回、遠端 SSH 分頁自動重連、貼圖自動上傳給遠端 agent、Claude／Codex 額度儀表板，還有手機可用的 Web 版。已發佈到 v1.3.9。</p></div>
+      <div class="tool"><span class="prov ref">參考 Xnip UI 自製</span><span class="nm">MyXnip</span><p>舊截圖 API 會凍住整台機器，改用 ScreenCaptureKit 重設計成「先擷取、後顯示」。滾動長截圖、標註、OCR。</p></div>
+      <div class="tool"><span class="prov ref">參考他人版本改寫優化</span><span class="nm">TypeTop</span><p>按住右 ⌘ 說話，Whisper 轉文字後由 LLM 修正並打進任何輸入框；支援裝置端 Apple Intelligence 與 7 家 LLM 自動切換。</p></div>
+      <div class="tool"><span class="prov ref">以自然輸入法為原型自製</span><span class="nm">超自然輸入法</span><p>InputMethodKit 自寫引擎：DP 詞格組句、選字學習與衰減、縮寫快選。</p></div>
+      <div class="tool"><span class="prov orig">原創</span><span class="nm">AirGrip</span><p>用鏡頭辨識手勢操作系統，Vision 手部姿勢辨識，全部本機運算。</p></div>
+      <div class="tool"><span class="prov fork">Fork DuoBar 後客製</span><span class="nm">MyDuoBar</span><p>選單列狀態中心：Wi-Fi、VPN、AirPods 左右耳電量、原生充電上限，Swift 6 嚴格併發。</p></div>
+      <div class="tool"><span class="prov ref">參考 Downie UI 自製</span><span class="nm">My Downie</span><p>影片下載器，補上原版抓不到的平台；瀏覽器擴充一鍵喚起、App 自我更新。</p></div>
+      <div class="tool"><span class="prov ref">參考 Niya UI 自製</span><span class="nm">My Niya</span><p>螢幕頂部靈動島儀表板：系統監控、待辦、網速、剪貼簿與隔空投送。</p></div>
+      <div class="tool"><span class="prov ref">參考 Hidden Bar 自製</span><span class="nm">MyHiddenBar</span><p>摸清 macOS 27 狀態列的新排版規則後重寫收納邏輯，一天完成。</p></div>
+      <div class="tool"><span class="prov ref">參考 Obsidian UI 自製</span><span class="nm">MyObsidian</span><p>Markdown 知識庫：雙向連結、mermaid、跨平台建置與 e2e 測試。</p></div>
+      <div class="tool"><span class="prov ref">參考 Slidepad UI 自製</span><span class="nm">MySlidePad</span><p>碰螢幕邊緣滑出的瀏覽器面板，附 AI 對話整理腳本。</p></div>
+      <div class="tool"><span class="prov orig">原創</span><span class="nm">MyPlayer</span><p>鍵盤操控倍速與循環的輕量播放器。</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="wrap">
+    <p class="eyebrow">Skills</p>
+    <h2>技術能力</h2>
+    <div class="skills">
+      <div><h3>AI 與 Agentic</h3><ul><li>Claude Code／Codex／Gemini</li><li>多 agent worktree 平行開發</li><li>跨模型審查・skill 化</li><li>LLM 產品整合與成本分流</li><li>GEO／AEO</li></ul></div>
+      <div><h3>後端與資料</h3><ul><li>PHP（Laravel・Lumen・ThinkPHP）</li><li>Go（Gin・GORM）</li><li>Node.js</li><li>MySQL／MariaDB 調校・Redis</li><li>Queue・排程・冪等設計</li></ul></div>
+      <div><h3>前端與客戶端</h3><ul><li>Next.js・Nuxt・Vue 3</li><li>TypeScript・Tailwind</li><li>Swift・SwiftUI・AppKit</li><li>PWA・Three.js</li><li>i18n 多語系</li></ul></div>
+      <div><h3>雲端與架構</h3><ul><li>AWS EKS・WAF・CloudFront・RDS</li><li>Terraform・Helm・GitLab CI</li><li>Cloudflare Workers・Tunnel</li><li>高併發・壓測・灰度</li><li>金流安全與對帳</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section id="experience">
+  <div class="wrap">
+    <p class="eyebrow">Experience</p>
+    <h2>經歷</h2>
+    <div class="tl">
+      <div class="job"><div class="yr">2020.04 – 至今</div><div><h3>海外遊戲 API 聚合平台</h3><div class="role">技術部 Team Leader ・ 台北</div>
+        <p>延伸開發 Laravel 與 ThinkPHP 系統，帶領 RD 建立代收商戶架構與營運後台；串接支付寶、銀行卡、話費與 USDT 等三方金流；主導跨國溝通（菲律賓、杜拜）與遠距協作。近年負責風控、商戶後台、行銷系統與新市場錢包。</p></div></div>
+      <div class="job"><div class="yr">2025 – 至今</div><div><h3>接案開發</h3><div class="role">系統架構・全端・Agentic Engineering</div>
+        <p>承接企業級平台重構與進駐開發（代理分潤後台、錢包金流與雲端），以及中小企業與品牌的系統從零交付（勞報與會計系統、占星品牌平台）。</p></div></div>
+      <div class="job"><div class="yr">2019.05 – 2020.01</div><div><h3>台灣金融遊戲公司</h3><div class="role">技術部 Team Leader ・ 台北</div>
+        <p>以 Yii 與 Go 開發第三方遊戲平台接入，把關遊戲邏輯與財務報表；以 Go 開發大額訂單即時分流與對沖系統。</p></div></div>
+      <div class="job"><div class="yr">2017.07 – 2019.01</div><div><h3>菲律賓德勝集團</h3><div class="role">技術部副總監 ・ 台北</div>
+        <p>由菲律賓總部派駐回台建立團隊，最多帶領 21 人。以 Laravel 打造用戶分析中心、遊戲中心、充值、風控與分紅制度，帶隊參加 2018 澳門 G2E 展。</p></div></div>
+      <div class="job"><div class="yr">2016.04 – 2017.06</div><div><h3>菲律賓 GamePark 集團</h3><div class="role">Team Leader ・ 馬尼拉</div>
+        <p>負責每週營業額平均破億台幣的線上平台：一個新平台開發、四個平台營運；多平台核心複用、NoSQL 壓測與手機遊戲 API。</p></div></div>
+      <div class="job"><div class="yr">2014.11 – 2016.04</div><div><h3>PChome Online</h3><div class="role">Team Leader ・ 台北</div>
+        <p>Pi 行動錢包初版開發主力：多主機架構、資料庫快取套件、銀行金流、風控與會計帳務；導入測試與 Scrum。</p></div></div>
+      <div class="job"><div class="yr">2010 – 2014</div><div><h3>Yahoo!・Tripmoment・Interfly</h3><div class="role">Web Development Engineer ・ 台北</div>
+        <p>Yahoo! 超級商城購買資料分析與廣告合作、無名小站重構（測試覆蓋率 70%→80%）；旅遊新創 App API；政府網站獲金手指獎。</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <p class="eyebrow">Contact</p>
+    <h2>有系統要做穩，或想導入 AI 工作流？</h2>
+    <p class="prose muted">全職機會、顧問與接案合作都歡迎來信。</p>
+    <div class="mail">
+      <code id="mailText">lance70176@gmail.com</code>
+      <button class="btn ghost" type="button" id="copyMail">複製 Email</button>
+      <a class="btn ghost" href="https://github.com/Lance70176" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</section>
 </main>
 
 <footer>
-  Rex Lu ｜ 資深工程師與系統架構師 ｜ <a href="mailto:lance70176@gmail.com">lance70176@gmail.com</a><br>
-  履歷更新於 2026.07
+  <div class="wrap">Rex Lu ・ 系統架構師 × Agentic Engineer ・ 更新於 2026.10</div>
 </footer>
-
-<button id="topBtn" title="回到頂部">↑</button>
 
 <script>
 (function(){
-  /* ---- typing effect ---- */
-  var roles=["技術管理職","資深工程師","系統架構師","AI 數字人組長","技術顧問"];
-  var el=document.getElementById("typeText"),ri=0,ci=0,del=false;
-  function type(){
-    var word=roles[ri];
-    el.textContent=word.slice(0,ci);
-    if(!del){
-      if(ci<word.length){ci++;setTimeout(type,110);}
-      else{del=true;setTimeout(type,1600);}
-    }else{
-      if(ci>0){ci--;setTimeout(type,55);}
-      else{del=false;ri=(ri+1)%roles.length;setTimeout(type,350);}
-    }
-  }
-  type();
-
-  /* ---- scroll progress + nav + top button ---- */
-  var nav=document.getElementById("nav"),topBtn=document.getElementById("topBtn"),
-      bar=document.getElementById("progress");
-  function onScroll(){
-    var st=document.documentElement.scrollTop||document.body.scrollTop,
-        h=document.documentElement.scrollHeight-window.innerHeight;
-    bar.style.width=(h>0?st/h*100:0)+"%";
-    nav.classList.toggle("show",st>240);
-    topBtn.classList.toggle("show",st>500);
-  }
-  window.addEventListener("scroll",onScroll,{passive:true});
-  onScroll();
-  topBtn.addEventListener("click",function(){window.scrollTo({top:0,behavior:"smooth"});});
-
-  /* ---- reveal on scroll ---- */
-  var io=new IntersectionObserver(function(entries){
-    entries.forEach(function(e){
-      if(e.isIntersecting){
-        e.target.classList.add("in");
-        e.target.querySelectorAll(".chips span").forEach(function(c,i){
-          c.style.transitionDelay=(i*40)+"ms";
-        });
-        io.unobserve(e.target);
-      }
-    });
-  },{threshold:.12});
-  document.querySelectorAll(".reveal").forEach(function(n){io.observe(n);});
-
-  /* ---- counters ---- */
-  var cio=new IntersectionObserver(function(entries){
-    entries.forEach(function(e){
-      if(!e.isIntersecting)return;
-      var span=e.target,target=+span.dataset.n,start=null;
-      function step(ts){
-        if(!start)start=ts;
-        var p=Math.min((ts-start)/1400,1);
-        span.textContent=Math.round(target*(1-Math.pow(1-p,3)));
-        if(p<1)requestAnimationFrame(step);
-      }
-      requestAnimationFrame(step);
-      cio.unobserve(span);
-    });
-  },{threshold:.6});
-  document.querySelectorAll(".count").forEach(function(n){cio.observe(n);});
-
-  /* ---- theme toggle ---- */
-  var btn=document.getElementById("themeBtn"),root=document.documentElement;
-  function apply(t){
-    root.setAttribute("data-theme",t);
-    btn.textContent=t==="dark"?"☀️ 淺色":"🌙 深色";
-    try{localStorage.setItem("theme",t);}catch(e){}
-  }
-  var saved=null;
-  try{saved=localStorage.getItem("theme");}catch(e){}
-  apply(saved||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"));
-  btn.addEventListener("click",function(){
-    apply(root.getAttribute("data-theme")==="dark"?"light":"dark");
+  var root=document.documentElement,btn=document.getElementById('themeBtn');
+  try{var t=localStorage.getItem('theme');if(t)root.setAttribute('data-theme',t);}catch(e){}
+  btn.addEventListener('click',function(){
+    var cur=root.getAttribute('data-theme');
+    var dark=cur?cur==='dark':matchMedia('(prefers-color-scheme: dark)').matches;
+    var next=dark?'light':'dark';root.setAttribute('data-theme',next);
+    try{localStorage.setItem('theme',next);}catch(e){}
+  });
+  var cb=document.getElementById('copyMail');
+  cb.addEventListener('click',function(){
+    var el=document.getElementById('mailText'),txt=el.textContent;
+    function sel(){var r=document.createRange();r.selectNodeContents(el);var s=getSelection();s.removeAllRanges();s.addRange(r);cb.textContent='已選取，請按複製';}
+    if(navigator.clipboard){navigator.clipboard.writeText(txt).then(function(){cb.textContent='已複製';},sel);}else{sel();}
   });
 })();
 </script>
