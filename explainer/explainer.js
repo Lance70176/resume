@@ -699,14 +699,14 @@
   var fontReady = null
   function loadFont() {
     if (!fontReady) {
-      fontReady = (window.FontFace ? new FontFace('Iansui', 'url(' + BASE + 'iansui-explainer.woff2)').load().then(function (f) { document.fonts.add(f) }) : Promise.resolve())
+      fontReady = (window.FontFace ? new FontFace('Iansui', 'url(' + BASE + 'iansui-explainer.woff2?v=2)').load().then(function (f) { document.fonts.add(f) }) : Promise.resolve())
         .catch(function () {}) // 字型載不到就用後備字型，不擋播放
     }
     return fontReady
   }
   var durReady = null
   function loadDurations() {
-    if (!durReady) durReady = fetch(BASE + 'durations.json').then(function (r) { return r.json() }).catch(function () { return {} })
+    if (!durReady) durReady = fetch(BASE + 'durations.json?v=2').then(function (r) { return r.json() }).catch(function () { return {} })
     return durReady
   }
 
