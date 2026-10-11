@@ -26,7 +26,7 @@ const VARIANTS = {
       [REX_URL, 'resume-snake.master0987.com'],
       ['rex-lu-resume.pdf', 'snake-lu-resume.pdf'],
       // PDF 改內容後要升版號，否則 CDN 會回舊檔（cf-purge token 沒有清快取權限）
-      ['snake-lu-resume.pdf"', 'snake-lu-resume.pdf?v=8"'],
+      ['snake-lu-resume.pdf"', 'snake-lu-resume.pdf?v=9"'],
       ['Rex Lu', 'Snake Lu'],
       ['REX LU', 'SNAKE LU'],
       ['ABOUT REX', 'ABOUT SNAKE'],
@@ -35,6 +35,9 @@ const VARIANTS = {
       // 兩版刻意用不同大頭照（Snake 版在 variants/snake/img/avatar.jpg），版本參數各自獨立，避免拿到另一版照片的 CDN 快取
       ['img/avatar.jpg?v=3', 'img/avatar.jpg?v=s3'],
       ['--author=rex', '--author=snake'],
+      // Snake 版 About 文案（2026-10-12 依太太建議調整，Rex 版維持原文）
+      ['<h2>先看懂業務邏輯，再把系統做穩</h2>', '<h2>先看懂業務邏輯，才能把系統做穩</h2>'],
+      ['<p>我最在意的是「錢不能錯」。跨系統的金流確認', '<p>因為有會計背景，我在工作中最在意的是「錢不能錯」。跨系統的金流確認'],
       ["'rex-explainer-muted'", "'snake-explainer-muted'"],
       // 舊網域轉址只屬於 rex 版
       [/<script>if\(location\.hostname==='resume\.master0987\.com'\)[^<]*<\/script>\n/, ''],
