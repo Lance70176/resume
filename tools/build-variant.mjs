@@ -1,6 +1,7 @@
 // 從同一份原始碼產出兩個對外履歷站：
 //   rex   → https://resume-rex.master0987.com（Rex Lu，求職用；原始碼本身就是這版）
-//   snake → https://resume-snake.master0987.com（Snake Lu，接案用；換名字、網址、email、PDF 檔名與開場配音）
+//   snake → https://resume-snake.master0987.com（Snake Lu，接案用；換名字、網址、email、PDF 檔名與開場配音，
+//           「實證」區塊改成附圖表與 8 月報告節錄連結的版本，報告在 variants/snake/report/）
 //
 // 用法：node tools/build-variant.mjs <rex|snake> <輸出目錄>
 //   例：node tools/build-variant.mjs snake ~/projects/case/resume-snake-site
@@ -37,6 +38,8 @@ const VARIANTS = {
       [/cues: \{ me: 0, years: [^}]*\}/, 'cues: { me: 0, years: 1.55, ecom: 2.92, pay: 3.96, overseas: 4.96, now: 6.43, pipeline: 7.32, line: 8.3 }'],
     ],
     overlay: 'variants/snake',
+    // index.html 裡 <!-- variant:名稱 --> … <!-- /variant:名稱 --> 整段換成 variants/snake/partials/名稱.html
+    partials: ['proof'],
   },
 }
 
@@ -58,7 +61,14 @@ for (const it of ITEMS) {
 if (v.overlay) {
   // Rex 的 PDF（含舊版 rex_resume.pdf）不能出現在其他版本
   for (const f of ['rex-lu-resume.pdf', 'rex_resume.pdf']) rmSync(join(out, 'download', f), { force: true })
-  cpSync(join(root, v.overlay), out, { recursive: true })
+  cpSync(join(root, v.overlay), out, { recursive: true, filter: src => !src.includes('/partials') })
+}
+for (const part of v.partials || []) {
+  const p = join(out, 'index.html')
+  const re = new RegExp(`[ \\t]*<!-- variant:${part}[^>]*-->[\\s\\S]*?<!-- /variant:${part} -->\\n`)
+  const s = readFileSync(p, 'utf8')
+  if (!re.test(s)) throw new Error(`index.html 找不到 variant:${part} 標記`)
+  writeFileSync(p, s.replace(re, () => readFileSync(join(root, v.overlay, 'partials', part + '.html'), 'utf8')))
 }
 
 for (const f of TEXT) {

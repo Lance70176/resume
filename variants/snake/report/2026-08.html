@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>8 月工作量報告｜Snake Lu</title>
+<meta name="description" content="2026 年 8 月工作量評估報告公開節錄版：團隊縮編到 4 人時，一人交付全隊 60% 的點數與 56% 的合併 MR。同事姓名與客戶資訊已去識別。">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://resume-snake.master0987.com/report/2026-08.html">
+<style>
+:root{--bg:#f3f4f6;--surface:#fff;--ink:#15171c;--muted:#5b616e;--line:#dcdfe5;--accent:#2c49c9;--accent-soft:#e6eafb;--spark:#c2410c;--grey:#a3a9b5;--heat:44,73,201;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1115;--surface:#171a20;--ink:#e6e8ee;--muted:#9aa1ae;--line:#2a2f39;--accent:#8fa3ff;--accent-soft:#1d2546;--spark:#fb923c;--grey:#4b5260;--heat:143,163,255;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1115;--surface:#171a20;--ink:#e6e8ee;--muted:#9aa1ae;--line:#2a2f39;--accent:#8fa3ff;--accent-soft:#1d2546;--spark:#fb923c;--grey:#4b5260;--heat:143,163,255;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;font-size:15px;line-height:1.7}
+.wrap{max-width:980px;margin:0 auto;padding:28px 16px 64px}
+a{color:var(--accent)}
+.back{font-size:14px;text-decoration:none}
+h1{font-size:clamp(22px,4vw,30px);margin:14px 0 4px;line-height:1.3}
+.sub{color:var(--muted);font-size:13.5px}
+.note{margin:18px 0 0;padding:12px 16px;border:1px dashed var(--line);border-radius:10px;background:var(--surface);font-size:13.5px;color:var(--muted)}
+h2{font-size:19px;margin:42px 0 12px;padding-left:12px;border-left:4px solid var(--accent)}
+h3{font-size:15.5px;margin:22px 0 8px}
+.lead{font-size:16px}
+.lead b{color:var(--spark)}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
+@media (max-width:640px){.tiles{grid-template-columns:repeat(2,1fr)}}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px}
+.tile .v{font-size:28px;font-weight:800;line-height:1.1}
+.tile .v small{font-size:14px;color:var(--spark);margin-left:4px}
+.tile .l{font-size:13px;color:var(--muted);margin-top:4px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-top:12px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:720px){.grid2{grid-template-columns:1fr}}
+ol.facts{margin:0;padding-left:1.3em;display:grid;gap:8px}
+.bar{display:grid;grid-template-columns:minmax(96px,150px) 1fr 56px;align-items:center;gap:10px;margin:7px 0;font-size:14px}
+.bt{height:14px;background:var(--accent-soft);border-radius:7px;overflow:hidden}
+.bt i{display:block;height:100%;width:var(--w);background:var(--grey);border-radius:7px}
+.bar.hl .bt i{background:var(--spark)}
+.bar.hl .bv{color:var(--spark);font-weight:800}
+.bv{text-align:right;font-variant-numeric:tabular-nums}
+.who{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.who.me{font-weight:800}
+.rd{filter:blur(4px);user-select:none;color:var(--muted);font-size:13px}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface);margin-top:12px}
+table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:640px}
+th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{color:var(--muted);font-weight:600;background:var(--bg)}
+tr:last-child td{border-bottom:0}
+.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tr.hl td{background:var(--accent-soft)}
+.role{font-size:12px;color:var(--muted)}
+.muted{color:var(--muted);font-size:13px}
+.tr{display:grid;grid-template-columns:44px 1fr 52px;gap:10px;align-items:center;margin:8px 0}
+.tb{display:flex;height:22px;border-radius:6px;overflow:hidden;background:var(--accent-soft)}
+.tb i{display:block;width:var(--w)}
+.tb .s1{background:var(--spark)} .tb .s2{background:var(--accent)} .tb .s3{background:var(--grey)}
+.tv{text-align:right;font-variant-numeric:tabular-nums}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-top:6px}
+.legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;background:var(--c)}
+.heat{display:grid;grid-template-columns:repeat(auto-fill,minmax(44px,1fr));gap:6px;margin-top:10px}
+.hd{position:relative;height:48px;border-radius:7px;background:rgba(var(--heat),var(--a));padding:4px 6px;font-size:11px;color:var(--ink)}
+.hd b{position:absolute;right:6px;bottom:4px;font-size:13px}
+.hd.we{outline:1.5px dashed var(--spark);outline-offset:-2px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+ul{padding-left:1.2em}
+footer{margin-top:48px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:14px}
+@media print{.back{display:none} body{background:#fff} .card,.tile,.tbl{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a class="back" href="../">← 回 Snake Lu 履歷</a>
+<h1>2026 年 8 月工作量評估報告<span style="color:var(--muted);font-weight:400">（公開節錄版）</span></h1>
+<div class="sub">對象：Snake（後端工程師，接案進駐）｜統計區間：2026-08-01 ～ 08-31｜資料來源：GitLab（git log＋Merge Request API）、工單系統、正式環境運維紀錄、本機工作日誌｜原報告產出日：2026-09-10</div>
+<p class="note">這份是內部報告的節錄。同事姓名以代號表示並模糊處理；客戶、平台、程式庫名稱、內部網域、單號、合作廠商名稱與薪資等內容都已移除。數字與原報告一致。</p>
+
+<h2>重點摘要</h2>
+<p class="lead">8 月團隊實質開發人力縮減到 4 人（三位同事在月中到月底相繼離開，前台由新同事 8/24 接手）。Snake 一個人承擔全隊 <b>60%</b> 的交付點數、<b>56%</b> 的合併 MR，同時橫跨後端、後台前端、前台、商城、雲端運維五條線；月底接手正式環境的架構查核與發版，修正 <b>12 件</b>運維端錯誤。</p>
+<div class="tiles">
+<div class="tile"><div class="v">743<small>60%</small></div><div class="l">交付點數（第 2 名 259）</div></div>
+<div class="tile"><div class="v">267<small>56%</small></div><div class="l">合併 MR（全隊 478 支）</div></div>
+<div class="tile"><div class="v">294<small>50%</small></div><div class="l">Commits（活躍 25／31 天）</div></div>
+<div class="tile"><div class="v">6</div><div class="l">一週內新接遊戲供應商</div></div>
+<div class="tile"><div class="v">12</div><div class="l">修正正式環境運維錯誤</div></div>
+<div class="tile"><div class="v">31</div><div class="l">評估／規格／交接文件（約 22 萬字）</div></div>
+</div>
+
+<div class="card"><ol class="facts">
+<li><b>產出是第 2 名的 2.9 倍、MR 是 2.4 倍</b>：交付點數 743 對 259，合併 MR 267 對 109。7 月時這個差距還是反過來的（592 對 343），8 月完成反轉。</li>
+<li><b>一人補上三個離職缺口</b>：後端、後台前端、前台三位同事 8 月陸續離開，交接盤點、遺留缺陷修復、前台補位都由 Snake 承接，前台在新同事到職前沒有斷線。</li>
+<li><b>正式環境上線前的穩定度</b>：上線前一週，運維端 CI、WAF、白名單、ingress、EKS、Secret 共 12 處錯誤由 Snake 診斷並修正；8/31 獨立跑完 STG／GRAY／PROD 三環境發版。</li>
+<li><b>登入壓測失敗率從 62.8% 壓到 0.03%</b>：三輪壓測找出 DB 連線數、CrashLoop 正回饋、同 IP 標籤同步三個根因，轉點成功率 99.75%。</li>
+<li><b>投入時間</b>：294 個 commit 中 48 個在深夜（22～06 時）、64 個在週末，皆為全隊最高。</li>
+</ol></div>
+
+<h2>一、8 月全團隊產出對比</h2>
+<div class="grid2">
+<div class="card"><b>交付點數</b><div class="bar hl"><div class="bl"><span class="who me">Snake（本人）</span></div><div class="bt"><i style="--w:100.0%"></i></div><div class="bv">743</div></div><div class="bar"><div class="bl"><span class="who"><span class="rd" aria-hidden="true">Xxxxx Xx</span>同事 A</span></div><div class="bt"><i style="--w:34.9%"></i></div><div class="bv">259</div></div><div class="bar"><div class="bl"><span class="who"><span class="rd" aria-hidden="true">Xxxxx Xx</span>同事 B</span></div><div class="bt"><i style="--w:15.5%"></i></div><div class="bv">115</div></div><div class="bar"><div class="bl"><span class="who"><span class="rd" aria-hidden="true">Xxxxx Xx</span>同事 C</span></div><div class="bt"><i style="--w:7.3%"></i></div><div class="bv">54</div></div><div class="bar"><div class="bl"><span class="who"><span class="rd" aria-hidden="true">Xxxxx Xx</span>同事 D</span></div><div class="bt"><i style="--w:3.8%"></i></div><div class="bv">28</div></div><div class="bar"><div class="bl"><span class="who"><span class="rd" aria-hidden="true">Xxxxx Xx</span>同事 E</span></div><div class="bt"><i style="--w:2.8%"></i></div><div class="bv">21</div></div><div class="bar"><div class="bl"><span class="who"><span class="rd" aria-hidden="true">Xxxxx Xx</span>同事 F</span></div><div class="bt"><i style="--w:2.7%"></i></div><div class="bv">20</div></div></div>
+<div class="card"><b>合併 MR 數</b><div class="bar hl"><div class="bl"><span class="who me">Snake（本人）</span></div><div class="bt"><i style="--w:100.0%"></i></div><div class="bv">267</div></div><div class="bar"><div class="bl"><span class="who"><span class="rd" aria-hidden="true">Xxxxx Xx</span>同事 A</span></div><div class="bt"><i style="--w:40.8%"></i></div><div class="bv">109</div></div><div class="bar"><div class="bl"><span class="who"><span class="rd" aria-hidden="true">Xxxxx Xx</span>同事 C</span></div><div class="bt"><i style="--w:15.0%"></i></div><div class="bv">40</div></div><div class="bar"><div class="bl"><span class="who"><span class="rd" aria-hidden="true">Xxxxx Xx</span>同事 B</span></div><div class="bt"><i style="--w:12.0%"></i></div><div class="bv">32</div></div><div class="bar"><div class="bl"><span class="who"><span class="rd" aria-hidden="true">Xxxxx Xx</span>同事 F</span></div><div class="bt"><i style="--w:7.1%"></i></div><div class="bv">19</div></div><div class="bar"><div class="bl"><span class="who"><span class="rd" aria-hidden="true">Xxxxx Xx</span>同事 D</span></div><div class="bt"><i style="--w:4.1%"></i></div><div class="bv">11</div></div></div>
+</div>
+<div class="tbl"><table>
+<thead><tr><th>人員</th><th class="num">Commits</th><th class="num">合併 MR</th><th class="num">+行</th><th class="num">−行</th><th class="num">交付點數</th><th class="num">佔比</th><th class="num">活躍天</th><th class="num">推估工時</th></tr></thead>
+<tbody><tr class=hl><td><span class="who me">Snake（本人）</span><div class="role">後端＋後台前端＋前台＋商城＋運維</div></td><td class="num">294</td><td class="num">267</td><td class="num">72,424</td><td class="num">7,523</td><td class="num">743</td><td class="num">60%</td><td class="num">25</td><td class="num">112</td></tr><tr><td><span class="who"><span class="rd" aria-hidden="true">Xxxxx Xx</span>同事 A</span><div class="role">後端</div></td><td class="num">67</td><td class="num">109</td><td class="num">25,493</td><td class="num">1,561</td><td class="num">259</td><td class="num">21%</td><td class="num">22</td><td class="num">47</td></tr><tr><td><span class="who"><span class="rd" aria-hidden="true">Xxxxx Xx</span>同事 B</span><div class="role">前台（8/24 到職）</div></td><td class="num">45</td><td class="num">32</td><td class="num">12,766</td><td class="num">129,415</td><td class="num">115</td><td class="num">9%</td><td class="num">8</td><td class="num">30</td></tr><tr><td><span class="who"><span class="rd" aria-hidden="true">Xxxxx Xx</span>同事 C</span><div class="role">後端（8/31 離職）</div></td><td class="num">36</td><td class="num">40</td><td class="num">2,082</td><td class="num">504</td><td class="num">54</td><td class="num">4%</td><td class="num">6</td><td class="num">18</td></tr><tr><td><span class="who"><span class="rd" aria-hidden="true">Xxxxx Xx</span>同事 D</span><div class="role">前台（8/11 後離開）</div></td><td class="num">77</td><td class="num">11</td><td class="num">4,834</td><td class="num">287</td><td class="num">28</td><td class="num">2%</td><td class="num">6</td><td class="num">21</td></tr><tr><td><span class="who"><span class="rd" aria-hidden="true">Xxxxx Xx</span>同事 E</span><div class="role">後台前端（8/12 後離開）</div></td><td class="num">5</td><td class="num">–</td><td class="num">1,480</td><td class="num">1,373</td><td class="num">21</td><td class="num">2%</td><td class="num">3</td><td class="num">4</td></tr><tr><td><span class="who"><span class="rd" aria-hidden="true">Xxxxx Xx</span>同事 F</span><div class="role">運維</div></td><td class="num">67</td><td class="num">19</td><td class="num">9,154</td><td class="num">3,408</td><td class="num">20</td><td class="num">2%</td><td class="num">13</td><td class="num">37</td></tr></tbody></table></div>
+<p class="muted">同事 B 的 −129,415 行是接手前台後清理前任遺留檔案，屬健康整理；同事 F 的 commit 多為部署設定，性質是運維不是開發。推估工時只算有 commit 落點的時段，不含研讀廠商文件、與廠商往返與實測。團隊裡只有 Snake 同時在後端、後台前端、前台、商城與基礎設施共 8 個 repo 都有合併紀錄。</p>
+
+<h2>二、6～8 月趨勢：團隊縮編、個人產出翻倍</h2>
+<div class="card"><b>全隊交付點數組成</b><div class="tr"><div class="tl">6 月</div><div class="tb"><i class="s2" style="--w:35.5%" title="同事 A 573"></i><i class="s3" style="--w:59.3%" title="其他 958"></i></div><div class="tv">1531</div></div><div class="tr"><div class="tl">7 月</div><div class="tb"><i class="s1" style="--w:21.2%" title="Snake 343"></i><i class="s2" style="--w:36.6%" title="同事 A 592"></i><i class="s3" style="--w:42.1%" title="其他 681"></i></div><div class="tv">1616</div></div><div class="tr"><div class="tl">8 月</div><div class="tb"><i class="s1" style="--w:46.0%" title="Snake 743"></i><i class="s2" style="--w:16.0%" title="同事 A 259"></i><i class="s3" style="--w:14.7%" title="其他 238"></i></div><div class="tv">1240</div></div>
+<div class="legend"><span style="--c:var(--spark)">Snake（7/7 進駐）</span><span style="--c:var(--accent)">同事 A</span><span style="--c:var(--grey)">其他成員合計</span></div>
+<p class="muted">有效貢獻者（點數 ≥ 10）從 6 月 10 人降到 8 月 7 人，其中實質開發只剩 4 人；全隊總點數只從 1,531 降到 1,240，主要靠 Snake 從 343 點提升到 743 點補上。</p></div>
+
+<h2>三、8 月工作內容</h2>
+<h3>3.1 六家遊戲供應商對接（8/20～8/26 一週內全部落地）</h3>
+<div class="card"><ul>
+<li>電子類 4 家、真人視訊 1 家、體育 1 家；每家都走「核心服務 → 平台 → 排程」三段式落地，加上 DEV 進出場與真實下注實測、免轉錢包開啟、前台分類補齊。</li>
+<li>實測中揪出注單 round_id 型別缺陷、拉單時間格式、遊戲清單游標拉單（單家 1,394 款遊戲）等問題並修正。</li>
+<li>主要廠商另附開發報告與接入規劃文件。</li>
+</ul></div>
+<h3>3.2 後台功能、報表與修復</h3>
+<div class="card"><p style="margin-top:0">267 支合併 MR 依主題：後台功能／報表／修復 <b>128</b>、三方廠商對接 <b>81</b>、運維／發版／架構 <b>36</b>、商城 <b>11</b>、跨 repo 版本同步 7、效能／韌性 3、文件／測試 1。</p>
+<ul>
+<li><b>待追回款項</b>：跨三個服務的掛帳 helper、三個回收插入點、後台四支 API 與列表頁</li>
+<li><b>流水（打碼量）盤點落地</b>：冪等鍵改複合鍵、取消補償、告警；金流 API 紀錄單表自足＋遮罩＋保留期清理</li>
+<li><b>三方 API log 全鏈</b>：HTTP 層自動記錄原文、遮罩、每日清理排程</li>
+<li><b>拉單機制改善</b>：視窗重疊／追趕／未結算重掃／健康告警／修復 job／並行</li>
+<li><b>會員轉移代理</b>：批次部分成功、單筆轉移、異動紀錄，CAS 更新防併發</li>
+<li><b>代理報表下鑽</b>：自身營收／下線佔成／佔成結算</li>
+<li><b>快速開站</b>：品牌識別、PWA 圖示、客服設定全面後台化，前台 manifest 動態產生（跨 4 repo）</li>
+<li><b>API 文件</b>：全站 swagger annotation 補齊（placeholder 382 → 0）</li>
+</ul></div>
+<h3>3.3 文件產出（31 份、約 22 萬字）</h3>
+<div class="card"><ul>
+<li>三方對接報告 4 份；評估／規格書 9 份（轉點異常盤點、待追回款項開發計畫、11 萬會員轉移難度評估、壓測方案、autoscaling 零改碼方案、WAF 調整報告等）</li>
+<li>商城規劃與多站點架構 3 份；交接盤點 2 份＋外包驗收 1 份；客服操作手冊與流程文件；個人週報與全團隊工作量統計各 4 份</li>
+</ul></div>
+
+<h2>四、正式環境：運維錯誤修正與壓測</h2>
+<div class="kpis">
+<div class="tile"><div class="v">12</div><div class="l">運維端錯誤修正落地</div></div>
+<div class="tile"><div class="v">11</div><div class="l">雲端資源直接操作</div></div>
+<div class="tile"><div class="v">10</div><div class="l">IaC 變更親自 apply</div></div>
+<div class="tile"><div class="v">7</div><div class="l">發版／migration 支援</div></div>
+</div>
+<div class="tbl"><table><thead><tr><th>問題現象</th><th>根因</th><th>Snake 做了什麼</th></tr></thead><tbody><tr><td>上線前 migrate CI 連不到正式 DB</td><td>CI 標籤、變數與資料庫安全群組三層設定錯誤</td><td>逐層診斷並修正，正式 DB 首次經 CI 完成 migrate</td></tr><tr><td>四個環境的代理後台全數 403</td><td>新 WAF 規則把代理後台一併封鎖</td><td>修 IaC 並直改四個 WAF，當晚全部恢復</td></tr><tr><td>後台加白 IP 推不進網路層</td><td>同步程式仍使用舊帳號金鑰</td><td>重發金鑰、更新 Secret 並滾動重啟，同步即時恢復</td></tr><tr><td>白名單回寫路徑指向舊位置</td><td>架構切換後部署設定沒跟著更新</td><td>修正路徑並清掉誤提交檔，plan 零差異</td></tr><tr><td>EKS API 白名單漂移</td><td>IaC 漏 IP、辦公室 IP 重複</td><td>修正後親自 apply</td></tr><tr><td>正式環境 ingress 停在草稿版</td><td>預發佈的 8 個修正沒帶到正式分支</td><td>補齊修正，四個後台網址恢復</td></tr><tr><td>權限設定與圖片上傳被 WAF 擋下</td><td>WAF 8KB body 限制，且例外清單有三份只改了兩份</td><td>三處加白並補齊例外缺口，四環境驗證</td></tr><tr><td>新加白 IP 無法進總後台</td><td>白名單只寫進 DB，沒有元件推到網路層</td><td>當天全鏈落地：IPSet＋WebACL＋IAM＋同步＋回寫 IaC</td></tr><tr><td>IaC apply 會移除雲端折抵標籤</td><td>標籤是手動加的，沒寫進預設標籤</td><td>改由預設標籤管理，確認 0 destroy 才 apply</td></tr><tr><td>商城滾動更新後導覽與登入區消失</td><td>節點快取檔不在映像檔內</td><td>改成快取自癒＋多 pod 版本同步，人工 SOP 作廢</td></tr><tr><td>商城後台設定每次部署被還原（67 項）</td><td>快取檔被打包進映像檔</td><td>改以資料表為準，快取落共享儲存</td></tr><tr><td>正式環境 DB 規格漂移（apply 會降規）</td><td>規格用 CLI 升級但沒回寫 IaC</td><td>查證管理路徑並記錄交運維</td></tr></tbody></table></div>
+<p class="muted">其中 5 件集中在上線前一晚的架構切換；若沒有當晚查核修正，上線時代理後台四環境會全部 403、白名單無法生效，下一次 IaC apply 還會把正式 DB 降規格。</p>
+<h3>登入壓測三輪</h3>
+<div class="card">
+<div class="bar"><div class="bl">壓測前</div><div class="bt"><i style="--w:100%"></i></div><div class="bv">62.8%</div></div>
+<div class="bar"><div class="bl">第二輪</div><div class="bt"><i style="--w:1.15%"></i></div><div class="bv">0.72%</div></div>
+<div class="bar hl"><div class="bl">第三輪</div><div class="bt"><i style="--w:0.6%"></i></div><div class="bv">0.03%</div></div>
+<p class="muted">完整流程 200 VU 的總失敗率。根因：DB 連線上限、連不上 DB 直接 Fatal 造成 CrashLoop 正回饋、同 IP 標籤同步卡在登入關鍵路徑且缺索引。第三輪後 DB 連線峰值 545 → 98、鎖等待 611 → 26；另揪出 XFF 可偽造影響回調白名單，改為 fail-closed。</p>
+</div>
+
+<h2>五、投入時間與工作節奏</h2>
+<div class="card"><b>Snake 每日 commit 熱度（8/1～8/31，虛線框＝週末）</b><div class="heat"><div class="hd we" style="--a:0.12" title="8/1：1 commits"><span>1</span><b>1</b></div><div class="hd we" style="--a:1.00" title="8/2：40 commits"><span>2</span><b>40</b></div><div class="hd" style="--a:0.51" title="8/3：18 commits"><span>3</span><b>18</b></div><div class="hd" style="--a:0.19" title="8/4：4 commits"><span>4</span><b>4</b></div><div class="hd" style="--a:0.26" title="8/5：7 commits"><span>5</span><b>7</b></div><div class="hd" style="--a:0.15" title="8/6：2 commits"><span>6</span><b>2</b></div><div class="hd" style="--a:0.10" title="8/7：0 commits"><span>7</span><b></b></div><div class="hd we" style="--a:0.10" title="8/8：0 commits"><span>8</span><b></b></div><div class="hd we" style="--a:0.10" title="8/9：0 commits"><span>9</span><b></b></div><div class="hd" style="--a:0.26" title="8/10：7 commits"><span>10</span><b>7</b></div><div class="hd" style="--a:0.21" title="8/11：5 commits"><span>11</span><b>5</b></div><div class="hd" style="--a:0.28" title="8/12：8 commits"><span>12</span><b>8</b></div><div class="hd" style="--a:0.21" title="8/13：5 commits"><span>13</span><b>5</b></div><div class="hd" style="--a:0.19" title="8/14：4 commits"><span>14</span><b>4</b></div><div class="hd we" style="--a:0.10" title="8/15：0 commits"><span>15</span><b></b></div><div class="hd we" style="--a:0.10" title="8/16：0 commits"><span>16</span><b></b></div><div class="hd" style="--a:0.33" title="8/17：10 commits"><span>17</span><b>10</b></div><div class="hd" style="--a:0.21" title="8/18：5 commits"><span>18</span><b>5</b></div><div class="hd" style="--a:0.66" title="8/19：25 commits"><span>19</span><b>25</b></div><div class="hd" style="--a:0.89" title="8/20：35 commits"><span>20</span><b>35</b></div><div class="hd" style="--a:0.28" title="8/21：8 commits"><span>21</span><b>8</b></div><div class="hd we" style="--a:0.21" title="8/22：5 commits"><span>22</span><b>5</b></div><div class="hd we" style="--a:0.10" title="8/23：0 commits"><span>23</span><b></b></div><div class="hd" style="--a:0.62" title="8/24：23 commits"><span>24</span><b>23</b></div><div class="hd" style="--a:0.46" title="8/25：16 commits"><span>25</span><b>16</b></div><div class="hd" style="--a:0.28" title="8/26：8 commits"><span>26</span><b>8</b></div><div class="hd" style="--a:0.37" title="8/27：12 commits"><span>27</span><b>12</b></div><div class="hd" style="--a:0.53" title="8/28：19 commits"><span>28</span><b>19</b></div><div class="hd we" style="--a:0.21" title="8/29：5 commits"><span>29</span><b>5</b></div><div class="hd we" style="--a:0.39" title="8/30：13 commits"><span>30</span><b>13</b></div><div class="hd" style="--a:0.30" title="8/31：9 commits"><span>31</span><b>9</b></div></div>
+<p class="muted">四個高峰：8/2（40）待追回款項與流水盤點三 repo 落地；8/19（25）單日結 8 張 QA 反饋單；8/20（35）兩家廠商與站台設定四 repo 連動；8/24（23）廠商與商城批次。</p></div>
+<div class="tbl"><table style="min-width:420px"><thead><tr><th>人員</th><th class="num">Commits</th><th class="num">深夜 22～06 時</th><th class="num">週末</th></tr></thead><tbody>
+<tr class="hl"><td><span class="who me">Snake（本人）</span></td><td class="num">294</td><td class="num">48</td><td class="num">64</td></tr>
+<tr><td><span class="who"><span class="rd" aria-hidden="true">Xxxxx Xx</span>同事 F</span></td><td class="num">67</td><td class="num">32</td><td class="num">30</td></tr>
+<tr><td><span class="who"><span class="rd" aria-hidden="true">Xxxxx Xx</span>同事 A</span></td><td class="num">67</td><td class="num">13</td><td class="num">13</td></tr>
+<tr><td><span class="who"><span class="rd" aria-hidden="true">Xxxxx Xx</span>同事 B</span></td><td class="num">45</td><td class="num">13</td><td class="num">8</td></tr>
+<tr><td><span class="who"><span class="rd" aria-hidden="true">Xxxxx Xx</span>同事 C</span></td><td class="num">36</td><td class="num">12</td><td class="num">0</td></tr>
+<tr><td><span class="who"><span class="rd" aria-hidden="true">Xxxxx Xx</span>同事 D</span></td><td class="num">77</td><td class="num">6</td><td class="num">0</td></tr>
+</tbody></table></div>
+<p class="muted">本機工作日誌：8 月 92 個工作階段、活躍 26 天，親自下達的工作指示 671 則。</p>
+
+<h2>六、角色涵蓋：一個人做了幾份工作</h2>
+<div class="tbl"><table><thead><tr><th>職能</th><th>8 月誰負責</th><th>Snake 的實際承擔</th></tr></thead><tbody>
+<tr><td>後端（Go）</td><td>Snake、同事 A</td><td>168 支合併 MR：六家廠商對接、待追回款項、流水盤點、拉單機制、登入壓測改碼</td></tr>
+<tr><td>後台前端（Vue）</td><td>Snake（同事 E 離開後無人接手）</td><td>67 支合併 MR，獨自接下整條後台前端線</td></tr>
+<tr><td>前台</td><td>同事 D → 同事 B（8/24 到職）</td><td>空窗期補位：商城 SSO 橋接頁、站台設定、PWA manifest</td></tr>
+<tr><td>商城（PHP）</td><td>Snake</td><td>客戶反饋 9 項、驗收批次 13 張、節點快取自癒、設定持久化</td></tr>
+<tr><td>雲端運維（AWS／EKS／IaC／helm）</td><td>同事 F＋Snake 備援</td><td>12 件運維錯誤修正、11 件雲端資源操作、8/31 暫代運維</td></tr>
+<tr><td>DBA</td><td>Snake</td><td>migrate CI 重構、正式 DB 首次 CI migrate、預發佈補 193 支 migration</td></tr>
+<tr><td>技術主管職能</td><td>Snake</td><td>兩份離職交接盤點、外包驗收、前台面試題與架構分析、31 份評估與規格文件</td></tr>
+</tbody></table></div>
+
+<h2>附錄：統計方法</h2>
+<div class="card muted" style="font-size:13.5px">
+<p style="margin-top:0"><b>交付點數</b>：每個合入 develop 的 MR 分支算 1 個工作項；加權有效行＝新增行 ×1＋刪除行 ×0.2（仿 GitClear Diff Delta），再依檔案類型加權（業務邏輯 ×1.3、SQL／migration ×1.2、測試 ×0.6、設定／文件 ×0.3），大型 seed 資料檔降權 ×0.05，最後以 Fibonacci 映射成 1～13 點。</p>
+<p><b>推估工時</b>：commit 間隔小於 2 小時視為連續工作，每段加 1 小時起始成本（git-hours 會話法），只反映有 commit 落點的時間。</p>
+<p style="margin-bottom:0"><b>MR 統計</b>：GitLab API 抓取 8 月建立或合併的 MR，依作者身份合併；排除 merge commit 與生成檔。</p>
+</div>
+<footer>Snake Lu ・ 公開節錄版，原始內部報告 2026-09-10 ・ <a href="../">回履歷</a></footer>
+</div>
+</body>
+</html>
