@@ -25,6 +25,8 @@ const VARIANTS = {
     replace: [
       [REX_URL, 'resume-snake.master0987.com'],
       ['rex-lu-resume.pdf', 'snake-lu-resume.pdf'],
+      // PDF 改內容後要升版號，否則 CDN 會回舊檔（cf-purge token 沒有清快取權限）
+      ['snake-lu-resume.pdf"', 'snake-lu-resume.pdf?v=7"'],
       ['Rex Lu', 'Snake Lu'],
       ['REX LU', 'SNAKE LU'],
       ['ABOUT REX', 'ABOUT SNAKE'],
