@@ -1,7 +1,7 @@
 // 從同一份原始碼產出兩個對外履歷站：
 //   rex   → https://resume-rex.master0987.com（Rex Lu，求職用；原始碼本身就是這版）
 //   snake → https://resume-snake.master0987.com（Snake Lu，接案用；換名字、網址、email、PDF 檔名與開場配音，
-//           「實證」區塊改成附圖表與 8 月報告節錄連結的版本，報告在 variants/snake/report/）
+//           工作流程四卡加圖示動畫、「實證」區塊改成附圖表與 8 月報告節錄連結的版本，報告在 variants/snake/report/）
 //
 // 用法：node tools/build-variant.mjs <rex|snake> <輸出目錄>
 //   例：node tools/build-variant.mjs snake ~/projects/case/resume-snake-site
@@ -41,7 +41,7 @@ const VARIANTS = {
     ],
     overlay: 'variants/snake',
     // index.html 裡 <!-- variant:名稱 --> … <!-- /variant:名稱 --> 整段換成 variants/snake/partials/名稱.html
-    partials: ['proof'],
+    partials: ['pipe', 'proof'],
   },
 }
 

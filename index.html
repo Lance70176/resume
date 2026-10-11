@@ -275,12 +275,14 @@ MyGhost  MyXnip  TypeTop  AirGrip  <span class="p">+8</span>
     <p class="eyebrow">Agentic Engineering</p>
     <h2>不只會用 AI，是把 agent 組成一條產線</h2>
     <p class="prose muted">2026 年業界把這種工作方式稱為 Agentic Engineering：人掌握架構與品質，AI agent 負責撰寫、測試與交付。以下是我每天實際在跑的流程。</p>
+    <!-- variant:pipe（Snake 版由 variants/snake/partials/pipe.html 取代） -->
     <div class="pipe">
       <div class="step"><h3>架構與拆解</h3><p>先釐清業務規則與錯誤情境，把需求拆成可獨立驗證的工作單元，寫下驗收基準。</p><span class="who-does">由我負責</span></div>
       <div class="step"><h3>平行實作</h3><p>每張工單一個 git worktree，多個 agent 同時開發互不干擾，單一專案最多 44 個平行工作區。</p><span class="who-does">AI agent 執行</span></div>
       <div class="step"><h3>交叉審查與對拍</h3><p>Claude 寫、Codex 審；重構以舊系統實際輸出為真相，自寫黑盒比對工具逐欄驗證。</p><span class="who-does">跨模型＋工具</span></div>
       <div class="step"><h3>把關與上線</h3><p>人工 review、測試與灰度開關後才進正式環境，過程沉澱成可重跑的 skill 與文件。</p><span class="who-does">由我負責</span></div>
     </div>
+    <!-- /variant:pipe -->
     <!-- variant:proof（Snake 版由 variants/snake/partials/proof.html 取代） -->
     <div class="proof">
       <p><strong>實證：團隊縮編時的一個月</strong>　2026 年 8 月，團隊實質開發人力只剩 4 人，三位同事相繼離開。</p>
