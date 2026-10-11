@@ -30,6 +30,8 @@ const VARIANTS = {
       ['ABOUT REX', 'ABOUT SNAKE'],
       ['我是 Rex', '我是 Snake'],
       ['lance70176@gmail.com', 'snakeluph@gmail.com'],
+      // 兩版刻意用不同大頭照（Snake 版在 variants/snake/img/avatar.jpg），加版本參數避開 Rex 照片的 CDN 快取
+      ['img/avatar.jpg', 'img/avatar.jpg?v=snake'],
       ['--author=rex', '--author=snake'],
       ["'rex-explainer-muted'", "'snake-explainer-muted'"],
       // 舊網域轉址只屬於 rex 版
