@@ -706,7 +706,7 @@
   }
   var durReady = null
   function loadDurations() {
-    if (!durReady) durReady = fetch(BASE + 'durations.json?v=3').then(function (r) { return r.json() }).catch(function () { return {} })
+    if (!durReady) durReady = fetch(BASE + 'durations.json?v=4').then(function (r) { return r.json() }).catch(function () { return {} })
     return durReady
   }
 

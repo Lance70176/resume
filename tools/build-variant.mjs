@@ -1,6 +1,6 @@
 // 從同一份原始碼產出兩個對外履歷站：
 //   rex   → https://resume-rex.master0987.com（Rex Lu，求職用；原始碼本身就是這版）
-//   snake → https://resume-snake.master0987.com（Snake Lu，接案用；換名字、網址、PDF 檔名與開場配音）
+//   snake → https://resume-snake.master0987.com（Snake Lu，接案用；換名字、網址、email、PDF 檔名與開場配音）
 //
 // 用法：node tools/build-variant.mjs <rex|snake> <輸出目錄>
 //   例：node tools/build-variant.mjs snake ~/projects/case/resume-snake-site
@@ -28,6 +28,7 @@ const VARIANTS = {
       ['REX LU', 'SNAKE LU'],
       ['ABOUT REX', 'ABOUT SNAKE'],
       ['我是 Rex', '我是 Snake'],
+      ['lance70176@gmail.com', 'snakeluph@gmail.com'],
       ['--author=rex', '--author=snake'],
       ["'rex-explainer-muted'", "'snake-explainer-muted'"],
       // 舊網域轉址只屬於 rex 版
@@ -68,7 +69,7 @@ for (const f of TEXT) {
 }
 
 if (name !== 'rex') {
-  const left = TEXT.flatMap(f => (readFileSync(join(out, f), 'utf8').match(/Rex Lu|我是 Rex|resume-rex\./g) || []).map(m => `${f}: ${m}`))
+  const left = TEXT.flatMap(f => (readFileSync(join(out, f), 'utf8').match(/Rex Lu|我是 Rex|resume-rex\.|lance70176@/g) || []).map(m => `${f}: ${m}`))
   if (left.length) {
     console.error('還有沒換掉的 Rex：\n' + left.join('\n'))
     process.exit(1)
