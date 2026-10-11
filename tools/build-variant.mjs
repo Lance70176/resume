@@ -41,7 +41,7 @@ const VARIANTS = {
     ],
     overlay: 'variants/snake',
     // index.html 裡 <!-- variant:名稱 --> … <!-- /variant:名稱 --> 整段換成 variants/snake/partials/名稱.html
-    partials: ['pipe', 'proof'],
+    partials: ['metrics', 'pipe', 'proof'],
   },
 }
 

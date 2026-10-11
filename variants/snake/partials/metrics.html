@@ -1,0 +1,96 @@
+<div class="band" aria-label="代表數據">
+  <div class="wrap metrics">
+    <div class="metric"><b>2.9×</b><span>單月交付為團隊第 2 名的倍數</span><small>交付點數全隊 60%、合併 MR 56%</small></div>
+    <div class="metric"><b>62.8→0.03%</b><span>正式規格壓測失敗率</span><small>找出 3 個根因，登入成功率 44.8%→100%</small></div>
+    <div class="metric"><b>90s→2s</b><span>1,347 萬列大表查詢</span><small>覆蓋索引＋移除多餘跨庫 join</small></div>
+    <div class="metric"><b>−96%</b><span>跨 30 平台報表的 SQL 數</span><small>先 audit 74 平台欄位型別再 UNION</small></div>
+    <div class="metric"><b>75 家／2 天</b><span>第三方平台設定自動萃取</span><small>寫工具從舊程式碼產出設定</small></div>
+    <div class="metric"><b>7 天</b><span>AI 產品從啟動到公測</span><small>68 commits、12 個版本批次</small></div>
+  </div>
+</div>
+<style>
+.cost{padding:34px 0 38px}
+.cost-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:22px;align-items:start}
+@media (max-width:860px){.cost-grid{grid-template-columns:minmax(0,1fr)}}
+.cost-hero{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 18px 16px}
+.cost-hero .k{font-family:var(--f-mono);font-size:clamp(30px,4.4vw,42px);font-weight:700;color:var(--spark);line-height:1.1;font-variant-numeric:tabular-nums}
+.cost-hero .k small{font-size:15px;color:var(--muted);font-weight:500;margin-left:4px}
+.cost-hero .t{font-size:14px;margin:4px 0 2px;font-weight:700}
+.cost-hero .n{font-size:12px;color:var(--muted);margin:0 0 14px}
+.cb{display:grid;grid-template-columns:128px 1fr 52px;gap:8px;align-items:center;margin:8px 0;font-size:13px}
+.cb .cbar{height:12px;border-radius:6px;background:var(--accent-soft);overflow:hidden}
+.cb .cbar i{display:block;height:100%;width:var(--w);min-width:2px;border-radius:6px;background:var(--muted);opacity:.5;transition:width .9s cubic-bezier(.2,.8,.2,1)}
+.cb.hl .cbar i{background:var(--spark);opacity:1}
+.cb.zero .cbar i{background:#16a34a;opacity:1}
+.cb .v{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.cb.hl .v{color:var(--spark);font-weight:700}
+.cb.zero .v{color:#16a34a;font-weight:700}
+.route{margin-top:14px;border-top:1px dashed var(--line);padding-top:12px;display:grid;gap:6px;font-size:12.5px}
+.route div{display:grid;grid-template-columns:96px 14px 1fr;gap:6px;align-items:center}
+.route span:first-child{color:var(--ink)}
+.route em{font-style:normal;font-family:var(--f-mono);font-size:11.5px;padding:2px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent);justify-self:start}
+.route .free em{background:color-mix(in srgb,#16a34a 14%,transparent);color:#16a34a}
+.route b{color:var(--muted);font-weight:400}
+.pillars{display:grid;gap:12px}
+.pillar{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;border-left:3px solid var(--c,var(--accent))}
+.pillar h3{font-size:15px;margin:0 0 6px;display:flex;align-items:center;gap:8px}
+.pillar h3 i{font-style:normal;font-family:var(--f-mono);font-size:11px;color:var(--c);border:1px solid var(--c);border-radius:999px;padding:1px 8px}
+.pillar ul{margin:0;padding-left:1.1em;display:grid;gap:3px;font-size:13.5px;color:var(--muted)}
+.pillar ul b{color:var(--ink);font-weight:600}
+.cost-foot{font-size:12px;color:var(--muted);margin:14px 0 0}
+.js-cost .cb .cbar i{width:0}
+.js-cost.go .cb .cbar i{width:var(--w)}
+.js-cost.go .cb:nth-child(2) .cbar i{transition-delay:.15s}
+.js-cost.go .cb:nth-child(3) .cbar i{transition-delay:.3s}
+@media (prefers-reduced-motion:reduce){.cb .cbar i{transition:none}}
+@media print{.cost-hero,.pillar{break-inside:avoid}.route{display:none!important}.cost h2{font-size:18px;margin-bottom:8px}.cost-hero{padding:10px 12px}.cost-hero .k{font-size:26px}.cb{margin:4px 0;font-size:10.5px;grid-template-columns:88px 1fr 34px;gap:5px}.cb .cbar{height:8px}.cb .cbar,.cb .cbar i{-webkit-print-color-adjust:exact;print-color-adjust:exact}.pillar{padding:8px 10px}.pillar h3{font-size:12.5px;margin-bottom:3px}.pillar ul{gap:1px}.pillars{gap:6px}.cost-foot{font-size:10px;margin-top:6px}.cost{padding:14px 0}.js-cost .cb .cbar i{width:var(--w)}.cost-grid{grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:12px}.pillar ul{font-size:11px}.route{font-size:11px}}
+</style>
+<section class="cost" id="cost" aria-label="成本控制">
+  <div class="wrap">
+    <p class="eyebrow">Cost</p>
+    <h2>會調 AI，也會算帳：把成本壓在設計裡</h2>
+    <div class="cost-grid">
+      <div class="cost-hero" id="costChart">
+        <div class="k">US$0.6<small>／重度用戶・月</small></div>
+        <p class="t">AI 陪伴產品的 LLM 推論成本</p>
+        <p class="n">試算：每人每天 50 則、輸入 3K／輸出 300 tokens；¥30 月卡下毛利 85% 以上。</p>
+        <div role="img" aria-label="同一位重度用戶每月 LLM 成本：全部用 Flash 約 1.8 美元，模型分流後約 0.6 美元，背景批次走免費層或訂閱 CLI 為 0 美元">
+          <div class="cb"><span>全部用旗艦 Flash</span><span class="cbar"><i style="--w:100%"></i></span><span class="v">$1.8</span></div>
+          <div class="cb hl"><span>模型分流後</span><span class="cbar"><i style="--w:33.3%"></i></span><span class="v">$0.6</span></div>
+          <div class="cb zero"><span>背景批次走免費層</span><span class="cbar"><i style="--w:0%"></i></span><span class="v">$0</span></div>
+        </div>
+        <div class="route" aria-label="請求依任務分流到不同成本層">
+          <div><span>即時聊天</span><span>→</span><em>Flash（失敗退避）</em></div>
+          <div><span>背景摘要</span><span>→</span><em>Flash-Lite</em></div>
+          <div class="free"><span>離線批次</span><span>→</span><em>免費層・訂閱 CLI $0</em></div>
+        </div>
+      </div>
+      <div class="pillars">
+        <div class="pillar" style="--c:var(--spark)"><h3>AI 成本<i>LLM</i></h3><ul>
+          <li><b>依任務分流模型</b>：即時對話用 Flash，背景整理一律 Flash-Lite（實測 2 秒），離線批次改走本機 CLI 或免費層</li>
+          <li><b>控 token</b>：只帶最近 40 則原文，更早的壓成 80～200 字滾動摘要；思考型模型的輸出上限實測調到不截斷，避免重試浪費</li>
+          <li><b>不空燒額度</b>：多把金鑰輪替，全數 429 時背景工作冷卻 30 分鐘；自建用量記帳與額度儀表板</li>
+          <li>占卜功能改走 Gemini 免費層：<b>API 成本 0 元</b>，延遲約 45 秒 → 20 秒</li>
+        </ul></div>
+        <div class="pillar" style="--c:var(--accent)"><h3>開發成本<i>DEV</i></h3><ul>
+          <li><b>一人交付全隊 60%</b>：Agentic 產線讓小編制做大團隊的量</li>
+          <li><b>寫工具取代人工</b>：75 家第三方平台設定 2 天自動萃取；API log 掛在 HTTP 層，新廠商零改碼自動納入</li>
+          <li>產業排行追蹤用訂閱 CLI 跑 Claude／ChatGPT 兩條線，<b>零 API 費用</b></li>
+        </ul></div>
+        <div class="pillar" style="--c:#16a34a"><h3>流量與雲端成本<i>INFRA</i></h3><ul>
+          <li><b>免費流量 +58%</b>：SEO／AEO 改造後 Google 4 週曝光 12,093 → 19,163，不靠買廣告</li>
+          <li>統計放在邊緣：Cloudflare Workers＋Analytics Engine 收資料，批次彙總進 MySQL，不打主庫</li>
+          <li>Graviton 機型、遷移折抵（MAP）標籤收進 IaC 預設標籤，避免 apply 時把折抵洗掉；語音用免費 Edge TTS、合成過的句子永久快取</li>
+        </ul></div>
+      </div>
+    </div>
+    <p class="cost-foot">US$1.8／$0.6 為依官方單價的試算，非實際帳單；其餘數字取自專案程式、設定與成效報表。</p>
+  </div>
+</section>
+<script>
+(function(){var c=document.getElementById('costChart');if(!c||!('IntersectionObserver' in window))return;
+  if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  c.classList.add('js-cost');
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){c.classList.add('go');io.disconnect()}})},{threshold:.3});
+  io.observe(c)})();
+</script>
