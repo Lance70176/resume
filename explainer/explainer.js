@@ -4,7 +4,7 @@
 // 所有抖動都用固定種子產生：同一個 t 畫出來永遠一樣，暫停、跳幕、減少動態模式都只是「用某個 t 重畫一次」。
 (function (root, factory) {
   if (typeof module === 'object' && module.exports) module.exports = factory(require('./script.js'))
-  else root.RexExplainer = factory(root.REX_EXPLAINER_SCRIPT)
+  else root.ResumeExplainer = factory(root.RESUME_EXPLAINER_SCRIPT)
 })(typeof self !== 'undefined' ? self : this, function (SCRIPT) {
   'use strict'
   var SCENES = SCRIPT.SCENES
@@ -670,7 +670,7 @@
     }
     sparkle(ctx, 330, 300, 10, BLUE, prog(t, n + 0.2, 0.5), 'cs1')
     sparkle(ctx, 640, 440, 8, ORANGE, prog(t, n + 0.6, 0.5), 'cs2')
-    text(ctx, 'resume.master0987.com', 480, 515, { size: 18, color: MUTED, progress: prog(t, n + 0.3, 1) })
+    text(ctx, 'resume-rex.master0987.com', 480, 515, { size: 18, color: MUTED, progress: prog(t, n + 0.3, 1) })
   }
 
   var RENDER = { intro: intro, money: money, pipeline: pipeline, proof: proof, toolsmith: toolsmith, cta: cta }
@@ -706,7 +706,7 @@
   }
   var durReady = null
   function loadDurations() {
-    if (!durReady) durReady = fetch(BASE + 'durations.json?v=2').then(function (r) { return r.json() }).catch(function () { return {} })
+    if (!durReady) durReady = fetch(BASE + 'durations.json?v=3').then(function (r) { return r.json() }).catch(function () { return {} })
     return durReady
   }
 

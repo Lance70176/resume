@@ -6,10 +6,10 @@
 // 「念到什麼就畫什麼」。量法：ffmpeg silencedetect（noise=-35dB:d=0.12）的靜音結束點＝子句起點，
 // gen-explainer-audio.mjs 會把它寫進 durations.json 的 <id>_pauses；子句內的詞（例如「十六年」）
 // 再用聽的估。重產配音後務必對照 <id>_pauses 更新這裡的 cues。
-// 瀏覽器與 Node（配音腳本、預覽腳本）共用同一份：瀏覽器掛在 window.REX_EXPLAINER_SCRIPT。
+// 瀏覽器與 Node（配音腳本、預覽腳本）共用同一份：瀏覽器掛在 window.RESUME_EXPLAINER_SCRIPT。
 (function (root, factory) {
   if (typeof module === 'object' && module.exports) module.exports = factory()
-  else root.REX_EXPLAINER_SCRIPT = factory()
+  else root.RESUME_EXPLAINER_SCRIPT = factory()
 })(typeof self !== 'undefined' ? self : this, function () {
   var SCENES = [
     {

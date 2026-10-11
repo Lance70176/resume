@@ -2,17 +2,18 @@
 <html lang="zh-Hant-TW">
 <head>
 <meta charset="utf-8">
+<script>if(location.hostname==='resume.master0987.com')location.replace('https://resume-rex.master0987.com'+location.pathname+location.search+location.hash)</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Rex Lu｜系統架構師 × Agentic Engineer</title>
 <meta name="description" content="Rex Lu：16 年經驗的系統架構師與 Agentic Engineer。以 AI agent 產線交付金流、遊戲平台與 SaaS 系統，單月交付為團隊第 2 名的 2.9 倍；自製 12 個 macOS 工具 App。台北。">
 <meta name="author" content="Rex Lu">
 <meta name="robots" content="index, follow">
-<link rel="canonical" href="https://resume.master0987.com/">
+<link rel="canonical" href="https://resume-rex.master0987.com/">
 <meta property="og:type" content="profile">
 <meta property="og:title" content="Rex Lu｜系統架構師 × Agentic Engineer">
 <meta property="og:description" content="我設計架構，指揮 AI agent 產線交付。金流安全、高併發平台、AI 產品與自製工具。">
-<meta property="og:url" content="https://resume.master0987.com/">
-<meta property="og:image" content="https://resume.master0987.com/img/avatr.jpg?v=2">
+<meta property="og:url" content="https://resume-rex.master0987.com/">
+<meta property="og:image" content="https://resume-rex.master0987.com/img/avatr.jpg?v=2">
 <meta property="og:locale" content="zh_TW">
 <meta name="twitter:card" content="summary">
 <script type="application/ld+json">
@@ -20,8 +21,8 @@
   "@context": "https://schema.org",
   "@type": "Person",
   "name": "Rex Lu",
-  "url": "https://resume.master0987.com/",
-  "image": "https://resume.master0987.com/img/avatr.jpg?v=2",
+  "url": "https://resume-rex.master0987.com/",
+  "image": "https://resume-rex.master0987.com/img/avatr.jpg?v=2",
   "email": "mailto:lance70176@gmail.com",
   "jobTitle": ["系統架構師", "Agentic Engineer"],
   "address": {"@type": "PostalAddress", "addressLocality": "台北", "addressCountry": "TW"},
@@ -417,7 +418,7 @@ MyGhost  MyXnip  TypeTop  AirGrip  <span class="p">+8</span>
   <div class="wrap">
     <p class="eyebrow">Contact</p>
     <h2>有系統要做穩，或想導入 AI 工作流？</h2>
-    <p class="prose muted">全職機會、顧問與接案合作都歡迎來信。線上版：resume.master0987.com</p>
+    <p class="prose muted">全職機會、顧問與接案合作都歡迎來信。線上版：resume-rex.master0987.com</p>
     <div class="mail">
       <code id="mailText">lance70176@gmail.com</code>
       <button class="btn ghost" type="button" id="copyMail">複製 Email</button>
@@ -457,11 +458,11 @@ MyGhost  MyXnip  TypeTop  AirGrip  <span class="p">+8</span>
     var a=window.__rxAudio||(window.__rxAudio=new Audio());
     a.preload='auto';a.src='explainer/audio/intro.mp3';a.muted=true;
     var unlocked=a.play().then(function(){a.pause();}).catch(function(){}).then(function(){a.muted=false;});
-    var ready=window.RexExplainer?Promise.resolve():(loading=true,eb.textContent='載入中…',
-      loadScript('explainer/script.js?v=2').then(function(){return loadScript('explainer/explainer.js?v=2');}));
+    var ready=window.ResumeExplainer?Promise.resolve():(loading=true,eb.textContent='載入中…',
+      loadScript('explainer/script.js?v=3').then(function(){return loadScript('explainer/explainer.js?v=3');}));
     ready.then(function(){
       loading=false;eb.textContent=label;
-      window.RexExplainer.open({audio:a,unlocked:unlocked,returnFocus:eb});
+      window.ResumeExplainer.open({audio:a,unlocked:unlocked,returnFocus:eb});
     },function(){loading=false;eb.textContent='載入失敗，請重試';});
   });
 })();
