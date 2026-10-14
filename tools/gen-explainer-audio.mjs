@@ -6,6 +6,8 @@
 //   node tools/gen-explainer-audio.mjs --missing                     # 只補還沒產生的幕
 //   node tools/gen-explainer-audio.mjs --from ~/錄音資料夾             # 改用真人錄音（檔名＝幕 id）
 //   node tools/gen-explainer-audio.mjs --measure                     # 不產音，只重量既有 mp3 的秒數與子句起點
+//   node tools/gen-explainer-audio.mjs --from ~/錄音 --out variants/snake/explainer  # 輸出到 Snake 版
+//   （Snake 版六幕是 Voicebox 用本人聲音克隆產的，產生方式見 variants/snake/explainer/README.md）
 //
 // 金鑰：環境變數 GEMINI_API_KEY，沒設就讀 GEMINI_KEY_FILE 指到的 .env（預設是 astrofish
 // dice-writer 的 .env，取 GEMINI_API_KEYS 第一把）。金鑰不印出、不寫進 repo。
@@ -29,15 +31,18 @@ import { createRequire } from 'node:module'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const { SCENES } = createRequire(import.meta.url)(join(root, 'explainer/script.js'))
-const outDir = join(root, 'explainer/audio')
-const durFile = join(root, 'explainer/durations.json')
+const args = process.argv.slice(2)
+const argOf = flag => (args.includes(flag) ? args[args.indexOf(flag) + 1] : null)
+const fromDir = argOf('--from')
+// --out：輸出到別版的 explainer 目錄（例如 variants/snake/explainer），預設 explainer/
+const outBase = join(root, argOf('--out') || 'explainer')
+const outDir = join(outBase, 'audio')
+const durFile = join(outBase, 'durations.json')
 const MODEL = process.env.TTS_MODEL || 'gemini-3.8-flash-tts'
 const VOICE = process.env.TTS_VOICE || 'Charon'
-const args = process.argv.slice(2)
-const fromDir = args.includes('--from') ? args[args.indexOf('--from') + 1] : null
 const skipExisting = args.includes('--missing')
 const measureOnly = args.includes('--measure')
-const only = args.filter(a => !a.startsWith('--') && a !== fromDir)
+const only = args.filter((a, i) => !a.startsWith('--') && !['--from', '--out'].includes(args[i - 1]))
 
 const readKey = () => {
   if (process.env.GEMINI_API_KEY) return process.env.GEMINI_API_KEY
