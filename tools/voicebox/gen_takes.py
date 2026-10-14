@@ -1,10 +1,11 @@
-# Snake 版配音：用筆電上的 Voicebox（本人聲音克隆）產生六幕旁白，whisper 聽寫後用拼音比對，
+# 用筆電上的 Voicebox（本人聲音克隆）產生六幕旁白，whisper 聽寫後用拼音比對，
 # 念錯（例如「補救」念成「保救」、「輸入法」念成「虛錄法」）就換 seed 重產，挑拼音最吻合的一條。
 #
 # 用法（筆電，Voicebox App 要開著；Mini 上可經 voicebox-tunnel 打同一個 localhost:17493）：
-#   uv run --with mlx-whisper --with pypinyin python tools/voicebox/gen_takes.py <輸出資料夾> [幕 id ...]
+#   uv run --with mlx-whisper --with pypinyin python tools/voicebox/gen_takes.py <輸出資料夾> [--name Rex] [幕 id ...]
+#   開場念的名字預設 Snake；--name Rex 產 Rex 版（原始碼 explainer/）
 # 產出 <輸出資料夾>/<幕 id>.wav，再交給：
-#   node tools/gen-explainer-audio.mjs --from <輸出資料夾> --out variants/snake/explainer
+#   node tools/gen-explainer-audio.mjs --from <輸出資料夾> [--out variants/snake/explainer]
 import difflib, json, os, shutil, subprocess, sys, time, urllib.request
 import mlx_whisper
 from pypinyin import lazy_pinyin
@@ -17,7 +18,9 @@ NUM = set("零一二三四五六七八九十百點兩")  # 數字聽寫會變阿
 
 root = os.path.join(os.path.dirname(__file__), "../..")
 scenes = json.loads(subprocess.check_output(["node", "-e", "console.log(JSON.stringify(require('./explainer/script.js').SCENES))"], cwd=root))
-out_dir, only = sys.argv[1], sys.argv[2:]
+args = sys.argv[2:]
+name = args[args.index("--name") + 1] if "--name" in args else "Snake"
+out_dir, only = sys.argv[1], [a for i, a in enumerate(args) if a != "--name" and (i == 0 or args[i - 1] != "--name")]
 os.makedirs(out_dir, exist_ok=True)
 
 def pinyin(t):
@@ -38,7 +41,7 @@ def generate(text, seed, wav):
 for s in scenes:
     if only and s["id"] not in only:
         continue
-    line = s["line"].replace("我是 Rex", "我是 Snake")
+    line = s["line"].replace("我是 Rex", f"我是 {name}")
     best = None
     for seed in SEEDS:
         wav = os.path.join(out_dir, f"{s['id']}.seed{seed}.wav")

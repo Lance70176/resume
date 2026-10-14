@@ -8,46 +8,5 @@
     "now": 6.38,
     "pipeline": 6.92,
     "line": 8.06
-  },
-  "money": {
-    "care": 0,
-    "money": 1.03,
-    "timeout": 2.41,
-    "dup": 3.0,
-    "recon": 4.43,
-    "day1": 5.68,
-    "putin": 6.5
-  },
-  "pipeline": {
-    "architect": 0,
-    "agents": 1.87,
-    "parallel": 4.44,
-    "review": 5.6,
-    "diff": 7.04,
-    "gate": 7.93,
-    "launch": 8.84
-  },
-  "proof": {
-    "result": 0,
-    "month": 1.31,
-    "sixty": 2.65,
-    "stress": 4.32,
-    "from": 5.64,
-    "down": 7.39
-  },
-  "toolsmith": {
-    "smith": 0,
-    "year": 1.32,
-    "twelve": 1.86,
-    "term": 3.91,
-    "cam": 4.5,
-    "ime": 5.14,
-    "daily": 5.9
-  },
-  "cta": {
-    "stable": 0,
-    "ai": 1.81,
-    "mail": 3.69,
-    "chat": 4.57
   }
 }

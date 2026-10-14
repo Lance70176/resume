@@ -7,7 +7,7 @@
 //   node tools/gen-explainer-audio.mjs --from ~/錄音資料夾             # 改用真人錄音（檔名＝幕 id）
 //   node tools/gen-explainer-audio.mjs --measure                     # 不產音，只重量既有 mp3 的秒數與子句起點
 //   node tools/gen-explainer-audio.mjs --from ~/錄音 --out variants/snake/explainer  # 輸出到 Snake 版
-//   （Snake 版六幕是 Voicebox 用本人聲音克隆產的，產生方式見 variants/snake/explainer/README.md）
+//   （2026-10-14 起兩版配音都是 Voicebox 本人聲音克隆，Gemini 流程保留備用；見 variants/snake/explainer/README.md）
 //
 // 金鑰：環境變數 GEMINI_API_KEY，沒設就讀 GEMINI_KEY_FILE 指到的 .env（預設是 astrofish
 // dice-writer 的 .env，取 GEMINI_API_KEYS 第一把）。金鑰不印出、不寫進 repo。

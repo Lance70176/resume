@@ -16,37 +16,37 @@
       id: 'intro',
       line: '我是 Rex，寫了十六年的系統。從電商、行動支付，到海外平台；現在，我用 AI agent 產線交付。',
       caption: '我是 Rex，寫了 16 年的系統。從電商、行動支付，到海外平台；現在，我用 AI agent 產線交付。',
-      cues: { me: 0, years: 1.5, ecom: 2.94, pay: 3.86, overseas: 5.08, now: 6.54, pipeline: 7.3, line: 8.3 },
+      cues: { me: 0, years: 1.56, ecom: 3.07, pay: 3.74, overseas: 4.83, now: 6.07, pipeline: 6.44, line: 7.52 },
     },
     {
       id: 'money',
       line: '我最在意的是：錢不能錯。逾時、重複入帳、對帳補救，我在設計的第一天就放進去。',
       caption: '我最在意的是：錢不能錯。逾時、重複入帳、對帳補救，我在設計的第一天就放進去。',
-      cues: { care: 0, money: 1.29, timeout: 3.04, dup: 3.84, recon: 5.09, day1: 6.26, putin: 7.07 },
+      cues: { care: 0, money: 1.03, timeout: 2.41, dup: 3.0, recon: 4.43, day1: 5.68, putin: 6.5 },
     },
     {
       id: 'pipeline',
       line: '我負責架構與拆解；多個 AI agent 在各自的工作區平行開發，經過跨模型審查與對拍，最後由我把關上線。',
       caption: '我負責架構與拆解；多個 AI agent 在各自的工作區平行開發，經過跨模型審查與對拍，最後由我把關上線。',
-      cues: { architect: 0, agents: 2.28, parallel: 4.6, review: 5.93, diff: 7.4, gate: 8.31, launch: 9.3 },
+      cues: { architect: 0, agents: 1.87, parallel: 4.44, review: 5.6, diff: 7.04, gate: 7.93, launch: 8.84 },
     },
     {
       id: 'proof',
       line: '結果是，一個月交付全隊百分之六十的工作量；壓測失敗率，從百分之六十二點八，降到百分之零點零三。',
       caption: '結果是，一個月交付全隊 60% 的工作量；壓測失敗率，從 62.8% 降到 0.03%。',
-      cues: { result: 0, month: 1.2, sixty: 2.6, stress: 4.63, from: 5.69, down: 7.44 },
+      cues: { result: 0, month: 1.31, sixty: 2.65, stress: 4.32, from: 5.64, down: 7.39 },
     },
     {
       id: 'toolsmith',
       line: '我也是工具匠。今年做了十二個 macOS App，終端機、截圖、輸入法，每天都在用。',
       caption: '我也是工具匠。今年做了 12 個 macOS App，終端機、截圖、輸入法，每天都在用。',
-      cues: { smith: 0, year: 1.28, twelve: 1.9, term: 4.01, cam: 4.94, ime: 5.76, daily: 6.74 },
+      cues: { smith: 0, year: 1.32, twelve: 1.86, term: 3.91, cam: 4.5, ime: 5.14, daily: 5.9 },
     },
     {
       id: 'cta',
       line: '如果你有系統要做穩，或想導入 AI 工作流，歡迎來信，我們聊聊。',
       caption: '如果你有系統要做穩，或想導入 AI 工作流，歡迎來信，我們聊聊。',
-      cues: { stable: 0, ai: 1.88, mail: 3.7, chat: 4.68 },
+      cues: { stable: 0, ai: 1.81, mail: 3.69, chat: 4.57 },
       hold: 3, // 結尾多停 3 秒給信封與 email
     },
   ]

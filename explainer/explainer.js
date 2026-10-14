@@ -684,8 +684,12 @@
     RENDER[s.id](ctx, t, d, n)
   }
 
+  // 全片播放速度：畫面時間軸與旁白（audio.playbackRate，瀏覽器預設保持音高）一起加快。
+  // cues、durations 都是配音原速的秒數，不用跟著改；預覽影片由 tools/make-preview-video.sh 依此加速。
+  var SPEED = 1.2
+
   var api = {
-    W: W, H: H, FONT: FONT, SCENES: SCENES, RENDER: RENDER, sceneDuration: sceneDuration,
+    W: W, H: H, FONT: FONT, SCENES: SCENES, RENDER: RENDER, sceneDuration: sceneDuration, SPEED: SPEED,
     background: background, drawFrame: drawFrame,
   }
   if (typeof document === 'undefined') return api
@@ -706,7 +710,7 @@
   }
   var durReady = null
   function loadDurations() {
-    if (!durReady) durReady = fetch(BASE + 'durations.json?v=4').then(function (r) { return r.json() }).catch(function () { return {} })
+    if (!durReady) durReady = fetch(BASE + 'durations.json?v=5').then(function (r) { return r.json() }).catch(function () { return {} })
     return durReady
   }
 
@@ -851,7 +855,7 @@
         b.firstChild.firstChild.style.width = (i < st.scene ? 100 : i === st.scene ? Math.min(1, st.elapsed / d) * 100 : 0) + '%'
       })
     }
-    function src(i) { return BASE + 'audio/' + SCENES[i].id + '.mp3' }
+    function src(i) { return BASE + 'audio/' + SCENES[i].id + '.mp3?v=5' }
 
     function goto(i, autoplay) {
       st.scene = i
@@ -863,6 +867,7 @@
       setCaption(i)
       syncButtons()
       audio.src = src(i)
+      audio.defaultPlaybackRate = audio.playbackRate = SPEED // 換 src 會重設速度
       if (play) audio.play().catch(function () {})
       if (!st.playing) paint()
     }
@@ -874,7 +879,7 @@
       last = now
       var d = durOf(st.scene)
       if (st.playing) {
-        st.elapsed += dt
+        st.elapsed += dt * SPEED
         st.clock += dt
         if (st.elapsed >= d) {
           if (st.scene < LAST) goto(st.scene + 1, true)
