@@ -22,7 +22,7 @@
       id: 'money',
       line: '我最在意的是：錢不能錯。逾時、重複入帳、對帳補救，我在設計的第一天就放進去。',
       caption: '我最在意的是：錢不能錯。逾時、重複入帳、對帳補救，我在設計的第一天就放進去。',
-      cues: { care: 0, money: 1.03, timeout: 2.41, dup: 3.0, recon: 4.43, day1: 5.68, putin: 6.5 },
+      cues: { care: 0, money: 1.69, timeout: 3.19, dup: 3.74, recon: 5.06, day1: 6.42, putin: 7.33 },
     },
     {
       id: 'pipeline',

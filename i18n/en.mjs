@@ -200,9 +200,9 @@ export default [
   ["cb.textContent='已選取，請按複製';", "cb.textContent='Selected — press ⌘C / Ctrl+C';"],
   ["cb.textContent='已複製';", "cb.textContent='Copied';"],
   // 「1 分鐘認識我」英文版：幕稿與配音在 explainer/en/（VER 與這裡的 ?v=en1 要一起升）
-  ["a.src='explainer/audio/intro.mp3?v=5'", "a.src='../explainer/en/audio/intro.mp3?v=en1'"],
-  ["loadScript('explainer/script.js?v=5')", "loadScript('../explainer/en/script.js?v=en1')"],
-  ["loadScript('explainer/explainer.js?v=7')", "loadScript('../explainer/explainer.js?v=en1')"],
+  ["a.src='explainer/audio/intro.mp3?v=6'", "a.src='../explainer/en/audio/intro.mp3?v=en1'"],
+  ["loadScript('explainer/script.js?v=6')", "loadScript('../explainer/en/script.js?v=en1')"],
+  ["loadScript('explainer/explainer.js?v=8')", "loadScript('../explainer/explainer.js?v=en1')"],
   ["eb.textContent='載入中…'", "eb.textContent='Loading…'"],
   ["eb.textContent='載入失敗，請重試'", "eb.textContent='Failed to load — try again'"],
 ]

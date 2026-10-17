@@ -32,7 +32,7 @@ node tools/build-variant.mjs snake ~/projects/case/resume-snake-site
 **注意：** Snake 的 durations.json 是整份覆蓋，其餘五幕的秒數要跟 Rex 版一致。步驟 4 用 `--out` 只跑 intro，
 會讀進既有檔案、只更新 intro，但 Rex 版其他幕改過時要先把 explainer/durations.json 複製過來再跑。
 
-聽寫比對只能抓到明顯念錯，產完仍要自己聽一次。使用的 seed：Rex 開場 1、Snake 開場 1、money 2、pipeline 1、proof 1、toolsmith 123、cta 1。
+聽寫比對只能抓到明顯念錯，產完仍要自己聽一次。使用的 seed：Rex 開場 1、Snake 開場 1、money 11（2026-10-17 由 2 換掉，「逾時、重複入帳」聲音怪）、pipeline 1、proof 1、toolsmith 123、cta 1。
 
 ## 英文版（/en/ 頁面，2026-10-17 起）
 

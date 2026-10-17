@@ -714,7 +714,7 @@
   }
   var durReady = null
   function loadDurations() {
-    if (!durReady) durReady = fetch(SCRIPT.DIR ? BASE + SCRIPT.DIR + 'durations.json?v=' + SCRIPT.VER : BASE + 'durations.json?v=5').then(function (r) { return r.json() }).catch(function () { return {} })
+    if (!durReady) durReady = fetch(SCRIPT.DIR ? BASE + SCRIPT.DIR + 'durations.json?v=' + SCRIPT.VER : BASE + 'durations.json?v=6').then(function (r) { return r.json() }).catch(function () { return {} })
     return durReady
   }
 
@@ -861,7 +861,7 @@
       })
     }
     // 英文版的配音在 explainer/en/（幕稿的 DIR），版本參數用幕稿的 VER
-    function src(i) { return SCRIPT.DIR ? BASE + SCRIPT.DIR + 'audio/' + SCENES[i].id + '.mp3?v=' + SCRIPT.VER : BASE + 'audio/' + SCENES[i].id + '.mp3?v=5' }
+    function src(i) { return SCRIPT.DIR ? BASE + SCRIPT.DIR + 'audio/' + SCENES[i].id + '.mp3?v=' + SCRIPT.VER : BASE + 'audio/' + SCENES[i].id + '.mp3?v=6' }
 
     function goto(i, autoplay) {
       st.scene = i

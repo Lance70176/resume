@@ -51,11 +51,11 @@ const VARIANTS = {
       ["'rex-explainer-muted'", "'snake-explainer-muted'"],
       // Snake 開場配音與 cues 不同，版本參數獨立（mp3／script.js 有 4 小時快取，混到 Rex 版的會對不上嘴型）；
       // 原始碼升 ?v=N 或重錄 Snake 開場時，要一起改這裡的來源字串與 s 後面的數字
-      ["durations.json?v=5'", "durations.json?v=s6'"],
-      ["explainer/script.js?v=5'", "explainer/script.js?v=s6'"],
-      ["explainer/explainer.js?v=7'", "explainer/explainer.js?v=s8'"],
-      ["SCENES[i].id + '.mp3?v=5'", "SCENES[i].id + '.mp3?v=s6'"],
-      ["a.src='explainer/audio/intro.mp3?v=5'", "a.src='explainer/audio/intro.mp3?v=s6'"],
+      ["durations.json?v=6'", "durations.json?v=s7'"],
+      ["explainer/script.js?v=6'", "explainer/script.js?v=s7'"],
+      ["explainer/explainer.js?v=8'", "explainer/explainer.js?v=s9'"],
+      ["SCENES[i].id + '.mp3?v=6'", "SCENES[i].id + '.mp3?v=s7'"],
+      ["a.src='explainer/audio/intro.mp3?v=6'", "a.src='explainer/audio/intro.mp3?v=s7'"],
       // 英文版動畫：Snake 的英文開場配音與 cues 不同，版本參數加 s 前綴（英文頁的 ?v=en1 與幕稿的 VER）
       ["?v=en1'", "?v=sen1'"],
       ["VER: 'en1'", "VER: 'sen1'"],

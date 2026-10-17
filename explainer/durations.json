@@ -1,6 +1,6 @@
 {
   "intro": 8.49,
-  "money": 7.8,
+  "money": 8.71,
   "pipeline": 9.48,
   "proof": 8.95,
   "toolsmith": 6.92,
@@ -14,9 +14,11 @@
   ],
   "money_pauses": [
     0,
-    2.41,
-    4.43,
-    5.68
+    0.45,
+    3.19,
+    3.87,
+    5.06,
+    6.42
   ],
   "pipeline_pauses": [
     0,
