@@ -480,7 +480,7 @@ MyGhost  MyXnip  TypeTop  AirGrip  <span class="p">+8</span>
     a.preload='auto';a.src='explainer/audio/intro.mp3?v=5';a.muted=true;
     var unlocked=a.play().then(function(){a.pause();}).catch(function(){}).then(function(){a.muted=false;});
     var ready=window.ResumeExplainer?Promise.resolve():(loading=true,eb.textContent='載入中…',
-      loadScript('explainer/script.js?v=5').then(function(){return loadScript('explainer/explainer.js?v=5');}));
+      loadScript('explainer/script.js?v=5').then(function(){return loadScript('explainer/explainer.js?v=7');}));
     ready.then(function(){
       loading=false;eb.textContent=label;
       window.ResumeExplainer.open({audio:a,unlocked:unlocked,returnFocus:eb});

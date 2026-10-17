@@ -4,6 +4,7 @@
 # 用法（筆電，Voicebox App 要開著；Mini 上可經 voicebox-tunnel 打同一個 localhost:17493）：
 #   uv run --with mlx-whisper --with pypinyin python tools/voicebox/gen_takes.py <輸出資料夾> [--name Rex] [幕 id ...]
 #   開場念的名字預設 Snake；--name Rex 產 Rex 版（原始碼 explainer/）
+#   --lang en：英文版（幕稿 explainer/en/script.js，用英文單字比對；產完交給 gen-explainer-audio.mjs --script explainer/en/script.js）
 # 產出 <輸出資料夾>/<幕 id>.wav，再交給：
 #   node tools/gen-explainer-audio.mjs --from <輸出資料夾> [--out variants/snake/explainer]
 import difflib, json, os, shutil, subprocess, sys, time, urllib.request
@@ -17,21 +18,29 @@ SEEDS = (1, 2, 7, 42, 123, 2026)
 NUM = set("零一二三四五六七八九十百點兩")  # 數字聽寫會變阿拉伯數字，比對時兩邊都略過
 
 root = os.path.join(os.path.dirname(__file__), "../..")
-scenes = json.loads(subprocess.check_output(["node", "-e", "console.log(JSON.stringify(require('./explainer/script.js').SCENES))"], cwd=root))
 args = sys.argv[2:]
-name = args[args.index("--name") + 1] if "--name" in args else "Snake"
-out_dir, only = sys.argv[1], [a for i, a in enumerate(args) if a != "--name" and (i == 0 or args[i - 1] != "--name")]
+opt = lambda f, d: args[args.index(f) + 1] if f in args else d
+name, lang = opt("--name", "Snake"), opt("--lang", "zh")
+script = "./explainer/en/script.js" if lang == "en" else "./explainer/script.js"
+scenes = json.loads(subprocess.check_output(["node", "-e", f"console.log(JSON.stringify(require('{script}').SCENES))"], cwd=root))
+out_dir, only = sys.argv[1], [a for i, a in enumerate(args) if not a.startswith("--") and (i == 0 or args[i - 1] not in ("--name", "--lang"))]
 os.makedirs(out_dir, exist_ok=True)
 
 def pinyin(t):
     return lazy_pinyin("".join(c.lower() for c in t if ("一" <= c <= "鿿" or c.isascii() and c.isalpha()) and c not in NUM))
+
+# 英文：只比字母單字，數字（念成 sixty-two point eight、聽寫成 62.8%）兩邊都略過
+NUM_EN = set("zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen twenty thirty forty fifty sixty seventy eighty ninety hundred point percent".split())
+def words(t):
+    import re
+    return [w for w in re.findall(r"[a-z]+", t.lower().replace("'", "")) if w not in NUM_EN]
 
 def call(path, body=None):
     req = urllib.request.Request(API + path, json.dumps(body).encode() if body else None, {"Content-Type": "application/json"})
     return json.load(urllib.request.urlopen(req))
 
 def generate(text, seed, wav):
-    g = call("/generate", {"profile_id": PROFILE, "text": text, "language": "zh", "seed": seed})
+    g = call("/generate", {"profile_id": PROFILE, "text": text, "language": lang, "seed": seed})
     while (h := call(f"/history/{g['id']}"))["status"] == "generating":
         time.sleep(2)
     if h["status"] != "completed":
@@ -41,14 +50,18 @@ def generate(text, seed, wav):
 for s in scenes:
     if only and s["id"] not in only:
         continue
-    line = s["line"].replace("我是 Rex", f"我是 {name}")
+    line = s["line"].replace("我是 Rex", f"我是 {name}").replace("I'm Rex", f"I'm {name}")
     best = None
     for seed in SEEDS:
         wav = os.path.join(out_dir, f"{s['id']}.seed{seed}.wav")
         generate(line, seed, wav)
-        heard = mlx_whisper.transcribe(wav, path_or_hf_repo=ASR, language="zh", initial_prompt="以下是繁體中文。")["text"]
-        score = difflib.SequenceMatcher(None, pinyin(line), pinyin(heard), autojunk=False).ratio()
-        print(f"{s['id']} seed={seed} 拼音吻合 {score:.2f}：{heard}", flush=True)
+        if lang == "en":
+            heard = mlx_whisper.transcribe(wav, path_or_hf_repo=ASR, language="en")["text"]
+            score = difflib.SequenceMatcher(None, words(line), words(heard), autojunk=False).ratio()
+        else:
+            heard = mlx_whisper.transcribe(wav, path_or_hf_repo=ASR, language="zh", initial_prompt="以下是繁體中文。")["text"]
+            score = difflib.SequenceMatcher(None, pinyin(line), pinyin(heard), autojunk=False).ratio()
+        print(f"{s['id']} seed={seed} 吻合 {score:.2f}：{heard}", flush=True)
         if not best or score > best[0]:
             best = (score, wav)
         if score >= 0.99:

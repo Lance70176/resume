@@ -29,7 +29,7 @@ export default [
   ['<a class="lang" href="en/" lang="en" hreflang="en">EN</a>', '<a class="lang" href="../" lang="zh-Hant" hreflang="zh-Hant">中文</a>'],
   ['aria-label="切換深淺色"', 'aria-label="Toggle dark mode"'],
 
-  // ── 首屏（/en/ 在子目錄，相對路徑要往上一層；英文版沒有中文配音的「1 分鐘認識我」）──
+  // ── 首屏（/en/ 在子目錄，相對路徑要往上一層）──
   ['src="img/avatar.jpg', 'src="../img/avatar.jpg'],
   ['alt="Rex Lu 大頭照"', 'alt="Rex Lu headshot"'],
   ['<span>REX LU · 台北</span>', '<span>REX LU · TAIPEI</span>'],
@@ -40,7 +40,7 @@ export default [
   ['<span class="spark">Toolsmith 工具匠</span>', '<span class="spark">Toolsmith</span>'],
   ['href="#contact">聯絡我</a>', 'href="#contact">Contact me</a>'],
   ['href="#agentic">看我怎麼工作</a>', 'href="#agentic">See how I work</a>'],
-  ['        <button class="btn ghost" type="button" id="explainBtn" aria-haspopup="dialog">▶ 1 分鐘認識我</button>\n', ''],
+  ['aria-haspopup="dialog">▶ 1 分鐘認識我</button>', 'aria-haspopup="dialog">▶ Meet me in 1 min</button>'],
   ['href="download/rex-lu-resume.pdf" download>下載 PDF</a>', 'href="../download/rex-lu-resume-en.pdf" download>Download PDF</a>'],
   ['aria-label="近一年開發數據的終端機畫面"', 'aria-label="Terminal showing development stats from the past year"'],
   ['44 worktrees · 跨模型審查開啟', '44 worktrees · cross-model review on'],
@@ -193,11 +193,16 @@ export default [
   ['<h2>有系統要做穩，或想導入 AI 工作流？</h2>', '<h2>Need a system made solid, or want AI in your workflow?</h2>'],
   ['全職機會、顧問與接案合作都歡迎來信。線上版：resume-rex.master0987.com', 'Full-time roles, consulting and contract work are all welcome — just email me. Online: resume-rex.master0987.com/en'],
   ['>複製 Email</button>', '>Copy email</button>'],
-  ['href="download/rex-lu-resume.pdf" download>下載 PDF 履歷</a>', 'href="../download/rex-lu-resume-en.pdf" download>Download PDF résumé</a>'],
+  ['href="download/rex-lu-resume.pdf" download>下載 PDF 履歷</a>', 'href="../download/rex-lu-resume-en.pdf" download>Download PDF resume</a>'],
   ['Rex Lu ・ 系統架構師 × Agentic Engineer ・ 更新於 2026.10', 'Rex Lu · Systems Architect × Agentic Engineer · Updated Oct 2026'],
 
   // ── 頁面腳本 ──
   ["cb.textContent='已選取，請按複製';", "cb.textContent='Selected — press ⌘C / Ctrl+C';"],
   ["cb.textContent='已複製';", "cb.textContent='Copied';"],
-  [/  \/\/ 「1 分鐘認識我」[\s\S]*?\n  \}\);\n/, ''],
+  // 「1 分鐘認識我」英文版：幕稿與配音在 explainer/en/（VER 與這裡的 ?v=en1 要一起升）
+  ["a.src='explainer/audio/intro.mp3?v=5'", "a.src='../explainer/en/audio/intro.mp3?v=en1'"],
+  ["loadScript('explainer/script.js?v=5')", "loadScript('../explainer/en/script.js?v=en1')"],
+  ["loadScript('explainer/explainer.js?v=7')", "loadScript('../explainer/explainer.js?v=en1')"],
+  ["eb.textContent='載入中…'", "eb.textContent='Loading…'"],
+  ["eb.textContent='載入失敗，請重試'", "eb.textContent='Failed to load — try again'"],
 ]

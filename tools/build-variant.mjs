@@ -38,6 +38,7 @@ const VARIANTS = {
       ['REX LU', 'SNAKE LU'],
       ['ABOUT REX', 'ABOUT SNAKE'],
       ['我是 Rex', '我是 Snake'],
+      ["I'm Rex", "I'm Snake"],
       ['lance70176@gmail.com', 'snakeluph@gmail.com'],
       // 兩版刻意用不同大頭照（Snake 版在 variants/snake/img/avatar.jpg），版本參數各自獨立，避免拿到另一版照片的 CDN 快取
       ['img/avatar.jpg?v=3', 'img/avatar.jpg?v=s3'],
@@ -52,15 +53,18 @@ const VARIANTS = {
       // 原始碼升 ?v=N 或重錄 Snake 開場時，要一起改這裡的來源字串與 s 後面的數字
       ["durations.json?v=5'", "durations.json?v=s6'"],
       ["explainer/script.js?v=5'", "explainer/script.js?v=s6'"],
-      ["explainer/explainer.js?v=5'", "explainer/explainer.js?v=s6'"],
+      ["explainer/explainer.js?v=7'", "explainer/explainer.js?v=s8'"],
       ["SCENES[i].id + '.mp3?v=5'", "SCENES[i].id + '.mp3?v=s6'"],
       ["a.src='explainer/audio/intro.mp3?v=5'", "a.src='explainer/audio/intro.mp3?v=s6'"],
+      // 英文版動畫：Snake 的英文開場配音與 cues 不同，版本參數加 s 前綴（英文頁的 ?v=en1 與幕稿的 VER）
+      ["?v=en1'", "?v=sen1'"],
+      ["VER: 'en1'", "VER: 'sen1'"],
       // 舊網域轉址只屬於 rex 版
       [/<script>if\(location\.hostname==='resume\.master0987\.com'\)[^<]*<\/script>\n/, ''],
     ],
     overlay: 'variants/snake',
     // Snake 開場念的名字不同，開場畫面元素的出現秒數跟著換
-    cues: 'variants/snake/explainer/cues.json',
+    cues: [['variants/snake/explainer/cues.json', 'explainer/script.js'], ['variants/snake/explainer/en/cues.json', 'explainer/en/script.js']],
     // index.html 裡 <!-- variant:名稱 --> … <!-- /variant:名稱 --> 整段換成 variants/snake/partials/名稱.html
     partials: ['metrics', 'pipe', 'proof', 'datasrc', 'dspanel'],
   },
@@ -74,7 +78,7 @@ if (!v || !outArg) {
 }
 const out = resolve(outArg)
 const ITEMS = ['index.html', 'explainer', 'img', 'download', 'robots.txt', 'sitemap.xml']
-const TEXT = ['index.html', 'en/index.html', 'robots.txt', 'sitemap.xml', 'explainer/script.js', 'explainer/explainer.js']
+const TEXT = ['index.html', 'en/index.html', 'robots.txt', 'sitemap.xml', 'explainer/script.js', 'explainer/en/script.js', 'explainer/explainer.js']
 
 // 依序套用 [原文, 譯文] 對照；任何一組原文找不到就停，代表中文改過而對照表沒同步
 function translate(s, pairs, label) {
@@ -96,14 +100,14 @@ for (const it of ITEMS) {
 if (v.overlay) {
   // Rex 的 PDF（含英文版與舊版 rex_resume.pdf）不能出現在其他版本
   for (const f of readdirSync(join(out, 'download'))) if (f.startsWith('rex')) rmSync(join(out, 'download', f), { force: true })
-  cpSync(join(root, v.overlay), out, { recursive: true, filter: src => !src.includes('/partials') && !/explainer\/(cues\.json|README\.md)$/.test(src) })
+  cpSync(join(root, v.overlay), out, { recursive: true, filter: src => !src.includes('/partials') && !/explainer\/(en\/)?(cues\.json|README\.md)$/.test(src) })
 }
-if (v.cues) {
-  const p = join(out, 'explainer/script.js')
+for (const [cuesFile, scriptFile] of v.cues || []) {
+  const p = join(out, scriptFile)
   let s = readFileSync(p, 'utf8')
-  for (const [id, cues] of Object.entries(JSON.parse(readFileSync(join(root, v.cues), 'utf8')))) {
+  for (const [id, cues] of Object.entries(JSON.parse(readFileSync(join(root, cuesFile), 'utf8')))) {
     const re = new RegExp(`(id: '${id}',[\\s\\S]*?cues: )\\{[^}]*\\}`)
-    if (!re.test(s)) throw new Error(`script.js 找不到 ${id} 的 cues`)
+    if (!re.test(s)) throw new Error(`${scriptFile} 找不到 ${id} 的 cues`)
     s = s.replace(re, `$1{ ${Object.entries(cues).map(([k, t]) => `${k}: ${t}`).join(', ')} }`)
   }
   writeFileSync(p, s)

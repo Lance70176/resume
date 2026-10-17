@@ -3,12 +3,16 @@
 // ①② 在 Node 也能跑（tools/render-preview.mjs 用 @napi-rs/canvas 出預覽圖），③ 只在瀏覽器執行。
 // 所有抖動都用固定種子產生：同一個 t 畫出來永遠一樣，暫停、跳幕、減少動態模式都只是「用某個 t 重畫一次」。
 (function (root, factory) {
-  if (typeof module === 'object' && module.exports) module.exports = factory(require('./script.js'))
+  // Node 預覽英文版：EXPLAINER_SCRIPT=explainer/en/script.js（相對 repo 根目錄）
+  if (typeof module === 'object' && module.exports) module.exports = factory(require(process.env.EXPLAINER_SCRIPT ? require('path').resolve(__dirname, '..', process.env.EXPLAINER_SCRIPT) : './script.js'))
   else root.ResumeExplainer = factory(root.RESUME_EXPLAINER_SCRIPT)
 })(typeof self !== 'undefined' ? self : this, function (SCRIPT) {
   'use strict'
   var SCENES = SCRIPT.SCENES
   var sceneDuration = SCRIPT.sceneDuration
+  // 畫面與播放器上的字：幕稿有 TEXT（英文版 explainer/en/script.js）就用它，沒有就是這裡寫的中文
+  var TEXT = SCRIPT.TEXT || {}
+  function L(key, zh) { return key in TEXT ? TEXT[key] : zh }
 
   // ---------- ① 筆刷 ----------
   var W = 960
@@ -368,10 +372,10 @@
   // --- intro：時間軸 2010 → 2026，最後長出產線 ---
   // 節點只畫旁白有念到的四站（電商／行動支付／海外平台／現在），各自在念到時出現
   var ERAS = [
-    { x: 120, year: '2010', label: '電商', cue: 'ecom' },
-    { x: 330, year: '2014', label: '行動支付', cue: 'pay' },
-    { x: 540, year: '2016', label: '海外平台', cue: 'overseas' },
-    { x: 860, year: '2026', label: '現在', cue: 'now' },
+    { x: 120, year: '2010', label: L('ecom', '電商'), cue: 'ecom' },
+    { x: 330, year: '2014', label: L('pay', '行動支付'), cue: 'pay' },
+    { x: 540, year: '2016', label: L('overseas', '海外平台'), cue: 'overseas' },
+    { x: 860, year: '2026', label: L('now', '現在'), cue: 'now' },
   ]
   function pipelineIcon(ctx, x, y, p, time) {
     // 輸送帶＋三個方塊（agent 的交付物）＋小旗
@@ -387,13 +391,13 @@
   }
   function intro(ctx, t, d, n) {
     var c = CUE.intro
-    title(ctx, '嗨，我是 Rex', t - c('me'))
+    title(ctx, L('hi', '嗨，我是 Rex'), t - c('me'))
     var Y = 300
     // 「寫了十六年的系統」：時間軸先畫到底，念到「十六年」時大括線＋「16 年」正好出現
     stroke(ctx, [[90, Y], [900, Y]], { seed: 'axis', color: CHALK, width: 3, progress: easeInOut(prog(t, 0.4, c('years') - 0.4)) })
     var yp = prog(t, c('years'), 0.7)
     stroke(ctx, [[120, 392], [120, 404], [860, 404], [860, 392]], { seed: 'span', color: ORANGE, width: 2.5, progress: easeOut(yp) })
-    text(ctx, '16 年', 490, 432, { size: 30, color: ORANGE, progress: prog(t, c('years') + 0.15, 0.5) })
+    text(ctx, L('years', '16 年'), 490, 432, { size: 30, color: ORANGE, progress: prog(t, c('years') + 0.15, 0.5) })
     // 經歷節點：念到「電商／行動支付／海外平台／現在」時各自出現
     ERAS.forEach(function (e, i) {
       var at = c(e.cue)
@@ -407,7 +411,7 @@
     })
     // 「我用 AI agent 產線交付」：產線圖示從 2026 節點上方長出來，字先寫、「產線」念到時輸送帶畫完
     var pt = c('pipeline')
-    text(ctx, 'AI agent 產線', 830, 148, { size: 24, color: ORANGE, progress: prog(t, pt, 0.9) })
+    text(ctx, L('pipeline', 'AI agent 產線'), 830, 148, { size: 24, color: ORANGE, progress: prog(t, pt, 0.9) })
     pipelineIcon(ctx, 860, 215, prog(t, pt + 0.1, c('line') + 0.5 - pt), t)
     sparkle(ctx, 775, 215, 9, ORANGE, prog(t, c('line') + 0.5, 0.5), 'is1')
     sparkle(ctx, 925, 265, 7, BLUE, prog(t, c('line') + 0.8, 0.5), 'is2')
@@ -420,17 +424,17 @@
     // 「我最在意的是」：先把兩本帳擺好當舞台；「錢不能錯」：標題＋金流箭頭＋第一枚錢幣安全抵達
     ledger(ctx, AX, Y, prog(t, c('care') + 0.35, 1.0), 'LA')
     ledger(ctx, BX, Y, prog(t, c('care') + 0.55, 1.0), 'LB')
-    text(ctx, '帳本 A', AX, Y + 100, { size: 24, color: BLUE, progress: prog(t, c('care') + 1.0, 0.5) })
-    text(ctx, '帳本 B', BX, Y + 100, { size: 24, color: BLUE, progress: prog(t, c('care') + 1.15, 0.5) })
+    text(ctx, L('ledgerA', '帳本 A'), AX, Y + 100, { size: 24, color: BLUE, progress: prog(t, c('care') + 1.0, 0.5) })
+    text(ctx, L('ledgerB', '帳本 B'), BX, Y + 100, { size: 24, color: BLUE, progress: prog(t, c('care') + 1.15, 0.5) })
     var mt = c('money')
-    title(ctx, '錢不能錯', t - mt, ORANGE)
+    title(ctx, L('money', '錢不能錯'), t - mt, ORANGE)
     arrow(ctx, [AX + 75, Y], [480, Y - 6], [BX - 75, Y], { seed: 'flow', color: CHALK, width: 3, progress: prog(t, mt + 0.1, 0.8) })
     var c1 = prog(t, mt + 0.6, 1.2)
     if (c1 > 0) coin(ctx, AX + 85 + (BX - AX - 200) * easeInOut(c1), Y - 2 - Math.sin(c1 * Math.PI) * 10, ORANGE, 1, 'c1')
     // 「逾時」：沙漏
     var ht = c('timeout')
     hourglass(ctx, 470, 205, prog(t, ht, 0.7), 'hg')
-    text(ctx, '逾時', 520, 205, { size: 26, color: BLUE, align: 'left', progress: prog(t, ht + 0.2, 0.45) })
+    text(ctx, L('timeout', '逾時'), 520, 205, { size: 26, color: BLUE, align: 'left', progress: prog(t, ht + 0.2, 0.45) })
     // 「重複入帳」：第二枚錢幣走到一半被打叉擋下
     var dt = c('dup')
     var c2 = prog(t, dt, 0.7)
@@ -439,11 +443,11 @@
       coin(ctx, cx, Y - 2, MUTED, 1, 'c2')
       cross(ctx, cx, Y - 2, 13, ORANGE, prog(t, dt + 0.55, 0.4), 'dup')
     }
-    text(ctx, '重複入帳', 455, 345, { size: 24, color: BLUE, progress: prog(t, dt + 0.2, 0.6) })
+    text(ctx, L('dup', '重複入帳'), 455, 345, { size: 24, color: BLUE, progress: prog(t, dt + 0.2, 0.6) })
     // 「對帳補救」：回頭反查的箭頭＋打勾
     var rt = c('recon')
     arrow(ctx, [BX - 70, Y + 60], [480, Y + 150], [AX + 70, Y + 60], { seed: 'recon', color: BLUE, width: 2.5, progress: prog(t, rt, 0.9) })
-    text(ctx, '對帳・反查', 455, 455, { size: 24, color: BLUE, progress: prog(t, rt + 0.3, 0.6) })
+    text(ctx, L('recon', '對帳・反查'), 455, 455, { size: 24, color: BLUE, progress: prog(t, rt + 0.3, 0.6) })
     check(ctx, 560, 452, 11, ORANGE, prog(t, rt + 0.85, 0.35), 'rk')
     // 「我在設計的第一天」：右上角蓋下 Day 1 戳章；「就放進去」：戳章旁閃一下
     var st = c('day1')
@@ -456,7 +460,7 @@
       ctx.scale(k, k)
       stroke(ctx, roundRect(-72, -36, 144, 72, 10), { seed: 'stamp', color: ORANGE, width: 3.5, amp: 2, alpha: sp })
       text(ctx, 'Day 1', 0, -10, { size: 32, color: ORANGE, alpha: sp })
-      text(ctx, '設計第一天就放進去', 0, 18, { size: 14, color: ORANGE, alpha: sp })
+      text(ctx, L('day1', '設計第一天就放進去'), 0, 18, { size: 14, color: ORANGE, alpha: sp })
       ctx.restore()
     }
     sparkle(ctx, 748, 112, 9, ORANGE, prog(t, c('putin'), 0.5), 'ms1')
@@ -466,13 +470,13 @@
   // --- pipeline：架構師 → 四條平行軌道 → 審查閘門 → 把關 → 火箭上線 ---
   function pipeline(ctx, t, d, n) {
     var c = CUE.pipeline
-    title(ctx, 'AI agent 產線', t)
+    title(ctx, L('pipeline', 'AI agent 產線'), t)
     var TRACKS = [185, 255, 325, 395]
     var X0 = 175, X1 = 640, GX = 690
     // 「我負責架構與拆解」：我站在左邊，手指向右
     var at = c('architect')
     person(ctx, 95, 410, prog(t, at + 0.2, 0.9), { arm: 0 })
-    text(ctx, '架構・拆解', 95, 448, { size: 22, color: ORANGE, progress: prog(t, at + 0.9, 0.7) })
+    text(ctx, L('architect', '架構・拆解'), 95, 448, { size: 22, color: ORANGE, progress: prog(t, at + 0.9, 0.7) })
     // 「多個 AI agent 在各自的工作區」：從手指分叉出四條軌道，agent 各自沿軌道走；「平行開發」念到時標上字
     var ag = c('agents')
     var split = prog(t, ag, 0.6)
@@ -486,11 +490,11 @@
       stroke(ctx, [[X0, y], [X1, y]], { seed: 'track' + i, color: BLUE, width: 2.5, progress: p })
       if (p > 0) agent(ctx, X0 + 10 + (X1 - X0 - 40) * p, y - 2 + Math.sin(t * 6 + i) * 1.5, prog(t, start - 0.2, 0.5), 'ag' + i)
     })
-    text(ctx, '4 個工作區平行開發', 405, 140, { size: 22, color: MUTED, progress: prog(t, c('parallel'), 0.8) })
+    text(ctx, L('parallel', '4 個工作區平行開發'), 405, 140, { size: 22, color: MUTED, progress: prog(t, c('parallel'), 0.8) })
     // 「經過跨模型審查」：審查閘門；「與對拍」：四條都打勾
     var gt = c('review')
     stroke(ctx, roundRect(GX - 20, 155, 40, 265, 10), { seed: 'gate', color: CHALK, width: 3, progress: prog(t, gt, 0.7) })
-    text(ctx, '跨模型審查・對拍', GX, 135, { size: 22, color: CHALK, progress: prog(t, gt + 0.15, 0.9) })
+    text(ctx, L('review', '跨模型審查・對拍'), GX, 135, { size: 22, color: CHALK, progress: prog(t, gt + 0.15, 0.9) })
     var ck = c('diff')
     TRACKS.forEach(function (y, i) {
       stroke(ctx, [[X1, y], [GX - 20, y]], { seed: 'in' + i, color: BLUE, width: 2.5, progress: prog(t, gt + 0.4 + i * 0.1, 0.3), alpha: 0.8 })
@@ -500,19 +504,19 @@
     var ft = c('gate')
     stroke(ctx, [[GX + 20, 290], [740, 290], [740, 362], [772, 362]], { seed: 'out', color: BLUE, width: 2.5, progress: prog(t, ft - 0.35, 0.5) })
     person(ctx, 795, 410, prog(t, ft, 0.7), { arm: prog(t, c('launch'), 0.4) })
-    text(ctx, '把關', 795, 448, { size: 22, color: ORANGE, progress: prog(t, ft + 0.3, 0.45) })
+    text(ctx, L('gate', '把關'), 795, 448, { size: 22, color: ORANGE, progress: prog(t, ft + 0.3, 0.45) })
     var lt = c('launch')
     var rp = prog(t, lt, 0.6)
     var flame = prog(t, lt + 0.55, 0.35)
     var lift = easeInOut(prog(t, lt + 0.7, d - lt - 0.7))
     if (rp > 0) rocket(ctx, 890 + Math.sin(t * 30) * flame * 1.2, 330 - lift * 240, rp, flame, t)
-    text(ctx, '上線', 890, 395, { size: 24, color: ORANGE, progress: prog(t, lt + 0.1, 0.45), alpha: 1 - lift * 0.5 })
+    text(ctx, L('launch', '上線'), 890, 395, { size: 24, color: ORANGE, progress: prog(t, lt + 0.1, 0.45), alpha: 1 - lift * 0.5 })
   }
 
   // --- proof：60% 圓餅長出來、失敗率折線從天花板掉到地板 ---
   function proof(ctx, t, d, n) {
     var c = CUE.proof
-    title(ctx, '數字會說話', t - c('result'))
+    title(ctx, L('result', '數字會說話'), t - c('result'))
     var PX = 245, PY = 295, R = 110
     // 「一個月交付全隊」：先畫整個餅（全隊）；「百分之六十」：橘色扇形長到 60%
     stroke(ctx, ellipse(PX, PY, R, R), { seed: 'pie', color: CHALK, width: 3, progress: easeOut(prog(t, c('month'), 0.9)) })
@@ -532,12 +536,12 @@
       stroke(ctx, [[PX, PY], [PX + Math.cos(-Math.PI / 2 + sweep) * R, PY + Math.sin(-Math.PI / 2 + sweep) * R]], { seed: 'r1', color: ORANGE, width: 3, progress: 1 })
     }
     text(ctx, Math.round(60 * wp) + '%', PX + 52, PY + 26, { size: 44, color: ORANGE, alpha: prog(wp, 0.05, 0.2) })
-    text(ctx, '一個月・全隊工作量', PX, PY + R + 38, { size: 22, color: CHALK, progress: prog(t, c('month') + 0.3, 0.9) })
+    text(ctx, L('month', '一個月・全隊工作量'), PX, PY + R + 38, { size: 22, color: CHALK, progress: prog(t, c('month') + 0.3, 0.9) })
     // 「壓測失敗率」：座標軸＋折線先在高處晃；「從 62.8%」：起點與標籤；「降到 0.03%」：折線一路跌到地板
     var OX = 560, OY = 435, TOP = 165, RIGHT = 905
     var ct = c('stress')
     stroke(ctx, [[OX, TOP], [OX, OY], [RIGHT, OY]], { seed: 'axes', color: CHALK, width: 2.5, progress: prog(t, ct, 0.7) })
-    text(ctx, '壓測失敗率', (OX + RIGHT) / 2, OY + 36, { size: 22, color: CHALK, progress: prog(t, ct + 0.25, 0.6) })
+    text(ctx, L('stress', '壓測失敗率'), (OX + RIGHT) / 2, OY + 36, { size: 22, color: CHALK, progress: prog(t, ct + 0.25, 0.6) })
     var pts = [[590, 198], [630, 210], [665, 190], [700, 215], [735, 240], [770, 330], [805, 400], [840, 416], [880, 418]]
     // 折線分兩段：前五點是高原（念「壓測失敗率…從 62.8%」時慢慢畫），後四點是下跌（念「降到」時一口氣畫完）
     var FLAT = 0.4 // 前五點佔整條折線長度的比例（168 / 421 px）
@@ -590,7 +594,7 @@
   }
   function toolsmith(ctx, t, d, n) {
     var c = CUE.toolsmith
-    title(ctx, '工具匠', t - c('smith'))
+    title(ctx, L('smith', '工具匠'), t - c('smith'))
     // 「今年做了」：Dock 先畫；「十二個」：12 個圖示一個個跳出來，念到「終端機」前跳完
     var DY = 420
     stroke(ctx, roundRect(90, DY - 46, 780, 92, 18), { seed: 'dock', color: BLUE, width: 3, progress: easeOut(prog(t, c('year'), 0.6)) })
@@ -611,14 +615,14 @@
       ctx.translate(x, DY)
       ctx.scale(k * mag, k * mag)
       stroke(ctx, roundRect(-25, -25, 50, 50, 11), { seed: 'app' + i, color: named > 0 ? ORANGE : BLUE, width: 2.5, alpha: p })
-      appGlyph(ctx, a.glyph, 0, 0, prog(p, 0.3, 0.7), 'g' + i)
+      appGlyph(ctx, L('glyph' + i, a.glyph), 0, 0, prog(p, 0.3, 0.7), 'g' + i)
       ctx.restore()
     })
     // 計數：12 個 macOS App
     var cnt = prog(t, c('year') + 0.2, 0.5)
-    text(ctx, count + ' 個 macOS App', 480, 150, { size: 40, color: ORANGE, alpha: cnt })
+    text(ctx, count + L('apps', ' 個 macOS App'), 480, 150, { size: 40, color: ORANGE, alpha: cnt })
     // 「每天都在用」
-    text(ctx, '2026 · 每天都在用', 480, 200, { size: 22, color: MUTED, progress: prog(t, c('daily'), 0.8) })
+    text(ctx, L('daily', '2026 · 每天都在用'), 480, 200, { size: 22, color: MUTED, progress: prog(t, c('daily'), 0.8) })
     // 點名：終端機、截圖、輸入法
     var callY = { 0: 300, 1: 262, 3: 300 }
     Object.keys(callouts).forEach(function (key) {
@@ -626,7 +630,7 @@
       var x = 139 + i * 62
       var cp = prog(t, callouts[i], 0.5)
       stroke(ctx, [[x, DY - 34], [x, callY[i] + 20]], { seed: 'lead' + i, color: ORANGE, width: 2, progress: prog(cp, 0, 0.5), alpha: 0.8 })
-      text(ctx, APPS[i].nm, x, callY[i], { size: 26, color: ORANGE, progress: prog(cp, 0.4, 0.6) })
+      text(ctx, L('app' + i, APPS[i].nm), x, callY[i], { size: 26, color: ORANGE, progress: prog(cp, 0.4, 0.6) })
     })
   }
 
@@ -637,11 +641,11 @@
     var b1 = prog(t, c('stable') + 0.2, 0.8)
     stroke(ctx, roundRect(100, 150, 300, 86, 16), { seed: 'bub1', color: BLUE, width: 3, progress: easeOut(b1) })
     stroke(ctx, [[220, 236], [236, 262], [250, 236]], { seed: 'tail1', color: BLUE, width: 3, progress: prog(b1, 0.8, 0.2) })
-    text(ctx, '系統要做穩', 250, 193, { size: 30, progress: prog(t, c('stable') + 0.45, 0.8) })
+    text(ctx, L('stable', '系統要做穩'), 250, 193, { size: 30, progress: prog(t, c('stable') + 0.45, 0.8) })
     var b2 = prog(t, c('ai'), 0.8)
     stroke(ctx, roundRect(560, 150, 300, 86, 16), { seed: 'bub2', color: BLUE, width: 3, progress: easeOut(b2) })
     stroke(ctx, [[710, 236], [724, 262], [740, 236]], { seed: 'tail2', color: BLUE, width: 3, progress: prog(b2, 0.8, 0.2) })
-    text(ctx, '導入 AI 工作流', 710, 193, { size: 30, progress: prog(t, c('ai') + 0.25, 0.8) })
+    text(ctx, L('ai', '導入 AI 工作流'), 710, 193, { size: 30, progress: prog(t, c('ai') + 0.25, 0.8) })
     // 「歡迎來信」：信封＋ email；「我們聊聊」：標題「來聊聊吧」最後才寫上去
     var et = c('mail')
     var ep = prog(t, et, 0.9)
@@ -652,7 +656,7 @@
     stroke(ctx, [[EX + 110, EY + 68], [EX + 30, EY - 10]], { seed: 'fr', color: CHALK, width: 2, progress: prog(ep, 0.8, 0.2), alpha: 0.6 })
     stroke(ctx, ellipse(EX, EY + 22, 10, 10), { seed: 'seal', color: ORANGE, width: 2.5, progress: prog(t, et + 0.9, 0.4) })
     text(ctx, 'lance70176@gmail.com', EX, 470, { size: 32, color: ORANGE, progress: prog(t, et + 0.3, 1.0) })
-    title(ctx, '來聊聊吧', t - c('chat'))
+    title(ctx, L('chat', '來聊聊吧'), t - c('chat'))
     // 結尾停留：紙飛機從信封飛出去
     var fp = prog(t, n + 0.4, 2.2)
     if (fp > 0) {
@@ -670,7 +674,7 @@
     }
     sparkle(ctx, 330, 300, 10, BLUE, prog(t, n + 0.2, 0.5), 'cs1')
     sparkle(ctx, 640, 440, 8, ORANGE, prog(t, n + 0.6, 0.5), 'cs2')
-    text(ctx, 'resume-rex.master0987.com', 480, 515, { size: 18, color: MUTED, progress: prog(t, n + 0.3, 1) })
+    text(ctx, L('url', 'resume-rex.master0987.com'), 480, 515, { size: 18, color: MUTED, progress: prog(t, n + 0.3, 1) })
   }
 
   var RENDER = { intro: intro, money: money, pipeline: pipeline, proof: proof, toolsmith: toolsmith, cta: cta }
@@ -710,7 +714,7 @@
   }
   var durReady = null
   function loadDurations() {
-    if (!durReady) durReady = fetch(BASE + 'durations.json?v=5').then(function (r) { return r.json() }).catch(function () { return {} })
+    if (!durReady) durReady = fetch(SCRIPT.DIR ? BASE + SCRIPT.DIR + 'durations.json?v=' + SCRIPT.VER : BASE + 'durations.json?v=5').then(function (r) { return r.json() }).catch(function () { return {} })
     return durReady
   }
 
@@ -789,28 +793,28 @@
     var ov = el('div', 'rx-ov')
     ov.setAttribute('role', 'dialog')
     ov.setAttribute('aria-modal', 'true')
-    ov.setAttribute('aria-label', '1 分鐘認識我：動畫介紹')
+    ov.setAttribute('aria-label', L('ui.dialog', '1 分鐘認識我：動畫介紹'))
     var dlg = el('div', 'rx-dlg')
     var hd = el('div', 'rx-hd')
     hd.appendChild(el('span', null, '1 MIN · ABOUT REX'))
     var closeBtn = el('button', 'rx-b', ICON.close)
     closeBtn.type = 'button'
-    closeBtn.setAttribute('aria-label', '關閉')
+    closeBtn.setAttribute('aria-label', L('ui.close', '關閉'))
     hd.appendChild(closeBtn)
     var cvWrap = el('div', 'rx-cv')
     var cv = document.createElement('canvas')
     cv.setAttribute('aria-hidden', 'true')
-    var loading = el('div', 'rx-ld', '載入中…')
+    var loading = el('div', 'rx-ld', L('ui.loading', '載入中…'))
     cvWrap.appendChild(cv)
     cvWrap.appendChild(loading)
     var cap = el('div', 'rx-cap')
     cap.setAttribute('aria-live', 'polite')
     var seg = el('div', 'rx-seg')
-    seg.setAttribute('aria-label', '幕')
+    seg.setAttribute('aria-label', L('ui.scenes', '幕'))
     var segBtns = SCENES.map(function (s, i) {
       var b = el('button', null, '<span><i></i></span>')
       b.type = 'button'
-      b.setAttribute('aria-label', '第 ' + (i + 1) + ' 幕')
+      b.setAttribute('aria-label', L('ui.scene', '第 # 幕').replace('#', i + 1))
       b.addEventListener('click', function () { goto(i) })
       seg.appendChild(b)
       return b
@@ -819,12 +823,12 @@
     var spacer = el('span')
     spacer.style.width = '40px'
     var mid = el('div', 'mid')
-    var prevBtn = el('button', 'rx-b', ICON.prev); prevBtn.type = 'button'; prevBtn.setAttribute('aria-label', '上一幕')
-    var playBtn = el('button', 'rx-b main', ICON.play); playBtn.type = 'button'; playBtn.setAttribute('aria-label', '播放')
-    var nextBtn = el('button', 'rx-b', ICON.next); nextBtn.type = 'button'; nextBtn.setAttribute('aria-label', '下一幕')
+    var prevBtn = el('button', 'rx-b', ICON.prev); prevBtn.type = 'button'; prevBtn.setAttribute('aria-label', L('ui.prev', '上一幕'))
+    var playBtn = el('button', 'rx-b main', ICON.play); playBtn.type = 'button'; playBtn.setAttribute('aria-label', L('ui.play', '播放'))
+    var nextBtn = el('button', 'rx-b', ICON.next); nextBtn.type = 'button'; nextBtn.setAttribute('aria-label', L('ui.next', '下一幕'))
     mid.appendChild(prevBtn); mid.appendChild(playBtn); mid.appendChild(nextBtn)
     var muteBtn = el('button', 'rx-b', muted ? ICON.muted : ICON.sound); muteBtn.type = 'button'
-    muteBtn.setAttribute('aria-label', muted ? '開啟聲音' : '關閉聲音')
+    muteBtn.setAttribute('aria-label', muted ? L('ui.unmute', '開啟聲音') : L('ui.mute', '關閉聲音'))
     ct.appendChild(spacer); ct.appendChild(mid); ct.appendChild(muteBtn)
     dlg.appendChild(hd); dlg.appendChild(cvWrap); dlg.appendChild(cap); dlg.appendChild(seg); dlg.appendChild(ct)
     ov.appendChild(dlg)
@@ -832,7 +836,8 @@
     document.body.classList.add('rx-lock')
 
     // 狀態：RAF 迴圈直接讀這個物件
-    var st = { scene: 0, elapsed: 0, playing: false, clock: 0, ended: false, ready: false }
+    // wait＝這一幕等旁白開始播放已經等了幾秒（見 frame）
+    var st = { scene: 0, elapsed: 0, playing: false, clock: 0, ended: false, ready: false, wait: 0 }
     var raf = 0
     var ctx = cv.getContext('2d')
     var dpr = Math.min(window.devicePixelRatio || 1, 2)
@@ -842,7 +847,7 @@
     function setCaption(i) { cap.textContent = SCENES[i].caption || SCENES[i].line }
     function syncButtons() {
       playBtn.innerHTML = st.playing ? ICON.pause : st.ended ? ICON.replay : ICON.play
-      playBtn.setAttribute('aria-label', st.playing ? '暫停' : st.ended ? '再看一次' : '播放')
+      playBtn.setAttribute('aria-label', st.playing ? L('ui.pause', '暫停') : st.ended ? L('ui.replay', '再看一次') : L('ui.play', '播放'))
       prevBtn.disabled = st.scene === 0
       nextBtn.disabled = st.scene === LAST
       segBtns.forEach(function (b, i) { b.classList.toggle('on', i === st.scene) })
@@ -855,7 +860,8 @@
         b.firstChild.firstChild.style.width = (i < st.scene ? 100 : i === st.scene ? Math.min(1, st.elapsed / d) * 100 : 0) + '%'
       })
     }
-    function src(i) { return BASE + 'audio/' + SCENES[i].id + '.mp3?v=5' }
+    // 英文版的配音在 explainer/en/（幕稿的 DIR），版本參數用幕稿的 VER
+    function src(i) { return SCRIPT.DIR ? BASE + SCRIPT.DIR + 'audio/' + SCENES[i].id + '.mp3?v=' + SCRIPT.VER : BASE + 'audio/' + SCENES[i].id + '.mp3?v=5' }
 
     function goto(i, autoplay) {
       st.scene = i
@@ -864,6 +870,7 @@
       st.elapsed = reduced && !play ? durOf(i) : 0
       st.playing = play
       st.ended = false
+      st.wait = 0
       setCaption(i)
       syncButtons()
       audio.src = src(i)
@@ -879,7 +886,13 @@
       last = now
       var d = durOf(st.scene)
       if (st.playing) {
-        st.elapsed += dt * SPEED
+        // 畫面跟著旁白走：旁白在播就直接用它播到的秒數（cues 也是配音原速秒數），
+        // 旁白還在下載／解碼就先停著等（最多 1.5 秒），旁白播完（停留時間）或被擋下無法播放才用自己的時鐘。
+        // 以前只靠時鐘，音檔晚開始或瀏覽器沒套用倍速時，旁白沒念完就被換幕切掉。
+        var a = audio
+        if (!a.paused && !a.ended && a.currentTime > 0) st.elapsed = a.currentTime
+        else if (!a.paused && !a.ended && st.wait < 1.5) st.wait += dt
+        else st.elapsed += dt * SPEED
         st.clock += dt
         if (st.elapsed >= d) {
           if (st.scene < LAST) goto(st.scene + 1, true)
@@ -906,6 +919,7 @@
         // 減少動態模式下停在完成畫面，按播放就從頭播這一幕
         if (st.elapsed >= durOf(st.scene)) st.elapsed = 0
         st.playing = true
+        st.wait = 0
         if (st.elapsed < (audio.duration || Infinity)) {
           try { audio.currentTime = st.elapsed } catch (e) {}
           audio.play().catch(function () {})
@@ -950,9 +964,13 @@
       muted = !muted
       audio.muted = muted
       muteBtn.innerHTML = muted ? ICON.muted : ICON.sound
-      muteBtn.setAttribute('aria-label', muted ? '開啟聲音' : '關閉聲音')
+      muteBtn.setAttribute('aria-label', muted ? L('ui.unmute', '開啟聲音') : L('ui.mute', '關閉聲音'))
       try { localStorage.setItem(MUTE_KEY, muted ? '1' : '0') } catch (e) {}
     })
+    // Chrome 在音檔載入、開始播放時會把 playbackRate 重設回 1（實測），每次開播都再套一次倍速
+    function keepSpeed() { if (audio.playbackRate !== SPEED) audio.playbackRate = SPEED }
+    audio.addEventListener('loadedmetadata', keepSpeed)
+    audio.addEventListener('playing', keepSpeed)
     document.addEventListener('keydown', onKey)
     document.addEventListener('visibilitychange', onHide)
     setCaption(0)

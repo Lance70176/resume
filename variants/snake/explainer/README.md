@@ -33,3 +33,20 @@ node tools/build-variant.mjs snake ~/projects/case/resume-snake-site
 會讀進既有檔案、只更新 intro，但 Rex 版其他幕改過時要先把 explainer/durations.json 複製過來再跑。
 
 聽寫比對只能抓到明顯念錯，產完仍要自己聽一次。使用的 seed：Rex 開場 1、Snake 開場 1、money 2、pipeline 1、proof 1、toolsmith 123、cta 1。
+
+## 英文版（/en/ 頁面，2026-10-17 起）
+
+幕稿 `explainer/en/script.js`（line／caption／畫面字 TEXT／anchors），配音 `explainer/en/audio/`，動畫引擎共用。
+Snake 英文開場在本目錄 `en/`（audio/intro.mp3、durations.json、cues.json）。cues 不手改，用 whisper 逐字時間戳對 anchors 算：
+
+```sh
+uv run --with mlx-whisper --with pypinyin python tools/voicebox/gen_takes.py ~/vb-en --lang en --name Rex
+node tools/gen-explainer-audio.mjs --from ~/vb-en --script explainer/en/script.js
+uv run --with mlx-whisper python tools/voicebox/en_cues.py
+# Snake 英文開場（先把 explainer/en/durations.json 複製到 variants/snake/explainer/en/）
+uv run --with mlx-whisper --with pypinyin python tools/voicebox/gen_takes.py ~/vb-en-snake --lang en intro
+node tools/gen-explainer-audio.mjs --from ~/vb-en-snake --script explainer/en/script.js --out variants/snake/explainer/en intro
+uv run --with mlx-whisper python tools/voicebox/en_cues.py --audio variants/snake/explainer/en --json variants/snake/explainer/en/cues.json intro
+```
+
+重錄後升 `explainer/en/script.js` 的 VER 與 `i18n/en.mjs` 裡的 `?v=en1`（兩處同一個值；Snake 版由 build-variant 自動加 s 前綴）。

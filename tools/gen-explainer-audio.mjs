@@ -30,19 +30,21 @@ import { fileURLToPath } from 'node:url'
 import { createRequire } from 'node:module'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
-const { SCENES } = createRequire(import.meta.url)(join(root, 'explainer/script.js'))
 const args = process.argv.slice(2)
 const argOf = flag => (args.includes(flag) ? args[args.indexOf(flag) + 1] : null)
+// --script：英文版用 explainer/en/script.js（輸出也預設改到 explainer/en/）
+const scriptArg = argOf('--script') || 'explainer/script.js'
+const { SCENES } = createRequire(import.meta.url)(join(root, scriptArg))
 const fromDir = argOf('--from')
 // --out：輸出到別版的 explainer 目錄（例如 variants/snake/explainer），預設 explainer/
-const outBase = join(root, argOf('--out') || 'explainer')
+const outBase = join(root, argOf('--out') || dirname(scriptArg))
 const outDir = join(outBase, 'audio')
 const durFile = join(outBase, 'durations.json')
 const MODEL = process.env.TTS_MODEL || 'gemini-3.8-flash-tts'
 const VOICE = process.env.TTS_VOICE || 'Charon'
 const skipExisting = args.includes('--missing')
 const measureOnly = args.includes('--measure')
-const only = args.filter((a, i) => !a.startsWith('--') && !['--from', '--out'].includes(args[i - 1]))
+const only = args.filter((a, i) => !a.startsWith('--') && !['--from', '--out', '--script'].includes(args[i - 1]))
 
 const readKey = () => {
   if (process.env.GEMINI_API_KEY) return process.env.GEMINI_API_KEY
