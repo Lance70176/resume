@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # 把動畫連續幀＋配音合成一支 mp4 預覽（給自己或別人看，不用開瀏覽器），速度與網站相同。
 #   tools/make-preview-video.sh <輸出資料夾> [fps=15]
+#   英文版：EXPLAINER_SCRIPT=explainer/en/script.js tools/make-preview-video.sh <輸出資料夾>
 # 會先跑 tools/render-preview.mjs 出每幕抽樣 PNG 與連續幀，再用 ffmpeg 把各幕 mp3 依
 # durations.json＋hold 排到正確時間點，合成 <輸出資料夾>/explainer-preview.mp4。
 set -euo pipefail
@@ -18,12 +19,13 @@ LIST="$OUT/audio.txt"
 node - "$ROOT" "$OUT" <<'JS'
   const fs = require("fs"), path = require("path"), { execFileSync } = require("child_process")
   const root = process.argv[2], out = process.argv[3]
-  const { SCENES, sceneDuration } = require(path.join(root, "explainer/script.js"))
-  const dur = JSON.parse(fs.readFileSync(path.join(root, "explainer/durations.json"), "utf8"))
+  const dir = path.dirname(process.env.EXPLAINER_SCRIPT || "explainer/script.js")
+  const { SCENES, sceneDuration } = require(path.join(root, dir, "script.js"))
+  const dur = JSON.parse(fs.readFileSync(path.join(root, dir, "durations.json"), "utf8"))
   const lines = []
   SCENES.forEach((s, i) => {
     const wav = path.join(out, `scene${i}.wav`)
-    execFileSync("ffmpeg", ["-v", "error", "-y", "-i", path.join(root, "explainer/audio", s.id + ".mp3"),
+    execFileSync("ffmpeg", ["-v", "error", "-y", "-i", path.join(root, dir, "audio", s.id + ".mp3"),
       "-ac", "1", "-ar", "24000", "-af", "apad=whole_dur=" + sceneDuration(s, dur).toFixed(3), wav])
     lines.push("file '" + wav + "'")
   })

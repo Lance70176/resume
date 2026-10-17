@@ -34,7 +34,8 @@ const fontFile = existsSync(woff2) ? woff2 : ttf
 if (!GlobalFonts.registerFromPath(fontFile, 'Iansui')) console.warn('字型載入失敗：' + fontFile)
 else console.log('字型：' + fontFile)
 
-const durFile = join(root, 'explainer/durations.json')
+// 英文版：EXPLAINER_SCRIPT=explainer/en/script.js（秒數表跟幕稿同目錄）
+const durFile = join(root, dirname(process.env.EXPLAINER_SCRIPT || 'explainer/script.js'), 'durations.json')
 const durations = existsSync(durFile) ? JSON.parse(readFileSync(durFile, 'utf8')) : {}
 const { W, H, SCENES, sceneDuration, drawFrame } = EX
 
