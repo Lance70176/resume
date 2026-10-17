@@ -9,6 +9,8 @@
 <meta name="author" content="Rex Lu">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://resume-rex.master0987.com/">
+<link rel="alternate" hreflang="zh-Hant" href="https://resume-rex.master0987.com/">
+<link rel="alternate" hreflang="en" href="https://resume-rex.master0987.com/en/">
 <meta property="og:type" content="profile">
 <meta property="og:title" content="Rex Lu｜系統架構師 × Agentic Engineer">
 <meta property="og:description" content="我設計架構，指揮 AI agent 產線交付。金流安全、高併發平台、AI 產品與自製工具。">
@@ -59,8 +61,10 @@ a{color:var(--accent)}
 .bar nav{display:flex;gap:16px;margin-left:auto;flex-wrap:wrap}
 .bar nav a{font-size:13.5px;color:var(--muted);text-decoration:none}
 .bar nav a:hover,.bar nav a:focus-visible{color:var(--accent)}
+.lang{font:12px var(--f-mono);border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:999px;padding:4px 10px;text-decoration:none;white-space:nowrap}
+.lang:hover,.lang:focus-visible{color:var(--accent)}
 #themeBtn{font:12px var(--f-mono);border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:4px 10px;cursor:pointer}
-@media (max-width:720px){.bar nav{display:none}.bar #themeBtn{margin-left:auto}}
+@media (max-width:720px){.bar nav{display:none}.bar .lang{margin-left:auto}}
 .hero{padding-block:56px 40px}
 .hero .grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:40px;align-items:center}
 @media (max-width:860px){.hero .grid{grid-template-columns:minmax(0,1fr)}}
@@ -190,6 +194,11 @@ footer{padding-block:28px 48px;color:var(--muted);font-size:13px;border-top:1px 
   .console{font-size:11px}
   .mail code{font-size:13px}
   a{text-decoration:none}
+  /* 英文字數多，grid 整塊被推到下一頁會留大片空白：英文版改成可逐列分頁（中文版 PDF 不受影響） */
+  html[lang="en"] .tl{display:block}
+  html[lang="en"] .cards{display:flex!important;flex-wrap:wrap}
+  html[lang="en"] .cards>.card{width:calc(50% - 5px)}
+  html[lang="en"] .ds{break-inside:auto}
 }
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
@@ -206,6 +215,7 @@ footer{padding-block:28px 48px;color:var(--muted);font-size:13px;border-top:1px 
       <a href="#experience">經歷</a>
       <a href="#contact">聯絡</a>
     </nav>
+    <a class="lang" href="en/" lang="en" hreflang="en">EN</a>
     <button id="themeBtn" type="button" aria-label="切換深淺色">◐</button>
   </div>
 </header>
